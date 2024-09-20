@@ -1,0 +1,15 @@
+# Changes here will be overwritten by Copier; NEVER EDIT MANUALLY
+_commit: v4.3.5
+_src_path: https://github.com/jupyterlab/extension-template
+author_email: haudin.florence@gmail.com
+author_name: Florence Haudin
+has_binder: true
+has_settings: true
+kind: frontend
+labextension_name: jupyterlab-web-bluetooth-manager
+project_short_description: A JupyterLab extension to manage to connect to devices
+    with web bluetooth.
+python_name: jupyterlab_web_bluetooth_manager
+repository: https://github.com/HaudinFlorence/jupyterlab-web-bluetooth-manager
+test: true
+
