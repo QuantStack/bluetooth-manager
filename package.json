@@ -58,7 +58,8 @@
     },
     "dependencies": {
         "@jupyterlab/application": "^4.0.0",
-        "@jupyterlab/settingregistry": "^4.0.0"
+        "@jupyterlab/settingregistry": "^4.0.0",
+        "lego-boost-browser": "git+https://github.com/DerThorsten/lego-boost-browser.git"
     },
     "devDependencies": {
         "@jupyterlab/builder": "^4.0.0",

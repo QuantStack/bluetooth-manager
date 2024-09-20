@@ -6,6 +6,7 @@ import {
 import { ISettingRegistry } from '@jupyterlab/settingregistry';
 import {SidePanel } from '@jupyterlab/ui-components';
 import { BluetoothIcon } from './icon';
+import LegoBoost from 'lego-boost-browser';
 
 const webBluetoothManager: JupyterFrontEndPlugin<void> = {
   id: 'jupyterlab-web-bluetooth-manager:web-bluetooth-manager-plugin',
@@ -23,6 +24,8 @@ async function activateWebBluetoothManager(app: JupyterFrontEnd) {
   panel.title.caption = 'Web bluetooth manager';
   panel.id ="web-bluetooth-manager-ui";
   app.shell.add(panel, 'left', { rank: 102, type: '' });
+  const boost = new LegoBoost()
+  console.log("boost:", boost)
 }
 
 const plugins: JupyterFrontEndPlugin<any>[] = [webBluetoothManager];
