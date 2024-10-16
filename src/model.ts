@@ -1,11 +1,13 @@
 import { VDomModel } from '@jupyterlab/apputils';
+import LegoBoost from 'lego-boost-browser';
 
 export class BluetoothPanelModel extends VDomModel {
    
-    public schema: any;
+    public devicesList: Array<LegoBoost>
 
-    constructor() {
+    constructor(devicesList:Array<LegoBoost>) {
       super();
+      this.devicesList = devicesList
     }
 
     

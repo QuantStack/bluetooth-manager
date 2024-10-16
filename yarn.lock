@@ -2087,7 +2087,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@jupyterlab/application@npm:^4.0.0, @jupyterlab/application@npm:^4.2.5":
+"@jupyterlab/application@npm:^4.2.5":
   version: 4.2.5
   resolution: "@jupyterlab/application@npm:4.2.5"
   dependencies:
@@ -2158,7 +2158,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@jupyterlab/builder@npm:^4.0.0":
+"@jupyterlab/builder@npm:^4.2.5":
   version: 4.2.5
   resolution: "@jupyterlab/builder@npm:4.2.5"
   dependencies:
@@ -2548,6 +2548,25 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@jupyterlab/running@npm:^4.2.5":
+  version: 4.2.5
+  resolution: "@jupyterlab/running@npm:4.2.5"
+  dependencies:
+    "@jupyterlab/apputils": ^4.3.5
+    "@jupyterlab/statedb": ^4.2.5
+    "@jupyterlab/translation": ^4.2.5
+    "@jupyterlab/ui-components": ^4.2.5
+    "@lumino/coreutils": ^2.1.2
+    "@lumino/disposable": ^2.1.2
+    "@lumino/domutils": ^2.0.1
+    "@lumino/messaging": ^2.0.1
+    "@lumino/signaling": ^2.1.2
+    "@lumino/widgets": ^2.3.2
+    react: ^18.2.0
+  checksum: cd79ca004cf23660af17667c33d69ddb290403ac617e2edbc1ec6c0617c8aab24fd249d9b9ee5030d2ec48a24a00ee5ca06665654bd4bff3a79f6c0eb45ec280
+  languageName: node
+  linkType: hard
+
 "@jupyterlab/services@npm:^7.2.5":
   version: 7.2.5
   resolution: "@jupyterlab/services@npm:7.2.5"
@@ -2567,7 +2586,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@jupyterlab/settingregistry@npm:^4.0.0, @jupyterlab/settingregistry@npm:^4.2.5":
+"@jupyterlab/settingregistry@npm:^4.2.5":
   version: 4.2.5
   resolution: "@jupyterlab/settingregistry@npm:4.2.5"
   dependencies:
@@ -2638,7 +2657,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@jupyterlab/testutils@npm:^4.0.0":
+"@jupyterlab/testutils@npm:^4.2.5":
   version: 4.2.5
   resolution: "@jupyterlab/testutils@npm:4.2.5"
   dependencies:
@@ -7304,10 +7323,12 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "jupyterlab-web-bluetooth-manager@workspace:."
   dependencies:
-    "@jupyterlab/application": ^4.0.0
-    "@jupyterlab/builder": ^4.0.0
-    "@jupyterlab/settingregistry": ^4.0.0
-    "@jupyterlab/testutils": ^4.0.0
+    "@jupyterlab/application": ^4.2.5
+    "@jupyterlab/builder": ^4.2.5
+    "@jupyterlab/running": ^4.2.5
+    "@jupyterlab/settingregistry": ^4.2.5
+    "@jupyterlab/testutils": ^4.2.5
+    "@jupyterlab/ui-components": ^4.2.5
     "@mui/icons-material": 6.1.1
     "@types/jest": ^29.2.0
     "@types/json-schema": ^7.0.11
