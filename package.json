@@ -57,17 +57,17 @@
         "watch:labextension": "jupyter labextension watch ."
     },
     "dependencies": {
-        "@jupyterlab/application": "^4.2.5",
-        "@jupyterlab/running": "^4.2.5",
-        "@jupyterlab/settingregistry": "^4.2.5",
-        "@jupyterlab/ui-components": "^4.2.5",
+        "@jupyterlab/application": "^4.3.0-rc.0",
+        "@jupyterlab/running": "^4.3.0-rc.0",
+        "@jupyterlab/settingregistry": "^4.3.0-rc.0",
+        "@jupyterlab/ui-components": "4.3.0-rc.0",
         "base64-js": "^1.5.1",
         "ieee754": "^1.2.1",
         "lego-boost-browser": "file:.yalc/lego-boost-browser"
     },
     "devDependencies": {
-        "@jupyterlab/builder": "^4.2.5",
-        "@jupyterlab/testutils": "^4.2.5",
+        "@jupyterlab/builder": "^4.3.0-rc.0",
+        "@jupyterlab/testutils": "^4.3.0-rc.0",
         "@mui/icons-material": "6.1.1",
         "@types/jest": "^29.2.0",
         "@types/json-schema": "^7.0.11",
