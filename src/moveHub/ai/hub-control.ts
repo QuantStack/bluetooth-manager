@@ -1,25 +1,28 @@
-import { manual } from './states/manual';
-import { stop, back, drive, turn, seek } from './states/ai';
-import { BoostConfiguration, HubAsync } from '../hub/hubAsync';
-import { ControlData, DeviceInfo, State } from '../types';
+import { manual } from "./states/manual";
+import { stop, back, drive, turn, seek } from "./states/ai";
+import { DeviceConfiguration, HubAsync } from "../hub/hubAsync";
+import { ControlData, DeviceInfo, State } from "../types";
 
 type States = {
   [key in State]: (hub: HubControl) => void;
 };
 
+
+
 class HubControl {
-  hub: HubAsync;
+  hub: HubAsync | null;
   device: DeviceInfo;
   prevDevice: DeviceInfo;
   control: ControlData;
   prevControl: ControlData;
-  configuration: BoostConfiguration;
+  configuration: DeviceConfiguration;
   states: States;
   currentState: (hub: HubControl) => void;
 
-  constructor(deviceInfo: DeviceInfo, controlData: ControlData, configuration: BoostConfiguration) {
+  constructor(deviceInfo: DeviceInfo, controlData: ControlData, configuration: DeviceConfiguration) {
     this.hub = null;
     this.device = deviceInfo;
+    
     this.control = controlData;
     this.configuration = configuration;
     this.prevControl = { ...this.control };
@@ -36,7 +39,7 @@ class HubControl {
     this.currentState = this.states['Manual'];
   }
 
-  updateConfiguration(configuration: BoostConfiguration): void {
+  updateConfiguration(configuration: DeviceConfiguration): void {
     this.configuration = configuration;
   }
 
@@ -44,7 +47,7 @@ class HubControl {
     this.hub = hub;
     this.device.connected = true;
 
-    this.hub.emitter.on('error', err => {
+    this.hub.emitter.on('error', (err:any) => {
       this.device.err = err;
     });
 
@@ -52,32 +55,34 @@ class HubControl {
       this.device.connected = false;
     });
 
-    this.hub.emitter.on('distance', distance => {
+    this.hub.emitter.on('distance', (distance: any) => {
       this.device.distance = distance;
     });
 
-    this.hub.emitter.on('rssi', rssi => {
+    this.hub.emitter.on('rssi', (rssi: any) => {
       this.device.rssi = rssi;
     });
 
-    this.hub.emitter.on('port', portObject => {
+    this.hub.emitter.on('port', (portObject: any) => {
       const { port, action } = portObject;
-      this.device.ports[port].action = action;
+      this.device.ports[port as 'A' | 'B' | 'AB' | 'C' | 'D' | 'LED'].action = action;
+      
     });
 
-    this.hub.emitter.on('color', color => {
+    this.hub.emitter.on('color', (color: any) => {
       this.device.color = color;
     });
 
-    this.hub.emitter.on('tilt', tilt => {
+    this.hub.emitter.on('tilt', (tilt: any) => {
       const { roll, pitch } = tilt;
       this.device.tilt.roll = roll;
       this.device.tilt.pitch = pitch;
     });
 
-    this.hub.emitter.on('rotation', rotation => {
+    this.hub.emitter.on('rotation', (rotation: any) => {
       const { port, angle } = rotation;
-      this.device.ports[port].angle = angle;
+      console.log(`port=${port}, angle=${angle}`)
+      //this.device.ports[port].angle = angle;
     });
 
     await this.hub.ledAsync('red');
@@ -87,7 +92,7 @@ class HubControl {
 
   async disconnect() {
     if (this.device.connected) {
-      await this.hub.disconnectAsync();
+      await this.hub?.disconnectAsync();
     }
   }
 

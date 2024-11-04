@@ -18,15 +18,15 @@ function manual(hubControl: HubControl) {
     hubControl.control.motorA = motorA;
     hubControl.control.motorB = motorB;
 
-    hubControl.hub.motorTimeMulti(60, motorA, motorB);
+    hubControl.hub?.motorTimeMulti(60, motorA, motorB);
   }
 
   if (hubControl.control.tilt.pitch !== hubControl.prevControl.tilt.pitch) {
-    hubControl.hub.motorTime('C', 60, hubControl.control.tilt.pitch);
+    hubControl.hub?.motorTime('C', 60, hubControl.control.tilt.pitch);
   }
 
   if (hubControl.control.tilt.roll !== hubControl.prevControl.tilt.roll) {
-    hubControl.hub.motorTime('D', 60, hubControl.control.tilt.roll);
+    hubControl.hub?.motorTime('D', 60, hubControl.control.tilt.roll);
   }
 }
 

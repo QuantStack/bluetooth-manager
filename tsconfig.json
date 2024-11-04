@@ -16,7 +16,19 @@
     "outDir": "lib",
     "rootDir": "src",
     "strictNullChecks": true,
-    "target": "ES2018"
+    "target": "ES2018", 
+    "strict": false
   },
-  "include": ["src/*"]
+  "include": ["src/*", "src/moveHub/helpers", "src/moveHub/hub", "src/moveHub/moveHub.ts", "src/moveHub/moveHubConnector.ts", "src/moveHub/types.ts"],
+  "files": [
+  "src/moveHub/ai/states/ai.ts",
+  "src/moveHub/ai/states/manual.ts",
+  "src/moveHub/ai/hub-control.ts",
+  "src/moveHub/hub/hubAsync.ts",
+  "src/moveHub/helpers/eventEmitter.ts",
+  "src/moveHub/helpers/buffer.ts",
+  "src/moveHub/hub/hub.ts",
+ 
+
+]
 }

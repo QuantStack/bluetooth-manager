@@ -1,20 +1,23 @@
-import { BoostConnector } from './boostConnector';
-import { HubAsync, BoostConfiguration } from './hub/hubAsync';
+import { MoveHubConnector } from './moveHubConnector';
+import { HubAsync, DeviceConfiguration } from "./hub/hubAsync"
 import { HubControl } from './ai/hub-control';
-import { DeviceInfo, ControlData, RawData } from './types';
+import { DeviceInfo, ControlData, RawData } from "./types";
 
-export default class LegoBoost {
+export default class MoveHub {
   private hub: HubAsync;
   private hubControl: HubControl;
   private color: string;
   private updateTimer: any;
-  private configuration: BoostConfiguration;
+  private configuration: DeviceConfiguration;
+  public deviceID: string;
+  public deviceName: string |undefined;
+  public isConnected: boolean | undefined;
 
   private logDebug: (message?: any, ...optionalParams: any[]) => void = s => {};
 
   /**
-   * Information from Lego Boost motors and sensors
-   * @property LegoBoost#deviceInfo
+   * Information from Lego LegoDevice motors and sensors
+   * @property MoveHub#deviceInfo
    */
   public deviceInfo: DeviceInfo = {
     ports: {
@@ -23,19 +26,19 @@ export default class LegoBoost {
       AB: { action: '', angle: 0 },
       C: { action: '', angle: 0 },
       D: { action: '', angle: 0 },
-      LED: { action: '', angle: 0 },
+      LED: { action: '', angle: 0 }
     },
     tilt: { roll: 0, pitch: 0 },
     distance: Number.MAX_SAFE_INTEGER,
     rssi: 0,
     color: '',
     error: '',
-    connected: false,
+    connected: false
   };
 
   /**
    * Input data to used on manual and AI control
-   * @property LegoBoost#controlData
+   * @property MoveHub#controlData
    */
   public controlData: ControlData = {
     input: null,
@@ -43,34 +46,54 @@ export default class LegoBoost {
     turnAngle: 0,
     tilt: { roll: 0, pitch: 0 },
     forceState: null,
-    updateInputMode: null,
+    updateInputMode: (controlData: ControlData) =>  null,
     controlUpdateTime: undefined,
-    state: undefined,
+    state: undefined
   };
 
   /**
    * Drive forward until wall is reaced or drive backwards 100meters
-   * @method LegoBoost#connect
-   * @param {BoostConfiguration} [configuration={}] Lego boost motor and control configuration
+   * @method MoveHub#connect
+   * @param {DeviceConfiguration} [configuration={}] Lego Device motor and control configuration
    * @returns {Promise}
    */
-  async connect(configuration: BoostConfiguration = {}): Promise<void> {
+  async connect(configuration: DeviceConfiguration = {}): Promise<any> {
     try {
       this.configuration = configuration;
-      const bluetooth = await BoostConnector.connect(this.handleGattDisconnect.bind(this));
-      this.initHub(bluetooth, this.configuration);
+
+      const bluetooth = await MoveHubConnector.connect(
+        this.handleGattDisconnect.bind(this)
+      );
+      console.log(bluetooth);
+      const device = MoveHubConnector.device;
+      this.deviceID = await MoveHubConnector.getDeviceID(device);
+
+      this.deviceName = await MoveHubConnector.getDeviceName(device);
+
+      this.isConnected = await MoveHubConnector.getConnectionState();
+      this.initHub(bluetooth!, this.configuration);
     } catch (e) {
       console.log('Error from connect: ' + e);
     }
+    if (this.deviceID) {
+      const result = { deviceID: this.deviceID, deviceName: this.deviceName };
+      return result;
+    } else {
+      console.warn('the device is undefined');
+      return;
+    }
   }
 
-  async initHub(bluetooth: BluetoothRemoteGATTCharacteristic, configuration: BoostConfiguration) {
+  async initHub(
+    bluetooth: BluetoothRemoteGATTCharacteristic,
+    configuration: DeviceConfiguration
+  ) {
     this.hub = new HubAsync(bluetooth, configuration);
     this.hub.logDebug = this.logDebug;
 
     this.hub.emitter.on('disconnect', async evt => {
-      // TODO: This is never launched as event comes from BoostConnector
-      // await BoostConnector.reconnect();
+      // TODO: This is never launched as event comes from MoveHubConnector
+      // await MoveHubConnector.reconnect();
     });
 
     this.hub.emitter.on('connect', async evt => {
@@ -79,7 +102,11 @@ export default class LegoBoost {
       this.logDebug('Connected');
     });
 
-    this.hubControl = new HubControl(this.deviceInfo, this.controlData, configuration);
+    this.hubControl = new HubControl(
+      this.deviceInfo,
+      this.controlData,
+      configuration
+    );
     await this.hubControl.start(this.hub);
 
     this.updateTimer = setInterval(() => {
@@ -92,7 +119,7 @@ export default class LegoBoost {
 
     if (this.deviceInfo.connected === false) return;
 
-    this.hub.setDisconnected();
+    //this.hub.setDisconnected();
     this.deviceInfo.connected = false;
     clearInterval(this.updateTimer);
     this.logDebug('Disconnected');
@@ -104,7 +131,7 @@ export default class LegoBoost {
     // } else {
     //   this.hub.setDisconnected();
     //   this.deviceInfo.connected = false;
-    //   const reconnection = await BoostConnector.reconnect();
+    //   const reconnection = await MoveHubConnector.reconnect();
     //   if (reconnection[0]) {
     //     await this.initHub(reconnection[1], this.configuration);
     //   } else {
@@ -115,7 +142,7 @@ export default class LegoBoost {
 
   /**
    * Change the color of the led between pink and orange
-   * @method LegoBoost#changeLed
+   * @method MoveHub#changeLed
    * @returns {Promise}
    */
   async changeLed(): Promise<void> {
@@ -126,31 +153,32 @@ export default class LegoBoost {
 
   /**
    * Drive forward until wall is reaced or drive backwards 100meters
-   * @method LegoBoost#driveToDirection
+   * @method MoveHub#driveToDirection
    * @param {number} [direction=1] Direction to drive. 1 or positive is forward, 0 or negative is backwards.
    * @returns {Promise}
    */
-  async driveToDirection(direction = 1): Promise<{}> {
+  async driveToDirection(direction = 1): Promise<{} | undefined> {
     if (!this.preCheck()) return;
     if (direction > 0) return await this.hub.driveUntil();
     else return await this.hub.drive(-10000);
   }
 
   /**
-   * Disconnect Lego Boost
-   * @method LegoBoost#disconnect
+   * Disconnect Lego Device
+   * @method MoveHub#disconnect
    * @returns {boolean|undefined}
    */
   disconnect(): boolean | undefined {
     if (!this.hub || this.hub.connected === false) return;
     this.hub.setDisconnected();
-    const success = BoostConnector.disconnect();
+    const success = MoveHubConnector.disconnect();
+    console.log('DISCONNECT PLEASE!');
     return success;
   }
 
   /**
    * Start AI mode
-   * @method LegoBoost#ai
+   * @method MoveHub#ai
    */
   ai(): void {
     if (!this.hub || this.hub.connected === false) return;
@@ -159,10 +187,10 @@ export default class LegoBoost {
 
   /**
    * Stop engines A and B
-   * @method LegoBoost#stop
+   * @method MoveHub#stop
    * @returns {Promise}
    */
-  async stop(): Promise<{}> {
+  async stop(): Promise<{} | undefined> {
     if (!this.preCheck()) return;
     this.controlData.speed = 0;
     this.controlData.turnAngle = 0;
@@ -171,11 +199,11 @@ export default class LegoBoost {
   }
 
   /**
-   * Update Boost motor and control configuration
-   * @method LegoBoost#updateConfiguration
-   * @param {BoostConfiguration} configuration Boost motor and control configuration
+   * Update Lego Device motor and control configuration
+   * @method MoveHub#updateConfiguration
+   * @param {DeviceConfiguration} configuration Lego Device motor and control configuration
    */
-  updateConfiguration(configuration: BoostConfiguration): void {
+  updateConfiguration(configuration: DeviceConfiguration): void {
     if (!this.hub) return;
     this.hub.updateConfiguration(configuration);
     this.hubControl.updateConfiguration(configuration);
@@ -185,27 +213,27 @@ export default class LegoBoost {
 
   /**
    * Control the LED on the Move Hub
-   * @method LegoBoost#led
+   * @method MoveHub#led
    * @param {boolean|number|string} color
    * If set to boolean `false` the LED is switched off, if set to `true` the LED will be white.
    * Possible string values: `off`, `pink`, `purple`, `blue`, `lightblue`, `cyan`, `green`, `yellow`, `orange`, `red`,
    * `white`
    */
-  led(color: boolean | number | string): void {
+led(color: boolean | number | string): void {
     if (!this.preCheck()) return;
     this.hub.led(color);
   }
 
   /**
    * Control the LED on the Move Hub
-   * @method LegoBoost#ledAsync
+   * @method MoveHub#ledAsync
    * @param {boolean|number|string} color
    * If set to boolean `false` the LED is switched off, if set to `true` the LED will be white.
    * Possible string values: `off`, `pink`, `purple`, `blue`, `lightblue`, `cyan`, `green`, `yellow`, `orange`, `red`,
    * `white`
    * @returns {Promise}
    */
-  async ledAsync(color: boolean | number | string): Promise<{}> {
+  async ledAsync(color: boolean | number | string): Promise<{} | undefined> {
     if (!this.preCheck()) return;
     return await this.hub.ledAsync(color);
   }
@@ -224,7 +252,7 @@ export default class LegoBoost {
 
   /**
    * Run a motor for specific time
-   * @method LegoBoost#motorTimeAsync
+   * @method MoveHub#motorTimeAsync
    * @param {string|number} port possible string values: `A`, `B`, `AB`, `C`, `D`.
    * @param {number} seconds
    * @param {number} [dutyCycle=100] motor power percentage from `-100` to `100`. If a negative value is given rotation
@@ -251,14 +279,18 @@ export default class LegoBoost {
    * is counterclockwise.
    * @param {function} callback
    */
-  motorTimeMulti(seconds: number, dutyCycleA: number = 100, dutyCycleB: number = 100): void {
+ motorTimeMulti(
+    seconds: number,
+    dutyCycleA: number = 100,
+    dutyCycleB: number = 100
+  ): void {
     if (!this.preCheck()) return;
     this.hub.motorTimeMulti(seconds, dutyCycleA, dutyCycleB);
   }
 
   /**
    * Run both motors (A and B) for specific time
-   * @method LegoBoost#motorTimeMultiAsync
+   * @method MoveHub#motorTimeMultiAsync
    * @param {number} seconds
    * @param {number} [dutyCycleA=100] motor power percentage from `-100` to `100`. If a negative value is given rotation
    * is counterclockwise.
@@ -284,14 +316,18 @@ export default class LegoBoost {
    * @param {number} [dutyCycle=100] motor power percentage from `-100` to `100`. If a negative value is given
    * rotation is counterclockwise.
    */
-  motorAngle(port: string | number, angle: number, dutyCycle: number = 100): void {
+  motorAngle(
+    port: string | number,
+    angle: number,
+    dutyCycle: number = 100
+  ): void {
     if (!this.preCheck()) return;
     this.hub.motorAngle(port, angle, dutyCycle);
   }
 
   /**
    * Turn a motor by specific angle
-   * @method LegoBoost#motorAngleAsync
+   * @method MoveHub#motorAngleAsync
    * @param {string|number} port possible string values: `A`, `B`, `AB`, `C`, `D`.
    * @param {number} angle - degrees to turn from `0` to `2147483647`
    * @param {number} [dutyCycle=100] motor power percentage from `-100` to `100`. If a negative value is given
@@ -311,21 +347,25 @@ export default class LegoBoost {
 
   /**
    * Turn both motors (A and B) by specific angle
-   * @method LegoBoost#motorAngleMulti
+   * @method MoveHub#motorAngleMulti
    * @param {number} angle degrees to turn from `0` to `2147483647`
    * @param {number} dutyCycleA motor power percentage from `-100` to `100`. If a negative value is given
    * rotation is counterclockwise.
    * @param {number} dutyCycleB motor power percentage from `-100` to `100`. If a negative value is given
    * rotation is counterclockwise.
    */
-  motorAngleMulti(angle: number, dutyCycleA: number = 100, dutyCycleB: number = 100): void {
+  motorAngleMulti(
+    angle: number,
+    dutyCycleA: number = 100,
+    dutyCycleB: number = 100
+  ): void {
     if (!this.preCheck()) return;
     this.hub.motorAngleMulti(angle, dutyCycleA, dutyCycleB);
   }
 
   /**
    * Turn both motors (A and B) by specific angle
-   * @method LegoBoost#motorAngleMultiAsync
+   * @method MoveHub#motorAngleMultiAsync
    * @param {number} angle degrees to turn from `0` to `2147483647`
    * @param {number} [dutyCycleA=100] motor power percentage from `-100` to `100`. If a negative value is given
    * rotation is counterclockwise.
@@ -346,31 +386,31 @@ export default class LegoBoost {
 
   /**
    * Drive specified distance
-   * @method LegoBoost#drive
+   * @method MoveHub#drive
    * @param {number} distance distance in centimeters (default) or inches. Positive is forward and negative is backward.
    * @param {boolean} [wait=true] will promise wait untill the drive has completed.
    * @returns {Promise}
    */
-  async drive(distance: number, wait: boolean = true): Promise<{}> {
+  async drive(distance: number, wait: boolean = true): Promise<{} | undefined> {
     if (!this.preCheck()) return;
     return await this.hub.drive(distance, wait);
   }
 
   /**
    * Turn robot specified degrees
-   * @method LegoBoost#turn
+   * @method MoveHub#turn
    * @param {number} degrees degrees to turn. Negative is to the left and positive to the right.
    * @param {boolean} [wait=true] will promise wait untill the turn has completed.
    * @returns {Promise}
    */
-  async turn(degrees: number, wait: boolean = true): Promise<{}> {
+  async turn(degrees: number, wait: boolean = true): Promise<{} | undefined> {
     if (!this.preCheck()) return;
     return await this.hub.turn(degrees, wait);
   }
 
   /**
    * Drive untill sensor shows object in defined distance
-   * @method LegoBoost#driveUntil
+   * @method MoveHub#driveUntil
    * @param {number} [distance=0] distance in centimeters (default) or inches when to stop. Distance sensor is not very sensitive or accurate.
    * By default will stop when sensor notices wall for the first time. Sensor distance values are usualy between 110-50.
    * @param {boolean} [wait=true] will promise wait untill the bot will stop.
@@ -383,12 +423,12 @@ export default class LegoBoost {
 
   /**
    * Turn until there is no object in sensors sight
-   * @method LegoBoost#turnUntil
+   * @method MoveHub#turnUntil
    * @param {number} [direction=1] direction to turn to. 1 (or any positive) is to the right and 0 (or any negative) is to the left.
    * @param {boolean} [wait=true] will promise wait untill the bot will stop.
    * @returns {Promise}
    */
-  async turnUntil(direction: number = 1, wait: boolean = true): Promise<any> {
+ async turnUntil(direction: number = 1, wait: boolean = true): Promise<any> {
     if (!this.preCheck()) return;
     return await this.hub.turnUntil(direction, wait);
   }

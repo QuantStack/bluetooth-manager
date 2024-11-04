@@ -1,6 +1,6 @@
-import { EventEmitter } from '../helpers/eventEmitter';
+import { EventEmitter } from "../helpers/eventEmitter"
 import { Buffer } from '../helpers/buffer';
-import { RawData } from '../types';
+import { RawData } from "../types";
 
 type Device = 'LED' | 'DISTANCE' | 'IMOTOR' | 'MOTOR' | 'TILT';
 
@@ -29,12 +29,12 @@ export class Hub {
   autoSubscribe: boolean = true;
   ports: { [key: string]: any };
   num2type: { [key: number]: Device };
-  port2num: { [key in Port]: number };
+  port2num: { [key in Port]: number } ;
   num2port: { [key: number]: string };
   num2action: { [key: number]: string };
   num2color: { [key: number]: string };
   ledColors: LedColor[];
-  portInfoTimeout: number;
+  portInfoTimeout: NodeJS.Timeout | undefined;
   noReconnect: boolean;
   connected: boolean;
   rssi: number;
@@ -68,7 +68,7 @@ export class Hub {
       LED: 0x32,
       TILT: 0x3a,
     };
-    this.num2port = Object.entries(this.port2num).reduce((acc, [port, portNum]) => {
+    this.num2port = Object.entries(this.port2num).reduce((acc:any, [port, portNum]) => {
       acc[portNum] = port;
       return acc;
     }, {});
@@ -135,8 +135,8 @@ export class Hub {
           }
         }, 1000);
 
-        this.log('Found: ' + this.num2type[data[5]]);
-        this.logDebug('Found', data);
+        //this.log('Found: ' + this.num2type[data[5]]);
+        //this.logDebug('Found', data);
 
         if (data[4] === 0x01) {
           this.ports[data[3]] = {
@@ -275,8 +275,8 @@ export class Hub {
       callback = dutyCycle;
       dutyCycle = 100;
     }
-    const portNum = typeof port === 'string' ? this.port2num[port] : port;
-    this.write(this.encodeMotorTime(portNum, seconds, dutyCycle), callback);
+    /*const portNum = typeof port === 'string' ? this.port2num[port] : port;
+    this.write(this.encodeMotorTime(portNum, seconds, dutyCycle), callback);*/
   }
 
   /**
@@ -305,8 +305,8 @@ export class Hub {
       callback = dutyCycle;
       dutyCycle = 100;
     }
-    const portNum = typeof port === 'string' ? this.port2num[port] : port;
-    this.write(this.encodeMotorAngle(portNum, angle, dutyCycle), callback);
+    /*const portNum = typeof port === 'string' ? this.port2num[port] : port;
+    this.write(this.encodeMotorAngle(portNum, angle, dutyCycle), callback);*/
   }
 
   /**
@@ -331,20 +331,21 @@ export class Hub {
     // @ts-ignore
     const buf = Buffer.from([0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00]);
 
-    for (const idx in raw) {
-      buf.writeIntLE(raw[idx], idx);
-    }
+    //for (const idx in raw) {
+     
+      //buf.writeIntLE(raw[key], idx);
+    //}
 
     this.write(buf, callback);
   }
 
   motorPowerCommand(port: any, power: number) {
-    this.write(this.encodeMotorPower(port, power));
+    //this.write(this.encodeMotorPower(port, power));
   }
 
   //[0x09, 0x00, 0x81, 0x39, 0x11, 0x07, 0x00, 0x64, 0x03]
-  encodeMotorPower(port: string | number, dutyCycle = 100) {
-    const portNum = typeof port === 'string' ? this.port2num[port] : port;
+  /*encodeMotorPower(port: string | number, dutyCycle = 100) {
+    /*const portNum = typeof port === 'string' ? this.port2num[port] : port;
     // @ts-ignore
     const buf = Buffer.from([0x09, 0x00, 0x81, portNum, 0x11, 0x07, 0x00, 0x64, 0x03]);
     //buf.writeUInt16LE(seconds * 1000, 6);
@@ -430,7 +431,7 @@ export class Hub {
    */
   write(data: any, callback?: () => void) {
     if (typeof data === 'string') {
-      const arr = [];
+      const arr: any = [];
       data.split(' ').forEach(c => {
         arr.push(parseInt(c, 16));
       });

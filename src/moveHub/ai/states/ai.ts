@@ -15,7 +15,7 @@ const REVERSE_SPEED = -15;
 const seek = (hubControl: HubControl) => {
   if (!hubControl.control.controlUpdateTime || Date.now() - hubControl.control.controlUpdateTime > CHECK_TIME_MS) {
     hubControl.control.controlUpdateTime = Date.now();
-    hubControl.hub.motorTimeMulti(EXECUTE_TIME_SEC, TURN_SPEED, TURN_SPEED_OPPOSITE);
+    hubControl.hub?.motorTimeMulti(EXECUTE_TIME_SEC, TURN_SPEED, TURN_SPEED_OPPOSITE);
   }
 
   if (Date.now() - hubControl.control.controlUpdateTime < 250) return;
@@ -31,11 +31,11 @@ const seek = (hubControl: HubControl) => {
 
 const turn = (hubControl: HubControl) => {
   if (hubControl.device.distance < MIN_DISTANCE) {
-    hubControl.control.turnDirection = null;
+    hubControl.control.turnDirection = undefined;
     hubControl.setNextState('Back');
     return;
   } else if (hubControl.device.distance > OK_DISTANCE) {
-    hubControl.control.turnDirection = null;
+    hubControl.control.turnDirection = undefined;
     hubControl.setNextState('Drive');
     return;
   }
@@ -45,7 +45,7 @@ const turn = (hubControl: HubControl) => {
     const motorB = hubControl.control.turnDirection === 'right' ? TURN_SPEED_OPPOSITE : TURN_SPEED;
 
     hubControl.control.controlUpdateTime = Date.now();
-    hubControl.hub.motorTimeMulti(EXECUTE_TIME_SEC, motorA, motorB);
+    hubControl.hub?.motorTimeMulti(EXECUTE_TIME_SEC, motorA, motorB);
   }
 }
 
@@ -62,7 +62,7 @@ const drive = (hubControl: HubControl) => {
   if (!hubControl.control.controlUpdateTime || Date.now() - hubControl.control.controlUpdateTime > CHECK_TIME_MS) {
     hubControl.control.controlUpdateTime = Date.now();
     const speed = hubControl.configuration.leftMotor === 'A' ? DRIVE_SPEED : DRIVE_SPEED * -1;
-    hubControl.hub.motorTimeMulti(EXECUTE_TIME_SEC, speed, speed);
+    hubControl.hub?.motorTimeMulti(EXECUTE_TIME_SEC, speed, speed);
   }
 }
 
@@ -75,7 +75,7 @@ const back = (hubControl: HubControl) => {
   if (!hubControl.control.controlUpdateTime || Date.now() - hubControl.control.controlUpdateTime > CHECK_TIME_MS) {
     hubControl.control.controlUpdateTime = Date.now();
     const speed = hubControl.configuration.leftMotor === 'A' ? REVERSE_SPEED : REVERSE_SPEED * -1;
-    hubControl.hub.motorTimeMulti(EXECUTE_TIME_SEC, speed, speed);
+    hubControl.hub?.motorTimeMulti(EXECUTE_TIME_SEC, speed, speed);
   }
 }
 
@@ -86,7 +86,7 @@ const stop = (hubControl: HubControl) => {
 
   if (!hubControl.control.controlUpdateTime || Date.now() - hubControl.control.controlUpdateTime > CHECK_TIME_MS) {
     hubControl.control.controlUpdateTime = Date.now();
-    hubControl.hub.motorTimeMulti(EXECUTE_TIME_SEC, 0, 0);
+    hubControl.hub?.motorTimeMulti(EXECUTE_TIME_SEC, 0, 0);
   }
 }
 

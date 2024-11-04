@@ -25,15 +25,15 @@ export type DeviceInfo = {
 
 /** Input data to used on manual and AI control */
 export type ControlData = {
-  input: string;
+  input: string | null;
   speed: number;
   turnAngle: number;
   turnDirection?: TurnDirection;
   tilt: { roll: number; pitch: number };
   /** Force state change manually */
-  forceState: State;
+  forceState: State | null;
   /** Manually toggle input mode */
-  updateInputMode: (controlData: ControlData) => void;
+  updateInputMode: (controlData: ControlData) => void | null;
   /** Time stamp when control data was updated */
   controlUpdateTime?: number;
   state?: State;

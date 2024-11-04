@@ -7342,7 +7342,6 @@ __metadata:
     eslint-plugin-prettier: ^5.0.0
     ieee754: ^1.2.1
     jest: ^29.2.0
-    lego-boost-browser: "file:.yalc/lego-boost-browser"
     npm-run-all: ^4.1.5
     prettier: ^3.0.0
     rimraf: ^5.0.1
@@ -7387,14 +7386,6 @@ __metadata:
   checksum: daa6562e907f856cbfd58a00c42f532c9bba283388984da6a3bffb494e56612e5f23c52f30b0d9885f0ea07ad5d88bfa0470ee65017a6ce6c565289a1afd78af
   languageName: node
   linkType: hard
-
-"lego-boost-browser@portal:/home/fhaudin/dev/robots/lego-boost-browser::locator=jupyterlab-web-bluetooth-manager%40workspace%3A.":
-  version: 0.0.0-use.local
-  resolution: "lego-boost-browser@portal:/home/fhaudin/dev/robots/lego-boost-browser::locator=jupyterlab-web-bluetooth-manager%40workspace%3A."
-  dependencies:
-    "@types/web-bluetooth": ^0.0.7
-  languageName: node
-  linkType: soft
 
 "leven@npm:^3.1.0":
   version: 3.1.0
