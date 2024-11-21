@@ -205,7 +205,6 @@ export class HubAsync extends Hub {
         if (wait) {
           let beforeTurn;
           do {
-            console.log('Check portData:', this.portData['AB'])
             beforeTurn = this.portData['AB'].angle;
             await new Promise(res => setTimeout(res, CALLBACK_TIMEOUT_MS));
           } while (this.portData['AB'].angle !== beforeTurn);

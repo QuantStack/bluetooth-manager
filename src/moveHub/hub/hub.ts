@@ -1,12 +1,17 @@
 import { EventEmitter } from "../helpers/eventEmitter"
 import { Buffer } from '../helpers/buffer';
-import { RawData } from "../types";
+//import { RawData } from "../types";
+
+interface RawData {
+  [key: string]: number;
+}
+
 
 type Device = 'LED' | 'DISTANCE' | 'IMOTOR' | 'MOTOR' | 'TILT';
 
 type Port = 'A' | 'B' | 'C' | 'D' | 'AB' | 'LED' | 'TILT';
 
-type LedColor =
+export type LedColor =
   | 'off'
   | 'pink'
   | 'purple'
@@ -275,8 +280,8 @@ export class Hub {
       callback = dutyCycle;
       dutyCycle = 100;
     }
-    /*const portNum = typeof port === 'string' ? this.port2num[port] : port;
-    this.write(this.encodeMotorTime(portNum, seconds, dutyCycle), callback);*/
+    const portNum = typeof port === 'string' ? this.port2num[port as Port] : port;
+    this.write(this.encodeMotorTime(portNum, seconds, dutyCycle), callback);
   }
 
   /**
@@ -305,8 +310,8 @@ export class Hub {
       callback = dutyCycle;
       dutyCycle = 100;
     }
-    /*const portNum = typeof port === 'string' ? this.port2num[port] : port;
-    this.write(this.encodeMotorAngle(portNum, angle, dutyCycle), callback);*/
+  const portNum = typeof port === 'string' ? this.port2num[port as Port] : port;
+  this.write(this.encodeMotorAngle(portNum, angle, dutyCycle), callback);
   }
 
   /**
@@ -327,25 +332,50 @@ export class Hub {
    * @param {object} raw raw data
    * @param {function} callback
    */
+  /*rawCommand(raw: RawData, callback?: () => void) {
+    // @ts-ignore
+    const buf = Buffer.from([0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00]);
+
+    /*for (const idx in raw) {
+     
+      buf.writeIntLE(raw[idx], idx);
+    }
+*/      
+    
+
+    //this.write(buf, callback);
+ // }
+
+
+/* write(buf: Buffer, callback?: () => void) {
+    // Implement the write logic
+    console.log(buf);
+    if (callback) callback();
+  }*/
+
   rawCommand(raw: RawData, callback?: () => void) {
     // @ts-ignore
     const buf = Buffer.from([0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00]);
 
-    //for (const idx in raw) {
-     
-      //buf.writeIntLE(raw[key], idx);
-    //}
+    // Iterate over the properties of `raw`
+    for (const idx in raw) {
+      if (Object.prototype.hasOwnProperty.call(raw, idx)) {
+        // Write each value of `raw` to the buffer at the correct index
+        buf.writeIntLE(raw[idx], parseInt(idx)); // Convert the string index to a number
+      }
+    }
 
+    // Call `write` with the buffer and optional callback
     this.write(buf, callback);
   }
 
   motorPowerCommand(port: any, power: number) {
-    //this.write(this.encodeMotorPower(port, power));
+    this.write(this.encodeMotorPower(port, power));
   }
 
   //[0x09, 0x00, 0x81, 0x39, 0x11, 0x07, 0x00, 0x64, 0x03]
-  /*encodeMotorPower(port: string | number, dutyCycle = 100) {
-    /*const portNum = typeof port === 'string' ? this.port2num[port] : port;
+  encodeMotorPower(port: string | number, dutyCycle = 100) {
+    const portNum = typeof port === 'string' ? this.port2num[port as Port] : port;
     // @ts-ignore
     const buf = Buffer.from([0x09, 0x00, 0x81, portNum, 0x11, 0x07, 0x00, 0x64, 0x03]);
     //buf.writeUInt16LE(seconds * 1000, 6);
@@ -380,7 +410,7 @@ export class Hub {
       callback = option;
       option = 0x00;
     }
-    const portNum = typeof port === 'string' ? this.port2num[port] : port;
+    const portNum = typeof port === 'string' ? this.port2num[port as Port] : port;
     this.write(
       // @ts-ignore
       Buffer.from([0x0a, 0x00, 0x41, portNum, option, 0x01, 0x00, 0x00, 0x00, 0x01]),
@@ -399,7 +429,7 @@ export class Hub {
       callback = option;
       option = 0x00;
     }
-    const portNum = typeof port === 'string' ? this.port2num[port] : port;
+    const portNum = typeof port === 'string' ? this.port2num[port as Port] : port;
     this.write(
       // @ts-ignore
       Buffer.from([0x0a, 0x00, 0x41, portNum, option, 0x01, 0x00, 0x00, 0x00, 0x00]),

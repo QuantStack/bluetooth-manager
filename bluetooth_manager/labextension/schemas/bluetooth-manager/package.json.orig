@@ -1,15 +1,15 @@
 {
-    "name": "jupyterlab-web-bluetooth-manager",
+    "name": "bluetooth-manager",
     "version": "0.1.0",
-    "description": "A JupyterLab extension to manage to connect to devices with web bluetooth.",
+    "description": "JupyterLab extension for managing web bluetooth connection of compatible devices.",
     "keywords": [
         "jupyter",
         "jupyterlab",
         "jupyterlab-extension"
     ],
-    "homepage": "https://github.com/HaudinFlorence/jupyterlab-web-bluetooth-manager",
+    "homepage": "https://github.com/QuantStack/bluetooth-manager",
     "bugs": {
-        "url": "https://github.com/HaudinFlorence/jupyterlab-web-bluetooth-manager/issues"
+        "url": "https://github.com/QuantStack/bluetooth-manager/issues"
     },
     "license": "BSD-3-Clause",
     "author": {
@@ -27,7 +27,7 @@
     "style": "style/index.css",
     "repository": {
         "type": "git",
-        "url": "https://github.com/HaudinFlorence/jupyterlab-web-bluetooth-manager.git"
+        "url": "https://github.com/QuantStack/bluetooth-manager"
     },
     "scripts": {
         "build": "jlpm build:lib && jlpm build:labextension:dev",
@@ -39,7 +39,7 @@
         "clean": "jlpm clean:lib",
         "clean:lib": "rimraf lib tsconfig.tsbuildinfo",
         "clean:lintcache": "rimraf .eslintcache .stylelintcache",
-        "clean:labextension": "rimraf jupyterlab_web_bluetooth_manager/labextension jupyterlab_web_bluetooth_manager/_version.py",
+        "clean:labextension": "rimraf bluetooth_manager/labextension bluetooth_manager/_version.py",
         "clean:all": "jlpm clean:lib && jlpm clean:labextension && jlpm clean:lintcache",
         "eslint": "jlpm eslint:check --fix",
         "eslint:check": "eslint . --cache --ext .ts,.tsx",
@@ -57,13 +57,10 @@
         "watch:labextension": "jupyter labextension watch ."
     },
     "dependencies": {
-        "@emotion/react": "^11.13.5",
-        "@emotion/styled": "^11.13.5",
         "@jupyterlab/application": "^4.3.0-rc.0",
         "@jupyterlab/running": "^4.3.0-rc.0",
         "@jupyterlab/settingregistry": "^4.3.0-rc.0",
         "@jupyterlab/ui-components": "4.3.0-rc.0",
-        "@mui/material": "^6.1.8",
         "base64-js": "^1.5.1",
         "ieee754": "^1.2.1"
     },
@@ -106,7 +103,7 @@
     },
     "jupyterlab": {
         "extension": true,
-        "outputDir": "jupyterlab_web_bluetooth_manager/labextension",
+        "outputDir": "bluetooth_manager/labextension",
         "schemaDir": "schema"
     },
     "eslintIgnore": [

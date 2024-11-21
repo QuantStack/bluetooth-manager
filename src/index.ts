@@ -5,8 +5,12 @@ import {
 import { ITranslator } from '@jupyterlab/translation';
 import { IRunningSessionManagers } from '@jupyterlab/running';
 import { addConnectedDevicesManager } from './ConnectedDevicesManager';
-import { ICommandPalette, MainAreaWidget } from '@jupyterlab/apputils';
-import { Widget } from '@lumino/widgets';
+import { CommandIDs } from './commands';
+import { MoveHubPanelModel } from './MoveHubPanelModel';
+import { MoveHubPanelView } from './MoveHubPanelView';
+//import { HubAsync } from './moveHub/hub/hubAsync';
+import { connect } from './device';
+
 
 const ConnectedDevicesPlugin: JupyterFrontEndPlugin<void> = {
   id: 'jupyterlab-web-bluetooth-manager:connected-devices-plugin',
@@ -19,54 +23,40 @@ const ConnectedDevicesPlugin: JupyterFrontEndPlugin<void> = {
     managers: IRunningSessionManagers,
     translator: ITranslator
   ): void => {
-
     addConnectedDevicesManager(managers, translator, app);
   }
 };
 
-const LegoBoostControlPlugin: JupyterFrontEndPlugin<void> = {
-  id: 'jupyterlab-web-bluetooth-manager:legoboost-control-plugin',
-  description: 'Provides the running session managers.',
+const MoveHubPanelPlugin: JupyterFrontEndPlugin<void> = {
+  id: 'jupyterlab-web-bluetooth-manager:move-hub_panel-plugin',
+  description: 'Provides the ui to control the move hub.',
+  requires: [IRunningSessionManagers, ITranslator],
+  optional: [],
   autoStart: true,
-  requires: [ICommandPalette],
-  activate: (app: JupyterFrontEnd, palette: ICommandPalette) => {
-    console.log('JupyterLab extension jupyterlab_apod is activated!');
-
-    // Define a widget creator function,
-    // then call it to make a new widget
-    const newWidget = () => {
-      // Create a blank content widget inside of a MainAreaWidget
-      const content = new Widget();
-      const widget = new MainAreaWidget({ content });
-      widget.id = 'legoboost-controller';
-      widget.title.label = 'LegoBoost Controller';
-      widget.title.closable = true;
-      return widget;
-    }
-    let widget = newWidget();
-
-    // Add an application command
-    const command: string = 'apod:open';
-    app.commands.addCommand(command, {
-      label: 'Random Astronomy Picture',
-      execute: () => {
-        // Regenerate the widget if disposed
-        if (widget.isDisposed) {
-          widget = newWidget();
-        }
-        if (!widget.isAttached) {
-          // Attach the widget to the main work area if it's not there
-          app.shell.add(widget, 'main');
-        }
-        // Activate the widget
-        app.shell.activateById(widget.id);
-      }
+  activate: (
+    app: JupyterFrontEnd,
+    managers: IRunningSessionManagers,
+    translator: ITranslator
+  ): void => {
+    const trans = translator.load('jupyterlab');
+    app.commands.addCommand(CommandIDs.addLegoboostControllerPanel, {
+      execute: args => {
+     
+      const model = new MoveHubPanelModel();
+      const view = new MoveHubPanelView(model, translator);
+      view.addClass('jp-move-hub-panel');
+      view.id = 'move-hub-panel-plugin';
+      view.title.label = 'Move Hub Controller';
+      view.title.closable = true;
+      app.shell.add(view, 'main');
+      console.log('JupyterLab extension jupyter-theme-editor is activated!');
+      },
+  
+      caption: trans.__('Add a Move Hub controller panel.'),
+      label: trans.__('Add a Move Hub Controller Panel')
     });
-
-    // Add the command to the palette.
-    palette.addItem({ command, category: 'Tutorial' });
   }
 };
 
-const plugins: JupyterFrontEndPlugin<any>[] = [ConnectedDevicesPlugin, LegoBoostControlPlugin];
+const plugins: JupyterFrontEndPlugin<any>[] = [ConnectedDevicesPlugin, MoveHubPanelPlugin];
 export default plugins;

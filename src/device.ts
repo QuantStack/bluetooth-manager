@@ -1,25 +1,5 @@
-/* GAS: Generic Access Service
-// service: '00001801-0000-1000-8000-00805f9b34fb,
-// characteristics: '00002a00-0000-1000-8000-00805f9b34fb' // Device name characteristics
-// characteristics: '00002a05-0000-1000-8000-00805f9b34fb' // Peripheral Preferred Connection Parameters characteristic
-// characteristic: '"00002a05-0000-1000-8000-00805f9b34fb' // Service Changed characteristic
-
-/* MoveHub service */
-// service: '00001623-1212-efde-1623-785feabcd123';
-// characteristics: '00001624-1212-efde-1623-785feabcd123';
-
-/* Heart-rate */
-// service: '0000180d-0000-1000-8000-00805f9b34fb';
-// characteristics : '00002a37-0000-1000-8000-00805f9b34fb';
-
-/* Battery service */
-// service: '0000180f-0000-1000-8000-00805f9b34fb'
-// characteristics : '00002a19-0000-1000-8000-00805f9b34fb'
-
-/* Garmin specific service */
-// service :'6a4e310-667b-11e3-949a-0800200c9a66'
-
 import { defaultConfiguration, initHub } from './moveHubSpecific';
+import { servicesDict } from './services';
 
 export async function readValue(
   service: BluetoothRemoteGATTService,
@@ -37,7 +17,7 @@ export async function readValue(
     //const characteristicValue = value.getUint8(1);
 
     for (let i = 0; i < value.byteLength; i++) {
-      console.log(i)
+      console.log(i);
       console.log(value.getUint8(i));
     }
 
@@ -47,8 +27,86 @@ export async function readValue(
   }
 }
 
+export function connectToSelectedService(
+  service: BluetoothRemoteGATTService,
+  servicesDict: any
+) {
+  console.log('services Dict:', servicesDict);
+  if (service.uuid === '00001801-0000-1000-8000-00805f9b34fb') {
+    console.log('Generic Access Service :', service.uuid);
+    service.getCharacteristics().then(list => {
+      console.log('List of available characteristics:', list);
+      list.forEach(item => {
+        console.log('characteristics UUID', item.uuid);
+        console.log('characteristics properties', item.properties);
+      });
+    });
+  }
+
+  if (service.uuid === '0000180f-0000-1000-8000-00805f9b34fb') {
+    console.log('Battery level service :', service.uuid);
+    service.getCharacteristics().then(list => {
+      console.log('List of available characteristics:', list);
+      list.forEach(item => {
+        readValue(service, item.uuid);
+      });
+    });
+  }
+
+  if (service.uuid === '0000fe0f-0000-1000-8000-00805f9b34fb') {
+    console.log('Bluetooth Device Information :', service.uuid);
+    service.getCharacteristics().then(list => {
+      console.log('List of available characteristics:', list);
+      list.forEach(item => {
+        console.log('item UUID', item.uuid);
+        readValue(service, item.uuid);
+      });
+    });
+  }
+
+  if (service.uuid === '0000180d-0000-1000-8000-00805f9b34fb') {
+    console.log('Heart rate service :', service.uuid);
+    service
+      ?.getCharacteristic('00002a37-0000-1000-8000-00805f9b34fb')
+      .then(heartRate => {
+        heartRate.addEventListener(
+          'characteristicvaluechanged',
+          handleRateChange
+        );
+      });
+  }
+  if (service.uuid === '6a4e2401-667b-11e3-949a-0800200c9a66') {
+    console.log('Unknown service for Smart Watch :', service.uuid);
+    service.getCharacteristics().then(list => {
+      console.log('List of available characteristics:', list);
+      list.forEach(item => {
+        //readValue(service, item.uuid);
+      });
+    });
+  } else if (service.uuid === '00001623-1212-efde-1623-785feabcd123') {
+    console.log('Move hub service:', service.uuid);
+    service.getCharacteristics().then(list => {
+      console.log('List of available characteristics:', list);
+      list.forEach(item => {
+        if (item.uuid === '00001624-1212-efde-1623-785feabcd123') {
+          initHub(item, defaultConfiguration).then(hub => {
+            hub.emitter.on('color', () => {
+              hub.ledAsync('orange');
+            });
+
+            /*hub.emitter.on('distance', () => {
+              hub.drive(10);
+            });*/
+          });
+        }
+      });
+    });
+  }
+}
+
 export async function connect(): /*Promise<BluetoothRemoteGATTCharacteristic | undefined> */ Promise<BluetoothDevice> {
   /*disconnectCallback: () => Promise<void>*/
+
   const options = {
     acceptAllDevices: true,
     optionalServices: [
@@ -71,85 +129,9 @@ export async function connect(): /*Promise<BluetoothRemoteGATTCharacteristic | u
   });
   const server = await device.gatt?.connect();
   const services = await server?.getPrimaryServices(); // Get all services exposed by the device
-  //console.log('List of services:', services);
+  console.log('List of services:', services);
   services?.forEach(service => {
-    if (service.uuid === '00001801-0000-1000-8000-00805f9b34fb') {
-      console.log('Generic Access Service :', service.uuid);
-      service.getCharacteristics().then(list => {
-        console.log('List of available characteristics:', list);
-        list.forEach(item => {
-          console.log('item UUID', item.uuid);
-          console.log('item properties', item.properties);
-          console.log('item value', item.value);
-          item.getDescriptors().then(result => {
-            console.log('descriptors:', result);
-          });
-          //readValue(service, item.uuid)
-        });
-      });
-    }
-
-    if (service.uuid === '0000180f-0000-1000-8000-00805f9b34fb') {
-      console.log('Battery level service :', service.uuid);
-      service.getCharacteristics().then(list => {
-        console.log('List of available characteristics:', list);
-        list.forEach(item => {
-          console.log('item UUID', item.uuid);
-          console.log('item properties', item.properties);
-          console.log('item value', item.value);
-          readValue(service, item.uuid);
-        });
-      });
-    }
-
-    if (service.uuid === '0000fe0f-0000-1000-8000-00805f9b34fb') {
-      console.log('Bluetooth Device Information :', service.uuid);
-      service.getCharacteristics().then(list => {
-        console.log('List of available characteristics:', list);
-        list.forEach(item => {
-          console.log('item UUID', item.uuid);
-          readValue(service, item.uuid);
-        });
-      });
-    }
-
-    if (service.uuid === '0000180d-0000-1000-8000-00805f9b34fb') {
-      console.log('Heart rate service :', service.uuid);
-      service
-        ?.getCharacteristic('00002a37-0000-1000-8000-00805f9b34fb')
-        .then(heartRate => {
-          heartRate.addEventListener(
-            'characteristicvaluechanged',
-            handleRateChange
-          );
-        });
-    }
-    if (service.uuid === '6a4e2401-667b-11e3-949a-0800200c9a66') {
-      console.log('Unknown service for Smart Watch :', service.uuid);
-      service.getCharacteristics().then(list => {
-        console.log('List of available characteristics:', list);
-        list.forEach(item => {
-          console.log('item UUID', item.uuid);
-          console.log('item properties', item.properties);
-          console.log('item value', item.value);
-          readValue(service, item.uuid);
-        });
-      });
-    } else if (service.uuid === '00001623-1212-efde-1623-785feabcd123') {
-      console.log('Move hub service:', service.uuid);
-      service.getCharacteristics().then(list => {
-        console.log('List of available characteristics:', list);
-        list.forEach(item => {
-          if (item.uuid === '00001624-1212-efde-1623-785feabcd123') {
-            initHub(item, defaultConfiguration);
-          }
-          console.log('item UUID', item.uuid);
-          console.log('item properties', item.properties);
-          console.log('item value', item.value);
-          readValue(service, item.uuid);
-        });
-      });
-    }
+    connectToSelectedService(service, servicesDict);
   });
 
   await device.watchAdvertisements();

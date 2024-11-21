@@ -51,14 +51,14 @@ const controlData: ControlData = {
 
 function logDebug(message?: any, ...optionalParams: any[]): void {
   if (message) {
-    console.warn(message);
+    //console.warn(message);
   } else return;
 }
 
 export async function initHub(
   characteristics: BluetoothRemoteGATTCharacteristic,
   configuration: DeviceConfiguration = defaultConfiguration
-) {
+): Promise<HubAsync> {
   const hub = new HubAsync(characteristics, configuration);
   hub.logDebug = logDebug;
   hub.emitter.on('disconnect', async evt => {
@@ -67,7 +67,7 @@ export async function initHub(
 
   hub.emitter.on('connect', async evt => {
     hub.afterInitialization();
-    await hub.ledAsync('white');
+    await hub.ledAsync('pink');
   });
 
   const hubControl = new HubControl(deviceInfo, controlData, configuration);
@@ -77,5 +77,5 @@ export async function initHub(
     hubControl.update();
   }, 100);
 
-  hub.drive(10)
+  return hub;
 }
