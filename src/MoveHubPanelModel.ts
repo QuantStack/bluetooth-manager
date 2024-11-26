@@ -1,11 +1,11 @@
 import { VDomModel } from '@jupyterlab/apputils';
-//import { HubAsync } from './moveHub/hub/hubAsync';
+import ConnectedDevice from './ConnectedDevice';
 
 export class MoveHubPanelModel extends VDomModel {
-  //public hub: HubAsync;
+  public connectedDevice: ConnectedDevice;
 
-  constructor(/*hub: HubAsync*/) {
+  constructor(connectedDevice: ConnectedDevice) {
     super();
-    //this.hub = hub;
+    this.connectedDevice = connectedDevice;
   }
 }

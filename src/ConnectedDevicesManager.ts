@@ -1,125 +1,79 @@
-// Copyright (c) Jupyter Development Team.
-// Distributed under the terms of the Modified BSD License.
-
-import { IRunningSessionManagers, IRunningSessions } from '@jupyterlab/running';
-import { ITranslator } from '@jupyterlab/translation';
-import { BluetoothConnectIcon } from './icon';
-import { CommandToolbarButton } from '@jupyterlab/ui-components';
 import { JupyterFrontEnd } from '@jupyterlab/application';
-import { ConnectedDevicesSignaler } from './ConnectedDevicesSignaler';
-import { CommandIDs } from './commands';
+import ConnectedDevice from './ConnectedDevice';
+import { Signal } from '@lumino/signaling';
 
-/*function isAMoveHubDevice(node: HTMLElement): boolean {
-  return node.textContent === 'LEGO Move Hub (mteUarXhCP6Dpe7oAQzgQA==)';
-}*/
+/**
+ * A class used to update the list of connected device and related signals used to rerender the connected devices section.
+ */
+export class ConnectedDevicesManager {
+  constructor(devicesList: Array<ConnectedDevice>) {
+    this._devicesList = devicesList;
+    this.devicesListChanged = new Signal<this, Array<ConnectedDevice>>(this);
+    this.justAddedAMoveHub = new Signal<this, ConnectedDevice>(this);
+  }
 
-export function addConnectedDevicesManager(
-  managers: IRunningSessionManagers,
-  translator: ITranslator,
-  app: JupyterFrontEnd
-): void {
-  const trans = translator.load('jupyterlab');
-  const { commands } = app;
-  const connectDeviceLabel = trans.__('Connect Device');
-  let devicesList: Array<BluetoothDevice> = [];
-  const signaler = new ConnectedDevicesSignaler(devicesList);
-  let runningItemsList: Array<IRunningSessions.IRunningItem>;
+  get devicesList(): Array<any> {
+    return this._devicesList;
+  }
 
-  app.commands.addCommand(CommandIDs.alternativeDevice, {
-    execute: args => {},
-    caption: trans.__('Custom command to be set.'),
-    label: trans.__('Custom command to be set')
-  });
-
-  app.contextMenu.addItem({
-    command: CommandIDs.disconnectDevice,
-    selector: `jp-tree-item.jp-RunningSessions-item`,
-    rank: 0
-  });
-
-  app.contextMenu.addItem({
-    command: CommandIDs.alternativeDevice,
-    selector: `jp-tree-item.jp-RunningSessions-item.jp-ConnectedDevice-Forerunner-35`,
-    rank: 1
-  }),
-    app.contextMenu.addItem({
-      command: CommandIDs.addLegoboostControllerPanel,
-      selector: `jp-tree-item.jp-RunningSessions-item.jp-ConnectedDevice-Move-Hub`,
-      rank: 1
-    }),
-    commands.addCommand(CommandIDs.connectDevice, {
-      execute: async args => {
-        await signaler.connectDevice(app);
-      },
-      caption: trans.__('Connect device.')
+  async connectDevice(app: JupyterFrontEnd): Promise<void> {
+    const connectedDevice = new ConnectedDevice();
+    connectedDevice.connect().then(() => {
+      if (
+        !this._devicesList.includes(connectedDevice) &&
+        connectedDevice.bluetoothDevice.id // check if the device is not already in the list and has an id
+      ) {
+        this.addDeviceToList(connectedDevice);
+        if (connectedDevice.bluetoothDevice.name ==="Move Hub" || connectedDevice.bluetoothDevice.name ==="LEGO Move Hub"){
+          console.warn ('The added device is a Move Hub.')
+        this.justAddedAMoveHub.emit(connectedDevice);
+        }
+      }
     });
+  }
 
-  commands.addCommand(CommandIDs.disconnectDevice, {
-    execute: async args => {},
-    caption: trans.__('Disconnect device.'),
-    label: trans.__('Disconnect device.')
-  });
+  async disconnectDevice(connectedDevice: ConnectedDevice) : Promise<void>{
+    connectedDevice.disconnect();
+    this.removeDeviceFromList(connectedDevice);
+  }
 
-  managers.add({
-    name: trans.__('Connected Devices'),
-    supportsMultipleViews: false,
-    running: () => {
-      runningItemsList = [];
-      devicesList.forEach(device => {
-        runningItemsList.push(new ConnectedDevice(device, signaler));
-      });
-      return runningItemsList;
-    },
-    shutdownAll: () => {
-      signaler.removeAllDevices();
-    },
-    refreshRunning: () => {
-      return void 0;
-    },
-    runningChanged: signaler.devicesListChanged,
-    shutdownLabel: trans.__('Disconnect'),
-    shutdownAllLabel: trans.__('Disconnect All'),
-    shutdownAllConfirmationText: trans.__(
-      'Are you sure you want to disconnect all devices?'
-    ),
-    toolbarButtons: [
-      new CommandToolbarButton({
-        commands,
-        id: CommandIDs.connectDevice,
-        icon: BluetoothConnectIcon,
-        caption: connectDeviceLabel,
-        args: { toolbar: false }
-      })
-    ]
-  });
-}
+  // Method to add an item to the list
+  addDeviceToList(connectDevice: ConnectedDevice): void {
+    this._devicesList.push(connectDevice);
+    // Emit the signal when the list changes
 
-class ConnectedDevice implements IRunningSessions.IRunningItem {
-  constructor(device: BluetoothDevice, signaler: ConnectedDevicesSignaler) {
-    this._device = device;
-    this.signaler = signaler;
-    if (this._device.name) {
-      let deviceName = this._device.name;
-      this.className = 'jp-ConnectedDevice-' + deviceName.replace(/\s+/g, '-');
+    this.devicesListChanged.emit(this._devicesList);
+    console.warn(
+      `A device is added and the list has ${this._devicesList.length} devices`
+    );
+  }
+
+  // Method to remove an item from the list
+  removeDeviceFromList(connectedDevice: ConnectedDevice): void {
+    console.log('before removing, the list of devices is:', this._devicesList);
+    const index = this._devicesList.indexOf(connectedDevice);
+    if (index > -1) {
+      this._devicesList.splice(index, 1);
+      // Emit the signal when the list changes
+      this.devicesListChanged.emit(this._devicesList);
     }
+    console.warn(
+      `A device is removed and the list has ${this._devicesList.length} devices`
+    );
+    console.warn('After removing, the list of devices is:', this._devicesList);
   }
 
-  className?: string | undefined;
-
-  icon() {
-    return BluetoothConnectIcon;
+  removeAllDevices() {
+    this._devicesList.forEach((connectedDevice, index) => {
+      console.log(
+        `device n°${index + 1} with deviceID ${connectedDevice.bluetoothDevice.id}`
+      );
+      connectedDevice.disconnect();
+      this.removeDeviceFromList(connectedDevice);
+      this.devicesListChanged.emit(this._devicesList);
+    });
   }
-  label() {
-    return this._device.name + ' (' + this._device.id + ')';
-  }
-  labelTitle() {
-    return this._device.id;
-  }
-
-  shutdown() {
-    this.signaler.disconnectDevice(this._device, false);
-  }
-
-  private _device: BluetoothDevice;
-  public signaler: ConnectedDevicesSignaler;
+  private _devicesList: Array<ConnectedDevice>;
+  public devicesListChanged;
+  public justAddedAMoveHub;
 }

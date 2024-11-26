@@ -1,17 +1,14 @@
 import { useState } from 'react';
 import { Button } from '@mui/material';
-//import { HubAsync } from './moveHub/hub/hubAsync';
+import { HubAsync } from './moveHub/hub/hubAsync';
 
 export interface IColorPickerProps {
-  //hub: HubAsync; // Declare the 'hub' property with its correct type
-  colorOptions: Array<string>
+  hub: HubAsync; // Declare the 'hub' property with its correct type
+  colorOptions: Array<string>;
 }
 
 function ColorPicker(props: IColorPickerProps) {
   const [selectedColor, setSelectedColor] = useState('#FFFFFF');
-
-
-
   return (
     <div>
       <h3>Pick a Color</h3>
@@ -26,9 +23,10 @@ function ColorPicker(props: IColorPickerProps) {
           }}
           onClick={() => {
             if (selectedColor === '#ffc0cb') {
-              /*props.hub.emitter.on('color', () => {
+              props.hub.emitter.on('color', () => {
+                console.log('you have clicked on pink')
                 props.hub.ledAsync('pink');
-              });*/
+              });
             }
             setSelectedColor(color);
           }}

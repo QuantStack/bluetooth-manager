@@ -1,10 +1,10 @@
 import {
   DeviceConfiguration,
   DEFAULT_CONFIG,
-  HubAsync
 } from './moveHub/hub/hubAsync';
-import { HubControl } from './moveHub/ai/hub-control';
 import { ControlData, DeviceInfo } from './moveHub/types';
+
+
 
 export const defaultConfiguration: DeviceConfiguration = {
   distanceModifier: DEFAULT_CONFIG.METRIC_MODIFIER,
@@ -17,7 +17,7 @@ export const defaultConfiguration: DeviceConfiguration = {
   turnSpeed: DEFAULT_CONFIG.TURN_SPEED
 };
 
-const deviceInfo: DeviceInfo = {
+export const deviceInfo: DeviceInfo = {
   ports: {
     A: { action: '', angle: 0 },
     B: { action: '', angle: 0 },
@@ -38,7 +38,7 @@ const deviceInfo: DeviceInfo = {
  * Input data to used on manual and AI control
  * @property MoveHub#controlData
  */
-const controlData: ControlData = {
+export const controlData: ControlData = {
   input: null,
   speed: 0,
   turnAngle: 0,
@@ -48,34 +48,3 @@ const controlData: ControlData = {
   controlUpdateTime: undefined,
   state: undefined
 };
-
-function logDebug(message?: any, ...optionalParams: any[]): void {
-  if (message) {
-    //console.warn(message);
-  } else return;
-}
-
-export async function initHub(
-  characteristics: BluetoothRemoteGATTCharacteristic,
-  configuration: DeviceConfiguration = defaultConfiguration
-): Promise<HubAsync> {
-  const hub = new HubAsync(characteristics, configuration);
-  hub.logDebug = logDebug;
-  hub.emitter.on('disconnect', async evt => {
-    console.warn('The hub got disconnected');
-  });
-
-  hub.emitter.on('connect', async evt => {
-    hub.afterInitialization();
-    await hub.ledAsync('pink');
-  });
-
-  const hubControl = new HubControl(deviceInfo, controlData, configuration);
-  await hubControl.start(hub);
-
-  setInterval(() => {
-    hubControl.update();
-  }, 100);
-
-  return hub;
-}

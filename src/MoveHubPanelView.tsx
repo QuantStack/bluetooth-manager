@@ -2,6 +2,7 @@ import { MoveHubPanelModel } from './MoveHubPanelModel';
 import { VDomRenderer } from '@jupyterlab/ui-components';
 import { ITranslator, /*nullTranslator*/ } from '@jupyterlab/translation';
 import ColorPicker from './colorSelector';
+import { HubAsync } from './moveHub/hub/hubAsync';
 
 const colorOptions = [
   '#cecece',
@@ -18,10 +19,12 @@ const colorOptions = [
 
 export class MoveHubPanelView extends VDomRenderer<MoveHubPanelModel> {
   public translator: ITranslator;
+  public hub: HubAsync;
 
   constructor(model: MoveHubPanelModel, translator: ITranslator) {
     super(model);
     this.translator = translator;
+    this.hub = model.connectedDevice.hub
   }
 
   render() {
@@ -33,7 +36,7 @@ export class MoveHubPanelView extends VDomRenderer<MoveHubPanelModel> {
       <>
         <div>
           <ColorPicker
-            /*hub={this.model?.hub}*/
+            hub={this.hub}
             colorOptions={colorOptions}
           ></ColorPicker>
         </div>
