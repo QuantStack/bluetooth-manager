@@ -7,7 +7,7 @@ import { JupyterFrontEnd } from '@jupyterlab/application';
  * The connected devices manager token.
  */
 export const IConnectedDevicesManager = new Token<IConnectedDevicesManager>(
-  'jupyterlab-web-bluetooth-manager/connected-devices-plugin:IConnectedDevices',
+  'bluetooh-manager/connected-devices-plugin:IConnectedDevices',
   `A service for managing the connection and the list of devices connected by web bluetooth.`
 );
 

@@ -1,4 +1,4 @@
-# jupyterlab_web_bluetooth_manager
+# bluetooth_manager
 
 [![Github Actions Status](https://github.com/HaudinFlorence/jupyterlab-web-bluetooth-manager/workflows/Build/badge.svg)](https://github.com/HaudinFlorence/jupyterlab-web-bluetooth-manager/actions/workflows/build.yml)
 [![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/HaudinFlorence/jupyterlab-web-bluetooth-manager/main?urlpath=lab)
@@ -15,7 +15,7 @@ A JupyterLab extension to manage to connect to devices with web bluetooth.
 To install the extension, execute:
 
 ```bash
-pip install jupyterlab_web_bluetooth_manager
+pip install bluetooth_manager
 ```
 
 ## Uninstall
@@ -23,7 +23,7 @@ pip install jupyterlab_web_bluetooth_manager
 To remove the extension, execute:
 
 ```bash
-pip uninstall jupyterlab_web_bluetooth_manager
+pip uninstall bluetooth_manager
 ```
 
 ## Contributing
@@ -38,7 +38,7 @@ The `jlpm` command is JupyterLab's pinned version of
 
 ```bash
 # Clone the repo to your local environment
-# Change directory to the jupyterlab_web_bluetooth_manager directory
+# Change directory to the bluetooth_manager directory
 # Install package in development mode
 pip install -e "."
 # Link your development version of the extension with JupyterLab
@@ -67,7 +67,7 @@ jupyter lab build --minimize=False
 ### Development uninstall
 
 ```bash
-pip uninstall jupyterlab_web_bluetooth_manager
+pip uninstall bluetooth_manager
 ```
 
 In development mode, you will also need to remove the symlink created by `jupyter labextension develop`

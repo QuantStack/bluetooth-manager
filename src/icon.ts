@@ -3,11 +3,11 @@ import bluetoothConnectSvgstr from '../style/bluetoothConnect.svg';
 import bluetoothDisconnectSvgstr from '../style/bluetoothDisconnect.svg';
 
 export const BluetoothConnectIcon = new LabIcon({
-  name: '@jupyterlab/jupyterlab-web-bluetooth-manager:bluetooth-connect',
+  name: '@jupyterlab/bluetooh-manager:bluetooth-connect',
   svgstr: bluetoothConnectSvgstr
 });
 
 export const BluetoothDisconnectIcon = new LabIcon({
-  name: '@jupyterlab/jupyterlab-web-bluetooth-manager:bluetooth-disconnect',
+  name: '@jupyterlab/bluetooh-manager:bluetooth-disconnect',
   svgstr: bluetoothDisconnectSvgstr
 });

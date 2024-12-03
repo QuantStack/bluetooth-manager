@@ -18,7 +18,7 @@ import { ConnectedDevicesManager } from './ConnectedDevicesManager';
 
 const ConnectedDevicesManagerPlugin: JupyterFrontEndPlugin<IConnectedDevicesManager> =
   {
-    id: 'jupyterlab-web-bluetooth-manager:connected-devices-manager-plugin',
+    id: 'bluetooh-manager:connected-devices-manager-plugin',
     description: 'Provides the running session managers.',
     provides: IConnectedDevicesManager,
     requires: [IRunningSessionManagers, ITranslator],
@@ -118,7 +118,7 @@ const ConnectedDevicesManagerPlugin: JupyterFrontEndPlugin<IConnectedDevicesMana
   };
 
 const MoveHubPanelPlugin: JupyterFrontEndPlugin<void> = {
-  id: 'jupyterlab-web-bluetooth-manager:move-hub-panel-plugin',
+  id: 'bluetooh-manager:move-hub-panel-plugin',
   description: 'Provides the ui to control the move hub.',
   requires: [ITranslator, IConnectedDevicesManager],
   optional: [],

@@ -29,7 +29,7 @@ module.exports = [
       filename: 'index.js',
       path: path.resolve(
         __dirname,
-        'jupyterlab-web-bluetooth-manager',
+        'bluetooh-manager',
         'nbextension'
       ),
       libraryTarget: 'amd',
@@ -44,7 +44,7 @@ module.exports = [
   },
 
   /**
-   * Embeddable jupyterlab-web-bluetooth-manager bundle
+   * Embeddable bluetooh-manager bundle
    *
    * This bundle is almost identical to the notebook extension bundle. The only
    * difference is in the configuration of the webpack public path for the
@@ -59,9 +59,9 @@ module.exports = [
       filename: 'index.js',
       path: path.resolve(__dirname, 'dist'),
       libraryTarget: 'amd',
-      library: 'jupyterlab-web-bluetooth-manager',
+      library: 'bluetooh-manager',
       publicPath:
-        'https://unpkg.com/jupyterlab-web-bluetooth-manager@' +
+        'https://unpkg.com/bluetooh-manager@' +
         version +
         '/dist/'
     },
@@ -83,7 +83,7 @@ module.exports = [
     output: {
       filename: 'embed-bundle.js',
       path: path.resolve(__dirname, 'docs', 'source', '_static'),
-      library: 'jupyterlab-web-bluetooth-manager',
+      library: 'bluetooh-manager',
       libraryTarget: 'amd'
     },
     module: {
