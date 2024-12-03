@@ -1,30 +1,38 @@
 import { MoveHubPanelModel } from './MoveHubPanelModel';
 import { VDomRenderer } from '@jupyterlab/ui-components';
-import { ITranslator, /*nullTranslator*/ } from '@jupyterlab/translation';
-import ColorPicker from './colorSelector';
-import { HubAsync } from './moveHub/hub/hubAsync';
+import { ITranslator /*nullTranslator*/ } from '@jupyterlab/translation';
 
-const colorOptions = [
-  '#cecece',
-  '#ffc0cb',
-  '#800080',
-  '#0000ff',
-  '#00ffff',
-  '#008000',
-  '#ffff00',
-  '#ed7f10',
-  '#f00020',
-  '#ffffff'
-];
+import { ColorSelector, colorValues } from './components/ColorSelector';
+import { DriveForm } from './components/DriveForm';
+import {TurnForm} from './components/TurnForm';
+import ConnectedDevice from './ConnectedDevice';
+
+interface IMoveHubUI {
+  connectedDevice: ConnectedDevice;
+}
+
+export function MoveHubUI(props: IMoveHubUI) {
+  return (
+    <>
+    <h1 className='move-hub-panel-title'>Move hub control panel</h1>
+      <ColorSelector
+        hub={props.connectedDevice.hub}
+        colorValues={colorValues}
+      />
+      <DriveForm hub={props.connectedDevice.hub} />
+      <TurnForm hub={props.connectedDevice.hub}/>
+    </>
+  );
+}
 
 export class MoveHubPanelView extends VDomRenderer<MoveHubPanelModel> {
   public translator: ITranslator;
-  public hub: HubAsync;
+  public connectedDevice: ConnectedDevice;
 
   constructor(model: MoveHubPanelModel, translator: ITranslator) {
     super(model);
     this.translator = translator;
-    this.hub = model.connectedDevice.hub
+    this.connectedDevice = model.connectedDevice;
   }
 
   render() {
@@ -34,12 +42,7 @@ export class MoveHubPanelView extends VDomRenderer<MoveHubPanelModel> {
 
     return (
       <>
-        <div>
-          <ColorPicker
-            hub={this.hub}
-            colorOptions={colorOptions}
-          ></ColorPicker>
-        </div>
+        <MoveHubUI connectedDevice={this.connectedDevice}></MoveHubUI>
       </>
     );
   }

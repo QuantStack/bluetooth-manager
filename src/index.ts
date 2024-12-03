@@ -11,9 +11,10 @@ import { BluetoothConnectIcon } from './icon';
 import { CommandToolbarButton } from '@jupyterlab/ui-components';
 import { ConnectedDeviceRunningItem } from './ConnectedDeviceRunningItem';
 import { IRunningSessions } from '@jupyterlab/running';
-import ConnectedDevice from './ConnectedDevice';
+import ConnectedDevice, { getServicesFromDevice } from './ConnectedDevice';
 import { IConnectedDevicesManager } from './token';
 import { ConnectedDevicesManager } from './ConnectedDevicesManager';
+//import { colorValues } from './ColorSelector';
 
 const ConnectedDevicesManagerPlugin: JupyterFrontEndPlugin<IConnectedDevicesManager> =
   {
@@ -72,6 +73,11 @@ const ConnectedDevicesManagerPlugin: JupyterFrontEndPlugin<IConnectedDevicesMana
           selector: `jp-tree-item.jp-RunningSessions-item.jp-ConnectedDevice-LEGO-Move-Hub`,
           rank: 1
         });
+      app.contextMenu.addItem({
+        command: CommandIDs.addLegoboostControllerPanel,
+        selector: `jp-tree-item.jp-RunningSessions-item.jp-ConnectedDevice-Move-Hub`,
+        rank: 1
+      });
 
       managers.add({
         name: trans.__('Connected Devices'),
@@ -122,27 +128,54 @@ const MoveHubPanelPlugin: JupyterFrontEndPlugin<void> = {
     translator: ITranslator,
     devicesManager: ConnectedDevicesManager
   ): void => {
+    let moveHubDevice: ConnectedDevice;
     const trans = translator.load('jupyterlab');
     console.log('JupyterLab extension move-hub-panel-plugin is activated!');
-    devicesManager.justAddedAMoveHub.connect((sender, device) => {
-      device.initDevice();
+    devicesManager.justAddedAMoveHub.connect(async (sender, device) => {
+      console.log('I am in the MoveHubPluginPanel')
+      const myDevice = await device.initDevice(); // Ensure device is fully initialized
+      console.log('The hub should be here fully initialized')
+      const hub = myDevice.hub;
+      hub.emitter.on('color', async evt => {
+        await hub.ledAsync('orange');
+      });
+
+      hub.emitter.on('distance', async evt => {
+        await hub.ledAsync(10);
+      });
+
+    moveHubDevice = device; // Assign to global variable
+
+      if (!hub) {
+        console.error('Hub initialization failed.');
+        return;
+      }
+      /*for (let color in colorValues) {
+        hub.emitter.on('color', async evt => {
+          await hub.ledAsync(color);
+        });
+      }*/
+
+       
     });
-  
+
+    devicesManager.justAddedALightBulb.connect((sender, device) => {
+      console.log('Light Bulb case');
+      getServicesFromDevice(device.bluetoothDevice).then(services => {
+        console.log('Light bulb services:', services);
+      });
+    });
 
     app.commands.addCommand(CommandIDs.addLegoboostControllerPanel, {
       execute: args => {
-        devicesManager.justAddedAMoveHub.connect(
-          (sender, device) => {
-            const model = new MoveHubPanelModel(device);
-            const view = new MoveHubPanelView(model, translator);
-            view.addClass('jp-move-hub-panel');
-            view.id = 'move-hub-panel-plugin';
-            view.title.label = 'Move Hub Controller';
-            view.title.closable = true;
-            app.shell.add(view, 'main');
-          }
-          //}
-        );
+        const model = new MoveHubPanelModel(moveHubDevice);
+        const view = new MoveHubPanelView(model, translator);
+
+        view.addClass('jp-move-hub-panel');
+        view.id = 'move-hub-panel-plugin';
+        view.title.label = 'Move Hub Controller';
+        view.title.closable = true;
+        app.shell.add(view, 'main');
       },
 
       caption: trans.__('Add a Move Hub controller panel.'),

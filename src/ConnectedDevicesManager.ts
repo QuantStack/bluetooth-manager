@@ -1,7 +1,7 @@
 import { JupyterFrontEnd } from '@jupyterlab/application';
 import ConnectedDevice from './ConnectedDevice';
 import { Signal } from '@lumino/signaling';
-
+//import { getServicesFromDevice } from './ConnectedDevice';
 /**
  * A class used to update the list of connected device and related signals used to rerender the connected devices section.
  */
@@ -10,6 +10,7 @@ export class ConnectedDevicesManager {
     this._devicesList = devicesList;
     this.devicesListChanged = new Signal<this, Array<ConnectedDevice>>(this);
     this.justAddedAMoveHub = new Signal<this, ConnectedDevice>(this);
+    this.justAddedALightBulb = new Signal<this, ConnectedDevice>(this);
   }
 
   get devicesList(): Array<any> {
@@ -27,6 +28,11 @@ export class ConnectedDevicesManager {
         if (connectedDevice.bluetoothDevice.name ==="Move Hub" || connectedDevice.bluetoothDevice.name ==="LEGO Move Hub"){
           console.warn ('The added device is a Move Hub.')
         this.justAddedAMoveHub.emit(connectedDevice);
+        }
+
+        if (connectedDevice.bluetoothDevice.id ==="pIKqOzXBfZKpJgMQIfJhdg==" ){
+          console.warn ('The added device is a light bulb.')
+        this.justAddedALightBulb.emit(connectedDevice);
         }
       }
     });
@@ -76,4 +82,5 @@ export class ConnectedDevicesManager {
   private _devicesList: Array<ConnectedDevice>;
   public devicesListChanged;
   public justAddedAMoveHub;
+  public justAddedALightBulb
 }

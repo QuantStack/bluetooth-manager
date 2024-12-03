@@ -124,15 +124,6 @@ export function connectToSelectedService(service: BluetoothRemoteGATTService) {
   }
 }
 
-export function getSelectedService(
-  selectedServiceUUID: string,
-  service: BluetoothRemoteGATTService
-): BluetoothRemoteGATTService | undefined {
-  if (selectedServiceUUID === service.uuid) {
-    return service;
-  }
-}
-
 /*async reconnect(device: BluetoothDevice, isConnected: boolean): Promise<
     [boolean, BluetoothRemoteGATTCharacteristic | undefined]
   > {
@@ -157,6 +148,15 @@ export default class ConnectedDevice {
   async connect(): Promise<BluetoothDevice> {
     const options = {
       acceptAllDevices: true,
+      /* filters: [
+        {
+          manufacturerData: [
+            {
+              companyIdentifier: 0xd007
+            }
+          ]
+        }
+      ],*/
       optionalServices: optionalServices
     };
 
@@ -187,24 +187,36 @@ export default class ConnectedDevice {
       //console.warn(message);
     } else return;
   }
-  async initDevice(): Promise<void> {
-    const services = getServicesFromDevice(this.bluetoothDevice);
-    await services.then((services: Array<BluetoothRemoteGATTService>) => {
-      services.forEach((service: BluetoothRemoteGATTService) => {
+
+  async initDevice(): Promise<ConnectedDevice> {
+    try {
+      const services = await getServicesFromDevice(this.bluetoothDevice); // Await services directly
+      console.log('Services fetched:', services);
+
+      if (!services || services.length === 0) {
+        throw new Error('No services found on the device.');
+      }
+      console.log('Services fetched:', services);
+      for (const service of services) {
         if (service.uuid === '00001623-1212-efde-1623-785feabcd123') {
-          service
-            .getCharacteristic('00001624-1212-efde-1623-785feabcd123')
-            .then(characteristics => {
-              this.hub = new HubAsync(characteristics, defaultConfiguration);
-              this.hub.logDebug = this.logDebug;
-              this.hub.emitter.on('disconnect', async evt => {});
+          const characteristics = await service.getCharacteristic(
+            '00001624-1212-efde-1623-785feabcd123'
+          );
+          if (!characteristics) {
+            throw new Error(
+              'Characteristics not found for the specified service.'
+            );
+          }
+          console.log('Characteristics fetched:', characteristics);
+          // Initialize hub
+          this.hub = new HubAsync(characteristics, defaultConfiguration);
+          this.hub.logDebug = this.logDebug;
 
-              this.hub.emitter.on('connect', async evt => {
-                this.hub.afterInitialization();
-                await this.hub.ledAsync('white');
-                this.hub.logDebug('Connected');
-              });
-
+          // Register events
+          // Ensure hub is fully configured before returning
+          await new Promise(resolve => {
+            this.hub.emitter.on('connect', () => {
+              this.hub.afterInitialization();
               const hubControl = new HubControl(
                 deviceInfo,
                 controlData,
@@ -215,16 +227,18 @@ export default class ConnectedDevice {
               setInterval(() => {
                 hubControl.update();
               }, 100);
+
+              resolve(true); // Resolve only after hub is fully initialized
             });
+          });
+          break;
         }
-      });
-    });
+      }
+
+      return this;
+    } catch (error) {
+      console.error('Error during device initialization:', error);
+      throw error; // Propagate the error for the caller to handle
+    }
   }
-}
-
-
-export class MoveHubDevice extends ConnectedDevice {
-
-
-  // see how we can implement it
 }

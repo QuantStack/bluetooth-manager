@@ -19,7 +19,7 @@
     "target": "ES2018", 
     "strict": false
   },
-  "include": ["src/*", "src/moveHub/helpers", "src/moveHub/hub", "src/moveHub/moveHub.ts", "src/moveHub/moveHubConnector.ts", "src/moveHub/types.ts"],
+  "include": ["src/*", "src/moveHub/helpers", "src/moveHub/hub", "src/moveHub/moveHub.ts", "src/moveHub/moveHubConnector.ts", "src/moveHub/types.ts", "src/components/ColorSelector.tsx", "src/components/DriveForm.tsx", "src/components/InputField.tsx", "src/components/TurnForm.tsx"],
   "files": [
   "src/moveHub/ai/states/ai.ts",
   "src/moveHub/ai/states/manual.ts",

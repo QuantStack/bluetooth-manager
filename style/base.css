@@ -3,3 +3,13 @@
 
     https://jupyterlab.readthedocs.io/en/stable/developer/css.html
 */
+
+.color-pickers-container {
+  margin: auto;
+  width: 400px;
+  height: 100px;
+}
+
+.move-hub-panel-title {
+  text-align: center;
+}
