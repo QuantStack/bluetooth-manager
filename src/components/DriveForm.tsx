@@ -3,7 +3,6 @@ import { HubAsync } from '../moveHub/hub/hubAsync';
 import InputField from './InputField';
 
 
-
 export interface IDriveFormProps {
   hub: HubAsync; // Declare the 'hub' property with its correct type
 }
@@ -21,7 +20,7 @@ export function DriveForm (props: IDriveFormProps)  {
 
   return (
     <form onSubmit={driveSubmit} style={{ maxWidth: '400px', margin: 'auto' }}>
-      <h2>Enter a distance</h2>
+      <h3>Enter a distance (in cm)</h3>
 
       <InputField
         type="Distance"

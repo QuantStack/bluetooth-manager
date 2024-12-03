@@ -1,10 +1,10 @@
 import { VDomModel } from '@jupyterlab/apputils';
-import ConnectedDevice from './ConnectedDevice';
+import { MoveHub } from './ConnectedDevice';
 
 export class MoveHubPanelModel extends VDomModel {
-  public connectedDevice: ConnectedDevice;
+  public connectedDevice: MoveHub;
 
-  constructor(connectedDevice: ConnectedDevice) {
+  constructor(connectedDevice: MoveHub) {
     super();
     this.connectedDevice = connectedDevice;
   }

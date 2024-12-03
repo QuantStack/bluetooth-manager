@@ -5,16 +5,16 @@ import { ITranslator /*nullTranslator*/ } from '@jupyterlab/translation';
 import { ColorSelector, colorValues } from './components/ColorSelector';
 import { DriveForm } from './components/DriveForm';
 import {TurnForm} from './components/TurnForm';
-import ConnectedDevice from './ConnectedDevice';
+import { MoveHub } from './ConnectedDevice';
 
 interface IMoveHubUI {
-  connectedDevice: ConnectedDevice;
+  connectedDevice: MoveHub;
 }
 
 export function MoveHubUI(props: IMoveHubUI) {
   return (
     <>
-    <h1 className='move-hub-panel-title'>Move hub control panel</h1>
+    <h2 className='lego-boost-panel-title'>Lego Boost control panel</h2>
       <ColorSelector
         hub={props.connectedDevice.hub}
         colorValues={colorValues}
@@ -27,7 +27,7 @@ export function MoveHubUI(props: IMoveHubUI) {
 
 export class MoveHubPanelView extends VDomRenderer<MoveHubPanelModel> {
   public translator: ITranslator;
-  public connectedDevice: ConnectedDevice;
+  public connectedDevice: MoveHub;
 
   constructor(model: MoveHubPanelModel, translator: ITranslator) {
     super(model);

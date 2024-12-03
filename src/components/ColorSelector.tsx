@@ -37,7 +37,7 @@ export const ColorSelector = (props: IColorPickerProps) => {
 
   return (
     <div className='color-pickers-container'>
-      <h2>Pick a color</h2>
+      <h3>Pick a color for the LED</h3>
       <Grid2 container spacing={2} justifyContent="center">
         {props.colorValues.map((color: string, index) => (
           <Grid2 key={index} component="div">

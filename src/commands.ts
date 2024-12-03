@@ -3,8 +3,8 @@ export namespace CommandIDs {
       'bluetooh-manager:connect-device';
       export const disconnectDevice =
       'bluetooh-manager:disconnect-device';
-      export const alternativeDevice =
-      'bluetooh-manager:alternative-device';
-      export const addLegoboostControllerPanel = 
-      'bluetooh-manager:add-legoboost-controller-panel';
+      export const addLegoBoostControlPanel = 
+      'bluetooh-manager:add-lego-boost-control-panel';
+      export const addSmartWatchControlPanel = 
+      'bluetooh-manager:add-lmsart-watch-control-panel';
   }

@@ -20,7 +20,7 @@ export function TurnForm (props: ITurnFormProps)  {
 
   return (
     <form onSubmit={turnSubmit} style={{ maxWidth: '400px', margin: 'auto' }}>
-      <h2>Enter an angle</h2>
+      <h3>Enter an angle (in degrees)</h3>
 
       <InputField
         type="angle"

@@ -1,5 +1,3 @@
-import { Service } from './services';
-import { servicesDict } from './services';
 import { DeviceConfiguration } from './moveHub/hub/hubAsync';
 import {
   defaultConfiguration,
@@ -9,14 +7,6 @@ import {
 import { HubAsync } from './moveHub/hub/hubAsync';
 import { HubControl } from './moveHub/ai/hub-control';
 
-const optionalServices = getServicesFromDict(servicesDict);
-
-export function getServicesFromDict(servicesDict: Record<string, Service>) {
-  const serviceUUIDs = Object.values(servicesDict).map(
-    (service: Service) => service.serviceUUID
-  );
-  return serviceUUIDs;
-}
 export async function readValue(
   service: BluetoothRemoteGATTService,
   characteristicUUID: BluetoothCharacteristicUUID
@@ -51,117 +41,14 @@ export async function getServicesFromDevice(
   return services;
 }
 
-export async function connectToAllServices(
-  services: Array<BluetoothRemoteGATTService>
-) {
-  console.log('List of services:', services);
-  services?.forEach(service => {
-    this.connectToSelectedService(service);
-  });
-}
-
-export function connectToSelectedService(service: BluetoothRemoteGATTService) {
-  if (service.uuid === '00001801-0000-1000-8000-00805f9b34fb') {
-    console.log('Generic Access Service :', service.uuid);
-    service.getCharacteristics().then(list => {
-      console.log('List of available characteristics:', list);
-      list.forEach(item => {
-        console.log('characteristics UUID', item.uuid);
-        console.log('characteristics properties', item.properties);
-      });
-    });
-  }
-
-  if (service.uuid === '0000180f-0000-1000-8000-00805f9b34fb') {
-    console.log('Battery level service :', service.uuid);
-    service.getCharacteristics().then(list => {
-      console.log('List of available characteristics:', list);
-      list.forEach(item => {
-        readValue(service, item.uuid);
-      });
-    });
-  }
-
-  if (service.uuid === '0000fe0f-0000-1000-8000-00805f9b34fb') {
-    console.log('Bluetooth Device Information :', service.uuid);
-    service.getCharacteristics().then(list => {
-      console.log('List of available characteristics:', list);
-      list.forEach(item => {
-        console.log('item UUID', item.uuid);
-        readValue(service, item.uuid);
-      });
-    });
-  }
-
-  if (service.uuid === '0000180d-0000-1000-8000-00805f9b34fb') {
-    console.log('Heart rate service :', service.uuid);
-    service
-      ?.getCharacteristic('00002a37-0000-1000-8000-00805f9b34fb')
-      .then(heartRate => {
-        heartRate.addEventListener(
-          'characteristicvaluechanged',
-          handleRateChange
-        );
-      });
-  }
-  if (service.uuid === '6a4e2401-667b-11e3-949a-0800200c9a66') {
-    console.log('Unknown service for Smart Watch :', service.uuid);
-    service.getCharacteristics().then(list => {
-      console.log('List of available characteristics:', list);
-      list.forEach(item => {
-        //readValue(service, item.uuid);
-      });
-    });
-  } else if (service.uuid === '00001623-1212-efde-1623-785feabcd123') {
-    console.log('Move hub service:', service.uuid);
-    service.getCharacteristics().then(list => {
-      console.log('List of available characteristics:', list);
-      list.forEach(item => {
-        if (item.uuid === '00001624-1212-efde-1623-785feabcd123') {
-        }
-      });
-    });
-  }
-}
-
-/*async reconnect(device: BluetoothDevice, isConnected: boolean): Promise<
-    [boolean, BluetoothRemoteGATTCharacteristic | undefined]
-  > {
-    console.warn('Reconnect is called!');
-    if (device) {
-      const bluetooth = await getCharacteristic(device, serviceUUID, characteristicUUID);
-      isConnected = true;
-      return [true, bluetooth];
-    }
-    isConnected = false;
-    return [false, undefined];
-  }*/
-
 export default class ConnectedDevice {
   public deviceID: string;
   public deviceName: string | undefined;
   public isConnected: boolean | undefined;
   public bluetoothDevice: BluetoothDevice;
-  public configuration: DeviceConfiguration;
-  public hub: HubAsync;
 
-  async connect(): Promise<BluetoothDevice> {
-    const options = {
-      acceptAllDevices: true,
-      /* filters: [
-        {
-          manufacturerData: [
-            {
-              companyIdentifier: 0xd007
-            }
-          ]
-        }
-      ],*/
-      optionalServices: optionalServices
-    };
-
-    this.bluetoothDevice = await navigator.bluetooth.requestDevice(options);
-    console.log(this.bluetoothDevice);
+  async connect(bluetoothDevice: BluetoothDevice): Promise<BluetoothDevice> {
+    this.bluetoothDevice = bluetoothDevice;
     this.bluetoothDevice.addEventListener(
       'gattserverdisconnected',
       async event => {
@@ -182,13 +69,28 @@ export default class ConnectedDevice {
     this.isConnected = true;
     return false;
   }
+  async getServices() {
+    const services = await getServicesFromDevice(this.bluetoothDevice); // Await services directly
+    console.log('Services fetched:', services);
+
+    if (!services || services.length === 0) {
+      throw new Error('No services found on the device.');
+    }
+  }
+}
+
+export class MoveHub extends ConnectedDevice {
+  public configuration: DeviceConfiguration;
+  public hub: HubAsync;
+
   logDebug(message?: any, ...optionalParams: any[]): void {
     if (message) {
       //console.warn(message);
     } else return;
   }
 
-  async initDevice(): Promise<ConnectedDevice> {
+  async initDevice(): Promise<MoveHub> {
+    console.log('We are in initDevice of Move Hub class');
     try {
       const services = await getServicesFromDevice(this.bluetoothDevice); // Await services directly
       console.log('Services fetched:', services);
@@ -234,6 +136,130 @@ export default class ConnectedDevice {
           break;
         }
       }
+
+      return this;
+    } catch (error) {
+      console.error('Error during device initialization:', error);
+      throw error; // Propagate the error for the caller to handle
+    }
+  }
+}
+
+export class SmartWatch extends ConnectedDevice {
+  async initDevice() {
+    console.log('We are in initDevice of Smart Watch class');
+    try {
+      const services = await getServicesFromDevice(this.bluetoothDevice); // Await services directly
+      console.log('Services fetched:', services);
+
+      if (!services || services.length === 0) {
+        throw new Error('No services found on the device.');
+      }
+      console.log('Services fetched:', services);
+      for (const service of services) {
+        if (service.uuid === '6a4e2401-667b-11e3-949a-0800200c9a66') {
+          const characteristics = await service.getCharacteristics();
+          console.log('characteristics:', characteristics);
+          if (!characteristics) {
+            throw new Error(
+              'Characteristics not found for the specified service.'
+            );
+          }
+          console.log('Characteristics fetched:', characteristics);
+
+          break;
+        }
+      }
+
+      return this;
+    } catch (error) {
+      console.error('Error during device initialization:', error);
+      throw error; // Propagate the error for the caller to handle
+    }
+  }
+}
+
+export class LightBulb extends ConnectedDevice {
+  async turnOff(characteristic: BluetoothRemoteGATTCharacteristic) {
+    const turnOffCommand = new Uint8Array([0xa1, 0x00]); // 0xA1 could be a header
+    characteristic
+      .writeValue(turnOffCommand)
+      .then(() => {
+        console.log(`Light turned off successfully for characteristics ${characteristic.uuid}!`);
+      })
+      .catch(error => {
+        console.error('Error turning off the light:', error);
+      });
+  }
+  async initDevice() {
+    try {
+      const services = await getServicesFromDevice(this.bluetoothDevice); // Await services directly
+      console.log('Services fetched:', services);
+
+      if (!services || services.length === 0) {
+        throw new Error('No services found on the device.');
+      }
+      //console.log('Services fetched:', services);
+      for (const service of services) {
+        const characteristicsList = await service.getCharacteristics();
+        console.log('characteristics:', characteristicsList);
+        characteristicsList.forEach(async characteristics => {
+        
+            this.turnOff(characteristics);
+            
+         
+        });
+
+        if (!characteristicsList) {
+          throw new Error(
+            'Characteristics not found for the specified service.'
+          );
+        }
+        console.log('Characteristics fetched:', characteristicsList);
+
+        break;
+      }
+      /*}*/
+
+      return this;
+    } catch (error) {
+      console.error('Error during device initialization:', error);
+      throw error; // Propagate the error for the caller to handle
+    }
+  }
+}
+
+export class Loudspeaker extends ConnectedDevice {
+  async initDevice() {
+    try {
+      const services = await getServicesFromDevice(this.bluetoothDevice); // Await services directly
+      console.log('Services fetched:', services);
+
+      if (!services || services.length === 0) {
+        throw new Error('No services found on the device.');
+      }
+      //console.log('Services fetched:', services);
+      for (const service of services) {
+        /*if (
+        service.uuid === '0000fff6-0000-1000-8000-00805f9b34fb'
+      ) {*/
+        console.log('service:', service);
+        const characteristicsList = await service.getCharacteristics();
+        console.log('characteristics:', characteristicsList);
+        characteristicsList.forEach(async characteristics => {
+          console.log('Characteristics uuid:', characteristics.uuid);
+        });
+
+        if (!characteristicsList) {
+          throw new Error(
+            'Characteristics not found for the specified service.'
+          );
+        }
+        console.log('Characteristics fetched:', characteristicsList);
+
+        break;
+      }
+      /*}*/
 
       return this;
     } catch (error) {
