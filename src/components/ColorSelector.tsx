@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Button, Grid2 } from '@mui/material';
-import { HubAsync } from '../moveHub/hub/hubAsync';
+import { HubAsync } from '../movehub-extension/moveHub/hub/hubAsync';
 
 const colorOptionsDict: Record<string, string> = {
   '#cecece': 'off',

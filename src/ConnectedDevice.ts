@@ -1,11 +1,11 @@
-import { DeviceConfiguration } from './moveHub/hub/hubAsync';
+import { DeviceConfiguration } from './movehub-extension/moveHub/hub/hubAsync';
 import {
   defaultConfiguration,
   controlData,
   deviceInfo
-} from './moveHubSpecific';
-import { HubAsync } from './moveHub/hub/hubAsync';
-import { HubControl } from './moveHub/ai/hub-control';
+} from './movehub-extension/moveHubSpecific';
+import { HubAsync } from './movehub-extension/moveHub/hub/hubAsync';
+import { HubControl } from './movehub-extension/moveHub/ai/hub-control';
 
 export async function readValue(
   service: BluetoothRemoteGATTService,

@@ -1,17 +1,17 @@
 import { MoveHubPanelModel } from './MoveHubPanelModel';
 import { VDomRenderer } from '@jupyterlab/ui-components';
 import { ITranslator /*nullTranslator*/ } from '@jupyterlab/translation';
-
-import { ColorSelector, colorValues } from './components/ColorSelector';
-import { DriveForm } from './components/DriveForm';
-import {TurnForm} from './components/TurnForm';
-import { MoveHub } from './ConnectedDevice';
+import { BluetoothManager } from '../bluetooth/BluetoothManager';
+/*
+import { ColorSelector, colorValues } from '../components/ColorSelector';
+import { DriveForm } from '../components/DriveForm';
+import {TurnForm} from '../components/TurnForm';
 
 interface IMoveHubUI {
-  connectedDevice: MoveHub;
-}
+  connectedDevice:BluetoothManager.Device;
+}*/
 
-export function MoveHubUI(props: IMoveHubUI) {
+/*export function MoveHubUI(props: IMoveHubUI) {
   return (
     <>
     <h2 className='lego-boost-panel-title'>Lego Boost control panel</h2>
@@ -23,11 +23,11 @@ export function MoveHubUI(props: IMoveHubUI) {
       <TurnForm hub={props.connectedDevice.hub}/>
     </>
   );
-}
+}*/
 
 export class MoveHubPanelView extends VDomRenderer<MoveHubPanelModel> {
   public translator: ITranslator;
-  public connectedDevice: MoveHub;
+  public connectedDevice: BluetoothManager.Device;
 
   constructor(model: MoveHubPanelModel, translator: ITranslator) {
     super(model);
@@ -42,7 +42,7 @@ export class MoveHubPanelView extends VDomRenderer<MoveHubPanelModel> {
 
     return (
       <>
-        <MoveHubUI connectedDevice={this.connectedDevice}></MoveHubUI>
+
       </>
     );
   }
