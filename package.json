@@ -1,5 +1,5 @@
 {
-    "name": "jupyterlab-web-bluetooth-manager",
+    "name": "bluetooth-manager",
     "version": "0.1.0",
     "description": "A JupyterLab extension to manage to connect to devices with web bluetooth.",
     "keywords": [
@@ -7,9 +7,9 @@
         "jupyterlab",
         "jupyterlab-extension"
     ],
-    "homepage": "https://github.com/HaudinFlorence/jupyterlab-web-bluetooth-manager",
+    "homepage": "https://github.com/HaudinFlorence/bluetooth-manager",
     "bugs": {
-        "url": "https://github.com/HaudinFlorence/jupyterlab-web-bluetooth-manager/issues"
+        "url": "https://github.com/HaudinFlorence/bluetooth-manager/issues"
     },
     "license": "BSD-3-Clause",
     "author": {
@@ -27,7 +27,7 @@
     "style": "style/index.css",
     "repository": {
         "type": "git",
-        "url": "https://github.com/HaudinFlorence/jupyterlab-web-bluetooth-manager.git"
+        "url": "https://github.com/HaudinFlorence/bluetooth-manager.git"
     },
     "scripts": {
         "build": "jlpm build:lib && jlpm build:labextension:dev",
