@@ -8,7 +8,7 @@ import { DriveForm } from '../components/DriveForm';
 import {TurnForm} from '../components/TurnForm';
 
 interface IMoveHubUI {
-  connectedDevice:BluetoothManager.Device;
+  device:BluetoothManager.Device;
 }*/
 
 /*export function MoveHubUI(props: IMoveHubUI) {
@@ -16,23 +16,23 @@ interface IMoveHubUI {
     <>
     <h2 className='lego-boost-panel-title'>Lego Boost control panel</h2>
       <ColorSelector
-        hub={props.connectedDevice.hub}
+        hub={props.device.hub}
         colorValues={colorValues}
       />
-      <DriveForm hub={props.connectedDevice.hub} />
-      <TurnForm hub={props.connectedDevice.hub}/>
+      <DriveForm hub={props.device.hub} />
+      <TurnForm hub={props.device.hub}/>
     </>
   );
 }*/
 
 export class MoveHubPanelView extends VDomRenderer<MoveHubPanelModel> {
   public translator: ITranslator;
-  public connectedDevice: BluetoothManager.Device;
+  public device: BluetoothManager.Device;
 
   constructor(model: MoveHubPanelModel, translator: ITranslator) {
     super(model);
     this.translator = translator;
-    this.connectedDevice = model.connectedDevice;
+    this.device = model.device;
   }
 
   render() {

@@ -8,6 +8,10 @@ import { Token } from '@lumino/coreutils';
  * A class used to update the list of connected device and related signals used to rerender the connected devices section.
  */
 export class BluetoothManager implements IBluetoothManager {
+  constructor(devicesList: Array<BluetoothManager.Device>) {
+    this._devicesList = devicesList;
+  }
+
   get devicesList(): Array<BluetoothManager.Device> {
     return this._devicesList;
   }
@@ -24,6 +28,7 @@ export class BluetoothManager implements IBluetoothManager {
   }*/
 
   get devicesListChanged(): Signal<this, Array<BluetoothManager.Device>> {
+    console.log('the list has changed')
     return this._devicesListChanged;
   }
 
@@ -31,26 +36,26 @@ export class BluetoothManager implements IBluetoothManager {
     return await new BluetoothManager.Device();
   }
 
-  async disconnectDevice(Device: BluetoothManager.Device): Promise<void> {
-    Device.disconnect();
-    this.removeDeviceFromList(Device);
+  async disconnectDevice(device: BluetoothManager.Device): Promise<void> {
+    device.disconnect();
+    this.removeDeviceFromList(device);
   }
 
   // Method to add an item to the list
-  addDeviceToList(connectDevice: BluetoothManager.Device): void {
-    this._devicesList.push(connectDevice);
+  addDeviceToList(device: BluetoothManager.Device): void {
+    this._devicesList.push(device);
     // Emit the signal when the list changes
 
-    //this.devicesListChanged.emit(this._devicesList);
+    this.devicesListChanged.emit(this._devicesList);
     console.warn(
       `A device is added and the list has ${this._devicesList.length} devices`
     );
   }
 
   // Method to remove an item from the list
-  removeDeviceFromList(Device: BluetoothManager.Device): void {
+  removeDeviceFromList(device: BluetoothManager.Device): void {
     console.log('Before removing, the list of devices is:', this._devicesList);
-    const index = this._devicesList.indexOf(Device);
+    const index = this._devicesList.indexOf(device);
     if (index > -1) {
       this._devicesList.splice(index, 1);
       // Emit the signal when the list changes
@@ -63,12 +68,10 @@ export class BluetoothManager implements IBluetoothManager {
   }
 
   removeAllDevices() {
-    this._devicesList.forEach((Device, index) => {
-      console.log(
-        `device n°${index + 1} with deviceID ${Device.bluetoothDevice.id}`
-      );
-      Device.disconnect();
-      this.removeDeviceFromList(Device);
+    this._devicesList.forEach((device, index) => {
+      console.log(`device n°${index + 1} with deviceID ${device.native.id}`);
+      device.disconnect();
+      this.removeDeviceFromList(device);
       this._devicesListChanged.emit(this._devicesList);
     });
   }
@@ -84,24 +87,21 @@ export namespace BluetoothManager {
     /*isDisposed: boolean;
     dispose(): void {}*/
     public isConnected: boolean | undefined;
-    public bluetoothDevice: BluetoothDevice;
+    public native: BluetoothDevice;
 
     async connect(bluetoothDevice: BluetoothDevice): Promise<BluetoothDevice> {
-      this.bluetoothDevice = bluetoothDevice;
-      this.bluetoothDevice.addEventListener(
-        'gattserverdisconnected',
-        async event => {
-          console.warn('Device got disconnected');
-        }
-      );
+      this.native = bluetoothDevice;
+      this.native.addEventListener('gattserverdisconnected', async event => {
+        console.warn('Device got disconnected');
+      });
       this.isConnected = true;
-      return this.bluetoothDevice;
+      return this.native;
     }
 
     async disconnect(): Promise<boolean> {
       console.warn('Disconnect is called!');
-      if (this.bluetoothDevice) {
-        this.bluetoothDevice.gatt?.disconnect();
+      if (this.native) {
+        this.native.gatt?.disconnect();
         this.isConnected = false;
         return true;
       }
@@ -109,20 +109,19 @@ export namespace BluetoothManager {
       return false;
     }
   }
-}
 
-export interface IDevicesRegistry {
-  add: (
-    identifier: string,
-    factory: () => BluetoothManager.Device,
-    filters: string[]
-  ) => void;
-  get: (identifier: string) => Array<BluetoothManager.Device>;
-}
+  export class DeviceRegistry implements IDeviceRegistry {
+    private _registry: Array<IDeviceRegistryItem>;
+    public registryItem: IDeviceRegistryItem;
 
-export class DevicesRegistry {
-  add() {}
-  get() {}
+    constructor(registry: Array<IDeviceRegistryItem>) {
+      this._registry = registry;
+    }
+
+    add(item: IDeviceRegistryItem) {
+      this._registry.push(item);
+    }
+  }
 }
 
 /**
@@ -142,6 +141,16 @@ export interface IBluetoothManager /*extends IDisposable*/ {
   //get disconnectedADevice(): Signal<BluetoothManager, string>;
   get devicesList(): Array<BluetoothManager.Device>;
   get devicesRegistry(): any;
+}
+
+export interface IDeviceRegistry {
+  add: (item: IDeviceRegistryItem) => void;
+}
+
+export interface IDeviceRegistryItem {
+  identifier: string;
+  factory: () => BluetoothManager.Device;
+  filters: string[];
 }
 
 export const IBluetoothManager = new Token<IBluetoothManager>(

@@ -10,6 +10,8 @@ import {
   import { BluetoothDeviceRunningItem } from '../bluetooth/BluetoothDeviceRunningItem';
   import { IRunningSessions } from '@jupyterlab/running';
   import { IBluetoothManager, BluetoothManager } from '../bluetooth/BluetoothManager';
+  import {Dialog, showDialog} from '@jupyterlab/apputils';
+  import {Widget} from '@lumino/widgets'
 
   
   export const BluetoothManagerPlugin: JupyterFrontEndPlugin<IBluetoothManager> =
@@ -27,49 +29,29 @@ import {
       ): IBluetoothManager => {
         const trans = translator.load('jupyterlab');
         const { commands } = app;
-        const connectDeviceLabel = trans.__('Connect Device');
+        const openDevicesRegistryDialogLabel = trans.__('Open Dialog Showing Devices Registry');
         let runningItemsList: Array<IRunningSessions.IRunningItem>;
+        let devicesList: Array<BluetoothManager.Device> = [];
+        const bluetoothManager: IBluetoothManager = new BluetoothManager(devicesList);
+
+        app.commands.addCommand(CommandIDs.openDevicesRegistryDialog, {
+          execute: async () => {
+     
+
+              showDialog({
+                body: new Widget,
+                buttons: [Dialog.cancelButton()]
+              });
+      
+            },
        
-        const bluetoothManager: IBluetoothManager = new BluetoothManager();
-        let devicesList= bluetoothManager.devicesList;
-        const identifier = 'Move Hub';
-  
-        /* Add commands to the commandRegistry */
-        commands.addCommand(CommandIDs.connectDevice, {
-          execute: async args => {
-            await bluetoothManager.connectDevice(identifier);
-          },
-          caption: trans.__('Connect device.')
+          icon: BluetoothConnectIcon.bindprops({ stylesheet: 'menuItem' }),
+          caption: trans.__('Open a dialog to display the devices registry.'),
+          label: trans.__('Open A Dialog To Display the Devices Registry.')
         });
-  
-        commands.addCommand(CommandIDs.disconnectDevice, {
-          execute: async args => {},
-          caption: trans.__('Disconnect device.'),
-          label: trans.__('Disconnect device.')
-        });
-  
-        /* Adding commands to the context menu of the relevant connected device*/
-        app.contextMenu.addItem({
-          command: CommandIDs.disconnectDevice,
-          selector: `jp-tree-item.jp-RunningSessions-item`,
-          rank: 0
-        });
-  
-        app.contextMenu.addItem({
-          command: CommandIDs.addSmartWatchControlPanel,
-          selector: `jp-tree-item.jp-RunningSessions-item.jp-ConnectedDevice-Forerunner-35`,
-          rank: 1
-        }),
-          app.contextMenu.addItem({
-            command: CommandIDs.addLegoBoostControlPanel,
-            selector: `jp-tree-item.jp-RunningSessions-item.jp-ConnectedDevice-LEGO-Move-Hub`,
-            rank: 1
-          });
-        app.contextMenu.addItem({
-          command: CommandIDs.addLegoBoostControlPanel,
-          selector: `jp-tree-item.jp-RunningSessions-item.jp-ConnectedDevice-Move-Hub`,
-          rank: 1
-        });
+       
+      
+    
   
         managers.add({
           name: trans.__('Connected Devices'),
@@ -98,9 +80,9 @@ import {
           toolbarButtons: [
             new CommandToolbarButton({
               commands,
-              id: CommandIDs.connectDevice,
+              id: CommandIDs.openDevicesRegistryDialog,
               icon: BluetoothConnectIcon,
-              caption: connectDeviceLabel,
+              caption: openDevicesRegistryDialogLabel,
               args: { toolbar: false }
             })
           ]

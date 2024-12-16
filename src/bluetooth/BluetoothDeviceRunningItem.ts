@@ -9,9 +9,9 @@ export class BluetoothDeviceRunningItem implements IRunningSessions.IRunningItem
     constructor(device: BluetoothManager.Device) {
       this._device = device;
     
-      if (this._device.bluetoothDevice.name) {
-        let deviceName = this._device.bluetoothDevice.name;
-        this.className = 'jp-ConnectedDevice-' + deviceName.replace(/\s+/g, '-');
+      if (this._device.native.name) {
+        let deviceName = this._device.native.name;
+        this.className = 'jp-native-' + deviceName.replace(/\s+/g, '-');
       }
     }
   
@@ -21,10 +21,10 @@ export class BluetoothDeviceRunningItem implements IRunningSessions.IRunningItem
       return BluetoothConnectIcon;
     }
     label() {
-      return this._device.bluetoothDevice.name + ' (' + this._device.bluetoothDevice.id + ')';
+      return this._device.native.name + ' (' + this._device.native.id + ')';
     }
     labelTitle() {
-      return this._device.bluetoothDevice.id;
+      return this._device.native.id;
     }
   
     shutdown() {
