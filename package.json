@@ -7,9 +7,9 @@
         "jupyterlab",
         "jupyterlab-extension"
     ],
-    "homepage": "https://github.com/HaudinFlorence/bluetooth-manager",
+    "homepage": "https://github.com/QuantStack/bluetooth-manager",
     "bugs": {
-        "url": "https://github.com/HaudinFlorence/bluetooth-manager/issues"
+        "url": "https://github.com/QuantStack/bluetooth-manager/issues"
     },
     "license": "BSD-3-Clause",
     "author": {
@@ -27,7 +27,7 @@
     "style": "style/index.css",
     "repository": {
         "type": "git",
-        "url": "https://github.com/HaudinFlorence/bluetooth-manager.git"
+        "url": "https://github.com/QuantStack/bluetooth-manager.git"
     },
     "scripts": {
         "build": "jlpm build:lib && jlpm build:labextension:dev",

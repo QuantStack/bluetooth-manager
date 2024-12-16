@@ -14,10 +14,10 @@ import {
   import {Widget} from '@lumino/widgets'
 
   
-  export const BluetoothManagerPlugin: JupyterFrontEndPlugin<IBluetoothManager> =
+  const BluetoothManagerPlugin: JupyterFrontEndPlugin<IBluetoothManager> =
     {
       id: 'bluetooh-manager:bluetooth-manager-plugin',
-      description: 'Provides the running session managers.',
+      description: 'Provides the connected bluetooth devices sidebar.',
       provides: IBluetoothManager,
       requires: [IRunningSessionManagers, ITranslator],
       optional: [],

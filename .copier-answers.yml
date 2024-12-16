@@ -10,6 +10,6 @@ labextension_name: bluetooth-manager
 project_short_description: A JupyterLab extension to manage to connect to devices
     with web bluetooth.
 python_name: bluetooth_manager
-repository: https://github.com/HaudinFlorence/bluetooth-manager
+repository: https://github.com/QuantStack/bluetooth-manager
 test: true
 

@@ -1,7 +1,7 @@
 # bluetooth_manager
 
-[![Github Actions Status](https://github.com/HaudinFlorence/bluetooth-manager/workflows/Build/badge.svg)](https://github.com/HaudinFlorence/bluetooth-manager/actions/workflows/build.yml)
-[![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/HaudinFlorence/bluetooth-manager/main?urlpath=lab)
+[![Github Actions Status](https://github.com/QuantStack/bluetooth-manager/workflows/Build/badge.svg)](https://github.com/QuantStack/bluetooth-manager/actions/workflows/build.yml)
+[![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/QuantStack/bluetooth-manager/main?urlpath=lab)
 
 
 A JupyterLab extension to manage to connect to devices with web bluetooth.
