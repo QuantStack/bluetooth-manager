@@ -14,7 +14,8 @@ export class BluetoothManager implements IBluetoothManager {
       this
     );
     this.connectedADevice = new Signal<this, BluetoothManager.Device>(this);
-    this.registry = new BluetoothManager.DeviceRegistry();
+    this.registeredAPlugin = new Signal<this, BluetoothManager.DeviceRegistry>(this);
+    this._registry = new BluetoothManager.DeviceRegistry();
   }
 
   get devicesList(): Array<BluetoothManager.Device> {
@@ -64,11 +65,22 @@ export class BluetoothManager implements IBluetoothManager {
       this.devicesListChanged.emit(this._devicesList);
     });
   }
+
+  register(item: IDeviceRegistryItem) {
+    this._registry.add(item)
+    this.registeredAPlugin.emit(this._registry)
+    console.warn(`New item from category ${item.identifier} is added to the registry`)
+    return this._registry
+  }
   private _devicesList: Array<BluetoothManager.Device>;
   public devicesListChanged: Signal<this, Array<BluetoothManager.Device>>;
   public connectedADevice: Signal<this, BluetoothManager.Device>;
+  public registeredAPlugin: Signal<
+    BluetoothManager,
+    BluetoothManager.DeviceRegistry
+  >;
   //public disconnectedADevice: Signal<this, string>;
-  public registry: BluetoothManager.DeviceRegistry;
+  private _registry: BluetoothManager.DeviceRegistry;
 }
 
 export namespace BluetoothManager {
@@ -123,11 +135,12 @@ export interface IBluetoothManager /*extends IDisposable*/ {
   removeAllDevices(Devices: Array<BluetoothManager.Device>): void;
   connectDevice(identifier: string): Promise<BluetoothManager.Device>;
   disconnectDevice(Device: BluetoothManager.Device): Promise<void>;
+  register(item : IDeviceRegistryItem): BluetoothManager.DeviceRegistry;
   devicesListChanged: Signal<BluetoothManager, Array<BluetoothManager.Device>>;
+  registeredAPlugin: Signal<BluetoothManager, BluetoothManager.DeviceRegistry>;
   connectedADevice: Signal<BluetoothManager, BluetoothManager.Device>;
   //get disconnectedADevice(): Signal<BluetoothManager, string>;
   get devicesList(): Array<BluetoothManager.Device>;
-  get registry(): BluetoothManager.DeviceRegistry;
 }
 
 export interface IDeviceRegistryItem {

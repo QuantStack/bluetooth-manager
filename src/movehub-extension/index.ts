@@ -12,7 +12,7 @@ import {
 import { IBluetoothManager } from '../bluetooth/BluetoothManager';
 //import { CommandIDs } from '../commands';
 
-const MoveHubPlugin: JupyterFrontEndPlugin<void> = {
+const MoveHubPlugin: JupyterFrontEndPlugin<IBluetoothManager> = {
   id: 'bluetooh-manager:move-hub-plugin',
   description: 'Provides the ui to control the move hub.',
   requires: [ITranslator, IBluetoothManager],
@@ -22,7 +22,7 @@ const MoveHubPlugin: JupyterFrontEndPlugin<void> = {
     app: JupyterFrontEnd,
     translator: ITranslator,
     bluetoothManager: BluetoothManager
-  ): void => {
+  ): IBluetoothManager => {
     //let moveHubDevice: BluetoothManager.Device;
     //const trans = translator.load('jupyterlab');
     console.log('JupyterLab extension move-hub-plugin is activated!');
@@ -34,8 +34,7 @@ const MoveHubPlugin: JupyterFrontEndPlugin<void> = {
       }
     };
 
-    bluetoothManager.registry.add(movehubRegistryItem);
-    console.log(bluetoothManager.registry)
+    bluetoothManager.register(movehubRegistryItem);
 
     /* bluetoothManager.connectedADevice.connect(async (sender, device: BluetoothManager.Device) => {
       const movehub = await device.initDevice(); // Ensure device is fully initialized
@@ -71,6 +70,7 @@ const MoveHubPlugin: JupyterFrontEndPlugin<void> = {
       caption: trans.__('Add a Lego Boost control panel.'),
       label: trans.__('Add a Lego Boost Control Panel')
     });*/
+    return bluetoothManager;
   }
 };
 

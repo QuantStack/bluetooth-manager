@@ -34,7 +34,6 @@ import {
         let runningItemsList: Array<IRunningSessions.IRunningItem>;
         let devicesList: Array<BluetoothManager.Device> = [];
         const bluetoothManager: IBluetoothManager = new BluetoothManager(devicesList);
-        console.log('bluetooth registry:', bluetoothManager.registry);
    
         app.commands.addCommand(CommandIDs.openDevicesRegistryDialog, {
           execute: async () => {
