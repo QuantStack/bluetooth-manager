@@ -5,7 +5,10 @@ import {
   JupyterFrontEndPlugin
 } from '@jupyterlab/application';
 import { ITranslator } from '@jupyterlab/translation';
-import { BluetoothManager } from '../bluetooth/BluetoothManager';
+import {
+  BluetoothManager,
+  IDeviceRegistryItem
+} from '../bluetooth/BluetoothManager';
 import { IBluetoothManager } from '../bluetooth/BluetoothManager';
 //import { CommandIDs } from '../commands';
 
@@ -18,12 +21,23 @@ const MoveHubPlugin: JupyterFrontEndPlugin<void> = {
   activate: (
     app: JupyterFrontEnd,
     translator: ITranslator,
-   bluetoothManager: BluetoothManager
+    bluetoothManager: BluetoothManager
   ): void => {
     //let moveHubDevice: BluetoothManager.Device;
     //const trans = translator.load('jupyterlab');
     console.log('JupyterLab extension move-hub-plugin is activated!');
-   /* bluetoothManager.connectedADevice.connect(async (sender, device: BluetoothManager.Device) => {
+    const movehubRegistryItem: IDeviceRegistryItem = {
+      identifier: 'Move Hub',
+      filters: ['00001623-1212-efde-1623-785feabcd123'],
+      factory: () => {
+        return new BluetoothManager.Device();
+      }
+    };
+
+    bluetoothManager.registry.add(movehubRegistryItem);
+    console.log(bluetoothManager.registry)
+
+    /* bluetoothManager.connectedADevice.connect(async (sender, device: BluetoothManager.Device) => {
       const movehub = await device.initDevice(); // Ensure device is fully initialized
       const hub = movehub.hub;
       hub.emitter.on('color', async evt => {

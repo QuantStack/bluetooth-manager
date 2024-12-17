@@ -27,31 +27,32 @@ import {
         managers: IRunningSessionManagers,
         translator: ITranslator
       ): IBluetoothManager => {
+        console.log('bluetooth-manager plugin is activated.')
         const trans = translator.load('jupyterlab');
         const { commands } = app;
         const openDevicesRegistryDialogLabel = trans.__('Open Dialog Showing Devices Registry');
         let runningItemsList: Array<IRunningSessions.IRunningItem>;
         let devicesList: Array<BluetoothManager.Device> = [];
         const bluetoothManager: IBluetoothManager = new BluetoothManager(devicesList);
-
+        console.log('bluetooth registry:', bluetoothManager.registry);
+   
         app.commands.addCommand(CommandIDs.openDevicesRegistryDialog, {
           execute: async () => {
      
 
+            const dialogContent = new Widget;
+  
               showDialog({
-                body: new Widget,
+                body: dialogContent,
                 buttons: [Dialog.cancelButton()]
               });
       
             },
        
-          icon: BluetoothConnectIcon.bindprops({ stylesheet: 'menuItem' }),
-          caption: trans.__('Open a dialog to display the devices registry.'),
-          label: trans.__('Open A Dialog To Display the Devices Registry.')
+          /*icon: BluetoothConnectIcon.bindprops({ stylesheet: 'menuItem' }),*/
+          /*caption: trans.__('Open a dialog to display the devices registry.'),
+          label: trans.__('Open A Dialog To Display the Devices Registry.')*/
         });
-       
-      
-    
   
         managers.add({
           name: trans.__('Connected Devices'),
