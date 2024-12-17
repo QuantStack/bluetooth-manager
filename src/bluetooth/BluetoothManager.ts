@@ -8,13 +8,12 @@ import { Token } from '@lumino/coreutils';
  * A class used to update the list of connected device and related signals used to rerender the connected devices section.
  */
 export class BluetoothManager implements IBluetoothManager {
-  constructor(devicesList: Array<BluetoothManager.Device>) {
-    this._devicesList = devicesList;
+  constructor() {
     this.devicesListChanged = new Signal<this, Array<BluetoothManager.Device>>(
       this
     );
     this.connectedADevice = new Signal<this, BluetoothManager.Device>(this);
-    this.registeredAPlugin = new Signal<this, BluetoothManager.DeviceRegistry>(this);
+    this.registeredByAPlugin = new Signal<this, BluetoothManager.DeviceRegistry>(this);
     this._registry = new BluetoothManager.DeviceRegistry();
   }
 
@@ -68,14 +67,14 @@ export class BluetoothManager implements IBluetoothManager {
 
   register(item: IDeviceRegistryItem) {
     this._registry.add(item)
-    this.registeredAPlugin.emit(this._registry)
+    this.registeredByAPlugin.emit(this._registry)
     console.warn(`New item from category ${item.identifier} is added to the registry`)
     return this._registry
   }
   private _devicesList: Array<BluetoothManager.Device>;
   public devicesListChanged: Signal<this, Array<BluetoothManager.Device>>;
   public connectedADevice: Signal<this, BluetoothManager.Device>;
-  public registeredAPlugin: Signal<
+  public registeredByAPlugin: Signal<
     BluetoothManager,
     BluetoothManager.DeviceRegistry
   >;
@@ -137,7 +136,7 @@ export interface IBluetoothManager /*extends IDisposable*/ {
   disconnectDevice(Device: BluetoothManager.Device): Promise<void>;
   register(item : IDeviceRegistryItem): BluetoothManager.DeviceRegistry;
   devicesListChanged: Signal<BluetoothManager, Array<BluetoothManager.Device>>;
-  registeredAPlugin: Signal<BluetoothManager, BluetoothManager.DeviceRegistry>;
+  registeredByAPlugin: Signal<BluetoothManager, BluetoothManager.DeviceRegistry>;
   connectedADevice: Signal<BluetoothManager, BluetoothManager.Device>;
   //get disconnectedADevice(): Signal<BluetoothManager, string>;
   get devicesList(): Array<BluetoothManager.Device>;
