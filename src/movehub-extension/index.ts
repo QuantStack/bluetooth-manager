@@ -12,6 +12,8 @@ import {
 import { IBluetoothManager } from '../bluetooth/BluetoothManager';
 //import { CommandIDs } from '../commands';
 
+const moveHubServiceUUID = '00001623-1212-efde-1623-785feabcd123'
+
 const MoveHubPlugin: JupyterFrontEndPlugin<IBluetoothManager> = {
   id: 'bluetooh-manager:move-hub-plugin',
   description: 'Provides the ui to control the move hub.',
@@ -28,7 +30,11 @@ const MoveHubPlugin: JupyterFrontEndPlugin<IBluetoothManager> = {
     console.log('JupyterLab extension move-hub-plugin is activated!');
     const movehubRegistryItem: IDeviceRegistryItem = {
       identifier: 'Move Hub',
-      filters: ['00001623-1212-efde-1623-785feabcd123'],
+      options: {
+        acceptAllDevices: false,
+        filters: [{ services: [moveHubServiceUUID] }],
+        optionalServices:[moveHubServiceUUID]
+      },
       factory: () => {
         return new BluetoothManager.Device();
       }

@@ -3,6 +3,7 @@ import { Signal } from '@lumino/signaling';
 //import { Service, servicesDict } from '../services';
 //import { IDisposable } from '@lumino/disposable';
 import { Token } from '@lumino/coreutils';
+import { DeviceOptions } from './DeviceOptions';
 
 /**
  * A class used to update the list of connected device and related signals used to rerender the connected devices section.
@@ -13,16 +14,30 @@ export class BluetoothManager implements IBluetoothManager {
       this
     );
     this.connectedADevice = new Signal<this, BluetoothManager.Device>(this);
-    this.registeredByAPlugin = new Signal<this, BluetoothManager.DeviceRegistry>(this);
+    this.registeredByAPlugin = new Signal<
+      this,
+      BluetoothManager.DeviceRegistry
+    >(this);
     this._registry = new BluetoothManager.DeviceRegistry();
+    this._devicesList = [];
   }
 
   get devicesList(): Array<BluetoothManager.Device> {
     return this._devicesList;
   }
 
-  async connectDevice(identifier: string): Promise<BluetoothManager.Device> {
-    return await new BluetoothManager.Device();
+  get registry(): BluetoothManager.DeviceRegistry {
+    return this._registry;
+  }
+
+  async connectDevice(
+    registryItem: IDeviceRegistryItem
+  ): Promise<BluetoothManager.Device> {
+    const device = new BluetoothManager.Device();
+    device.native = await device.connect(registryItem);
+    this.addDeviceToList(device)
+    return device;
+
   }
 
   async disconnectDevice(device: BluetoothManager.Device): Promise<void> {
@@ -65,11 +80,13 @@ export class BluetoothManager implements IBluetoothManager {
     });
   }
 
-  register(item: IDeviceRegistryItem) {
-    this._registry.add(item)
-    this.registeredByAPlugin.emit(this._registry)
-    console.warn(`New item from category ${item.identifier} is added to the registry`)
-    return this._registry
+  register(registryItem: IDeviceRegistryItem) {
+    this._registry.add(registryItem);
+    this.registeredByAPlugin.emit(this._registry);
+    console.warn(
+      `New item from category ${registryItem.identifier} is added to the registry`
+    );
+    return this._registry;
   }
   private _devicesList: Array<BluetoothManager.Device>;
   public devicesListChanged: Signal<this, Array<BluetoothManager.Device>>;
@@ -89,12 +106,16 @@ export namespace BluetoothManager {
     public isConnected: boolean | undefined;
     public native: BluetoothDevice;
 
-    async connect(bluetoothDevice: BluetoothDevice): Promise<BluetoothDevice> {
-      this.native = bluetoothDevice;
+    async connect(registryItem: IDeviceRegistryItem): Promise<BluetoothDevice> {
+      this.native = await navigator.bluetooth.requestDevice(
+        registryItem.options
+      );
+
       this.native.addEventListener('gattserverdisconnected', async event => {
         console.warn('Device got disconnected');
       });
       this.isConnected = true;
+      console.log('native.name', this.native.name);
       return this.native;
     }
 
@@ -116,10 +137,10 @@ export namespace BluetoothManager {
       this._registry = [];
     }
 
-    add(item: IDeviceRegistryItem) {
-      this._registry.push(item);
+    add(registryItem: IDeviceRegistryItem) {
+      this._registry.push(registryItem);
     }
-    get registry(): Array<IDeviceRegistryItem> {
+    get itemsList(): Array<IDeviceRegistryItem> {
       return this._registry;
     }
   }
@@ -132,25 +153,31 @@ export interface IBluetoothManager /*extends IDisposable*/ {
   addDeviceToList(Device: BluetoothManager.Device): void;
   removeDeviceFromList(Device: BluetoothManager.Device): void;
   removeAllDevices(Devices: Array<BluetoothManager.Device>): void;
-  connectDevice(identifier: string): Promise<BluetoothManager.Device>;
+  connectDevice(
+    registryItem: IDeviceRegistryItem
+  ): Promise<BluetoothManager.Device>;
   disconnectDevice(Device: BluetoothManager.Device): Promise<void>;
-  register(item : IDeviceRegistryItem): BluetoothManager.DeviceRegistry;
+  register(registryItem: IDeviceRegistryItem): BluetoothManager.DeviceRegistry;
   devicesListChanged: Signal<BluetoothManager, Array<BluetoothManager.Device>>;
-  registeredByAPlugin: Signal<BluetoothManager, BluetoothManager.DeviceRegistry>;
+  registeredByAPlugin: Signal<
+    BluetoothManager,
+    BluetoothManager.DeviceRegistry
+  >;
   connectedADevice: Signal<BluetoothManager, BluetoothManager.Device>;
   //get disconnectedADevice(): Signal<BluetoothManager, string>;
   get devicesList(): Array<BluetoothManager.Device>;
+  get registry(): BluetoothManager.DeviceRegistry;
 }
 
 export interface IDeviceRegistryItem {
   identifier: string;
   factory: () => BluetoothManager.Device;
-  filters: string[];
+  options: DeviceOptions;
 }
 
 export interface IDeviceRegistry {
-  add: (item: IDeviceRegistryItem) => void;
-  get registry(): Array<IDeviceRegistryItem>;
+  add: (registryItem: IDeviceRegistryItem) => void;
+  get itemsList(): Array<IDeviceRegistryItem>;
 }
 
 export const IBluetoothManager = new Token<IBluetoothManager>(
