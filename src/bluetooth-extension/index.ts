@@ -68,27 +68,17 @@ const BluetoothSidebarPlugin: JupyterFrontEndPlugin<void> = {
             Dialog.cancelButton({ label: 'Cancel' })
           ]
         }).then(async result => {
-          console.log('result:', result);
           if (result.button.accept) {
-            console.log(result.value);
             bluetoothManager.registry.itemsList.forEach(async item => {
               if (item.identifier === result.value) {
-                console.log('Found')
-                const device = await bluetoothManager.connectDevice(item);
-                console.log('device:', device);
-              }
-              else {
-                console.warn(`item.identifier = ${item.identifier} and result.value=${result.value}`)
+                await bluetoothManager.connectDevice(item);
+              } else {
+                console.warn(`There is no corresponding item in the registry`);
               }
             });
-          } else {
-            console.log('Cancel button clicked');
           }
         });
       }
-      /*icon: BluetoothConnectIcon.bindprops({ stylesheet: 'menuItem' }),
-      caption: trans.__('Open a dialog to display the devices registry.'),
-      label: trans.__('Open A Dialog To Display the Devices Registry.')*/
     });
     managers.add({
       name: trans.__('Connected Devices'),
@@ -139,7 +129,6 @@ export class DropDownRegistry
     registry.itemsList.forEach(item => {
       const option = document.createElement('option');
       option.value = item.identifier;
-      console.log('option.value:', option.value);
       option.text = item.identifier;
       this._selectList.appendChild(option);
     });

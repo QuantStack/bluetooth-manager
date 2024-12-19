@@ -58,7 +58,7 @@ export class BluetoothManager implements IBluetoothManager {
 
   // Method to remove an item from the list
   removeDeviceFromList(device: BluetoothManager.Device): void {
-    console.log('Before removing, the list of devices is:', this._devicesList);
+    console.warn('Before removing, the list of devices is:', this._devicesList);
     const index = this._devicesList.indexOf(device);
     if (index > -1) {
       this._devicesList.splice(index, 1);
@@ -73,7 +73,7 @@ export class BluetoothManager implements IBluetoothManager {
 
   removeAllDevices() {
     this._devicesList.forEach((device, index) => {
-      console.log(`device n°${index + 1} with deviceID ${device.native.id}`);
+      console.warn(`device n°${index + 1} with deviceID ${device.native.id}`);
       device.disconnect();
       this.removeDeviceFromList(device);
       this.devicesListChanged.emit(this._devicesList);
@@ -115,7 +115,6 @@ export namespace BluetoothManager {
         console.warn('Device got disconnected');
       });
       this.isConnected = true;
-      console.log('native.name', this.native.name);
       return this.native;
     }
 
