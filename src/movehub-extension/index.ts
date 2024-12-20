@@ -11,17 +11,19 @@ import {
 } from '../bluetooth/BluetoothManager';
 import { IBluetoothManager } from '../bluetooth/BluetoothManager';
 import { MoveHub } from './moveHub';
-//import { CommandIDs } from '../commands';
+import { CommandIDs } from '../commands';
+import { MainAreaWidget } from '@jupyterlab/apputils';
+import { Widget } from '@lumino/widgets';
 
 const moveHubServiceUUID = '00001623-1212-efde-1623-785feabcd123';
 
 const MoveHubPlugin: JupyterFrontEndPlugin<IBluetoothManager> = {
   id: 'bluetooh-manager:move-hub-plugin',
-  description: 'Provides the ui to control the move hub.',
+  description: 'Registers the move hub device and provide a factory.',
   requires: [ITranslator, IBluetoothManager],
   optional: [],
   autoStart: true,
-   activate: (
+  activate: (
     app: JupyterFrontEnd,
     translator: ITranslator,
     bluetoothManager: BluetoothManager
@@ -48,44 +50,65 @@ const MoveHubPlugin: JupyterFrontEndPlugin<IBluetoothManager> = {
     };
 
     bluetoothManager.register(movehubRegistryItem);
-
-    /* bluetoothManager.connectedADevice.connect(async (sender, device: BluetoothManager.Device) => {
-      const movehub = await device.initDevice(); // Ensure device is fully initialized
-      const hub = movehub.hub;
-      hub.emitter.on('color', async evt => {
-        await hub.ledAsync('orange');
-      });
-
-      hub.emitter.on('distance', async evt => {
-        await hub.ledAsync(10);
-      });
-
-      moveHubDevice = movehub; // Assign to global variable
-
-      if (!hub) {
-        console.error('Hub initialization failed.');
-        return;
-      }
-    });*/
-
-    /*app.commands.addCommand(CommandIDs.addLegoBoostControlPanel, {
-      execute: args => {
-        const model = new MoveHubPanelModel(moveHubDevice);
-        const view = new MoveHubPanelView(model, translator);
-
-        view.addClass('jp-lego-boost-control-panel');
-        view.id = 'lego-boost-control-panel';
-        view.title.label = 'Lego Boost Control Panel';
-        view.title.closable = true;
-        app.shell.add(view, 'main');
-      },
-
-      caption: trans.__('Add a Lego Boost control panel.'),
-      label: trans.__('Add a Lego Boost Control Panel')
-    });*/
     return bluetoothManager;
   }
 };
 
-const MoveHubExtensionPlugins: JupyterFrontEndPlugin<any>[] = [MoveHubPlugin];
+const MoveHubControlPanelPlugin: JupyterFrontEndPlugin<void> = {
+  id: 'bluetooh-manager:move-hub-control-panel-plugin',
+  description: 'Provides the ui to control the move hub.',
+  requires: [ITranslator, IBluetoothManager],
+  optional: [],
+  autoStart: true,
+  activate: (
+    app: JupyterFrontEnd,
+    translator: ITranslator,
+    bluetoothManager: BluetoothManager
+  ): void => {
+    console.log(
+      'JupyterLab extension move-hub-control-panel-plugin is activated!'
+    );
+    const trans = translator.load('jupyterlab');
+
+    app.commands.addCommand(CommandIDs.addLegoBoostControlPanel, {
+      execute: args => {
+        bluetoothManager.connectedADevice.connect(
+          async (sender, device: MoveHub) => {
+            //const model = new MoveHubPanelModel(device);
+            //const view = new MoveHubPanelView(model, translator);
+            const content = new Widget();
+       
+          content.node.innerHTML = `
+          <div style="padding: 20px;">
+            <h1>Hello, JupyterLab!</h1>
+            <p>Hello</p>
+          </div>
+        `;
+          content.addClass('example-main-area-widget');
+          const view = new MainAreaWidget({ content });
+          
+            view.addClass('jp-lego-boost-control-panel');
+            view.id = 'lego-boost-control-panel';
+            view.title.label = 'Lego Boost Control Panel';
+            view.title.closable = true;
+            app.shell.add(view, 'main');
+          }
+        );
+      },
+
+      caption: trans.__('Add a Lego Boost control panel.'),
+      label: trans.__('Add a Lego Boost Control Panel')
+    });
+    app.contextMenu.addItem({
+      command: CommandIDs.addLegoBoostControlPanel,
+      selector: `jp-tree-item.jp-RunningSessions-item.jp-bluetooth-Move-Hub`,
+      rank: 1
+    });
+  }
+};
+
+const MoveHubExtensionPlugins: JupyterFrontEndPlugin<any>[] = [
+  MoveHubPlugin,
+  MoveHubControlPanelPlugin
+];
 export default MoveHubExtensionPlugins;

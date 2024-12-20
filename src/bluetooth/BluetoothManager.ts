@@ -34,11 +34,16 @@ export class BluetoothManager implements IBluetoothManager {
     registryItem: IDeviceRegistryItem
   ): Promise<BluetoothManager.Device | undefined> {
     if (registryItem) {
-      const native = await navigator.bluetooth.requestDevice(registryItem.options)
+      const native = await navigator.bluetooth.requestDevice(
+        registryItem.options
+      );
       const device = await registryItem.factory(native);
-
-      this.addDeviceToList(device!);
-      return device;
+      if (device) {
+        console.log('A signal is emitted');
+        this.connectedADevice.emit(device!);
+        this.addDeviceToList(device!);
+        return device;
+      } else throw new Error('There is no available device to connect.');
     } else return;
   }
 
@@ -172,7 +177,9 @@ export interface IBluetoothManager /*extends IDisposable*/ {
 
 export interface IDeviceRegistryItem {
   identifier: string;
-  factory: (native: BluetoothDevice) =>Promise<BluetoothManager.Device | undefined>;
+  factory: (
+    native: BluetoothDevice
+  ) => Promise<BluetoothManager.Device | undefined>;
   options: DeviceOptions;
 }
 
