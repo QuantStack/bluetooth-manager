@@ -61,12 +61,10 @@ export class MoveHub extends BluetoothManager.Device {
   async initDevice(): Promise<MoveHub> {
     try {
       const services = await getServicesFromDevice(this.native); // Await services directly
-      console.log('Services fetched:', services);
 
       if (!services || services.length === 0) {
         throw new Error('No services found on the device.');
       }
-      console.log('Services fetched:', services);
       for (const service of services) {
         if (service.uuid === '00001623-1212-efde-1623-785feabcd123') {
           const characteristics = await service.getCharacteristic(
@@ -98,18 +96,17 @@ export class MoveHub extends BluetoothManager.Device {
                 hubControl.update();
               }, 100);
 
-              resolve(true); // Resolve only after hub is fully initialized
+              resolve(true);
             });
           });
           break;
         }
-  
       }
 
       return this;
     } catch (error) {
       console.error('Error during device initialization:', error);
-      throw error; // Propagate the error for the caller to handle
+      throw error; 
     }
   }
 }

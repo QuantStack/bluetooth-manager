@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { HubAsync } from '../movehub-extension/moveHub/hub/hubAsync';
+import { HubAsync } from '../moveHub/hub/hubAsync';
 import InputField from './InputField';
 
 

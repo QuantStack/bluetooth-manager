@@ -4,8 +4,7 @@ import {
 } from '@jupyterlab/application';
 import { ITranslator } from '@jupyterlab/translation';
 import { IRunningSessionManagers } from '@jupyterlab/running';
-import { CommandIDs } from '../commands';
-import { BluetoothConnectIcon } from '../icon';
+import { addIcon } from '@jupyterlab/ui-components';
 import { CommandToolbarButton } from '@jupyterlab/ui-components';
 import { BluetoothDeviceRunningItem } from '../bluetooth/BluetoothDeviceRunningItem';
 import { IRunningSessions } from '@jupyterlab/running';
@@ -14,10 +13,13 @@ import {
   BluetoothManager
 } from '../bluetooth/BluetoothManager';
 import { Dialog, showDialog } from '@jupyterlab/apputils';
-/*import { RegistryDialogModel } from './RegistryDialogModel';
-import { RegistryDialogView } from './RegistryDialogView';*/
 import { Widget } from '@lumino/widgets';
 
+export namespace CommandIDs {
+
+    export const openDevicesRegistryDialog =
+    'bluetooth-manager:open-dialog-for-devices-registry';
+}
 export async function getServicesFromDevice(
   device: BluetoothDevice
 ): Promise<Array<BluetoothRemoteGATTService> | undefined> {
@@ -64,9 +66,7 @@ const BluetoothSidebarPlugin: JupyterFrontEndPlugin<void> = {
       'Open Dialog Showing Devices Registry'
     );
     let runningItemsList: Array<IRunningSessions.IRunningItem>;
-    //const model = new RegistryDialogModel(bluetoothManager);
-    //const view = new RegistryDialogView(model, translator);
-    //const registryIdentifierList = getIdentifierList(bluetoothManager);
+
     app.commands.addCommand(CommandIDs.openDevicesRegistryDialog, {
       execute: async () => {
         showDialog({
@@ -116,7 +116,7 @@ const BluetoothSidebarPlugin: JupyterFrontEndPlugin<void> = {
         new CommandToolbarButton({
           commands,
           id: CommandIDs.openDevicesRegistryDialog,
-          icon: BluetoothConnectIcon,
+          icon: addIcon,
           caption: openDevicesRegistryDialogLabel,
           args: { toolbar: false }
         })

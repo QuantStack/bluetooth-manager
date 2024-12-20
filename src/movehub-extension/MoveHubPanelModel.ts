@@ -1,10 +1,10 @@
 import { VDomModel } from '@jupyterlab/apputils';
-import { BluetoothManager } from '../bluetooth/BluetoothManager';
+import { MoveHub } from './moveHub';
 
 export class MoveHubPanelModel extends VDomModel {
-  public device: BluetoothManager.Device;
+  public device: MoveHub;
 
-  constructor(device: BluetoothManager.Device) {
+  constructor(device: MoveHub) {
     super();
     this.device = device;
   }
