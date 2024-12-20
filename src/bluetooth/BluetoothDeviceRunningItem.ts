@@ -12,7 +12,6 @@ export class BluetoothDeviceRunningItem implements IRunningSessions.IRunningItem
     
       if (this._device.native.name) {
         let deviceName = this._device.native.name;
-        console.log('Name:', this._device.native.name)
         this.className = 'jp-bluetooth-native-' + deviceName.replace(/\s+/g, '-');
       }
     }

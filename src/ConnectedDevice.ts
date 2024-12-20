@@ -2,10 +2,10 @@ import { DeviceConfiguration } from './movehub-extension/moveHub/hub/hubAsync';
 import {
   defaultConfiguration,
   controlData,
-  deviceInfo
-} from './movehub-extension/moveHubSpecific';
+  deviceInfo} from './movehub-extension/moveHub'
 import { HubAsync } from './movehub-extension/moveHub/hub/hubAsync';
 import { HubControl } from './movehub-extension/moveHub/ai/hub-control';
+import { getServicesFromDevice } from './bluetooth-extension';
 
 export async function readValue(
   service: BluetoothRemoteGATTService,
@@ -33,13 +33,6 @@ export async function readValue(
   }
 }
 
-export async function getServicesFromDevice(
-  device: BluetoothDevice
-): Promise<Array<BluetoothRemoteGATTService> | undefined> {
-  const server = await device.gatt?.connect();
-  const services = await server?.getPrimaryServices(); // Get all services exposed by the device
-  return services;
-}
 
 export default class ConnectedDevice {
   public deviceID: string;

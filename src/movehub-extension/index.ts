@@ -10,9 +10,10 @@ import {
   IDeviceRegistryItem
 } from '../bluetooth/BluetoothManager';
 import { IBluetoothManager } from '../bluetooth/BluetoothManager';
+import { MoveHub } from './moveHub';
 //import { CommandIDs } from '../commands';
 
-const moveHubServiceUUID = '00001623-1212-efde-1623-785feabcd123'
+const moveHubServiceUUID = '00001623-1212-efde-1623-785feabcd123';
 
 const MoveHubPlugin: JupyterFrontEndPlugin<IBluetoothManager> = {
   id: 'bluetooh-manager:move-hub-plugin',
@@ -20,23 +21,29 @@ const MoveHubPlugin: JupyterFrontEndPlugin<IBluetoothManager> = {
   requires: [ITranslator, IBluetoothManager],
   optional: [],
   autoStart: true,
-  activate: (
+   activate: (
     app: JupyterFrontEnd,
     translator: ITranslator,
     bluetoothManager: BluetoothManager
   ): IBluetoothManager => {
-    //let moveHubDevice: BluetoothManager.Device;
-    //const trans = translator.load('jupyterlab');
     console.log('JupyterLab extension move-hub-plugin is activated!');
     const movehubRegistryItem: IDeviceRegistryItem = {
-      identifier: 'Move Hub',
+      identifier: 'LEGO® MoveHub',
       options: {
         acceptAllDevices: false,
         filters: [{ services: [moveHubServiceUUID] }],
-        optionalServices:[moveHubServiceUUID]
+        optionalServices: [moveHubServiceUUID]
       },
-      factory: () => {
-        return new BluetoothManager.Device();
+      factory: async (native: BluetoothDevice) => {
+        let device = new MoveHub();
+        device.native = native;
+        device = await device.initDevice();
+        const hub = device.hub;
+
+        if (!hub) {
+          throw new Error('Hub initialization failed.');
+        }
+        return device;
       }
     };
 

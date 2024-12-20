@@ -32,12 +32,14 @@ export class BluetoothManager implements IBluetoothManager {
 
   async connectDevice(
     registryItem: IDeviceRegistryItem
-  ): Promise<BluetoothManager.Device> {
-    const device = new BluetoothManager.Device();
-    device.native = await device.connect(registryItem);
-    this.addDeviceToList(device)
-    return device;
+  ): Promise<BluetoothManager.Device | undefined> {
+    if (registryItem) {
+      const native = await navigator.bluetooth.requestDevice(registryItem.options)
+      const device = await registryItem.factory(native);
 
+      this.addDeviceToList(device!);
+      return device;
+    } else return;
   }
 
   async disconnectDevice(device: BluetoothManager.Device): Promise<void> {
@@ -154,7 +156,7 @@ export interface IBluetoothManager /*extends IDisposable*/ {
   removeAllDevices(Devices: Array<BluetoothManager.Device>): void;
   connectDevice(
     registryItem: IDeviceRegistryItem
-  ): Promise<BluetoothManager.Device>;
+  ): Promise<BluetoothManager.Device | undefined>;
   disconnectDevice(Device: BluetoothManager.Device): Promise<void>;
   register(registryItem: IDeviceRegistryItem): BluetoothManager.DeviceRegistry;
   devicesListChanged: Signal<BluetoothManager, Array<BluetoothManager.Device>>;
@@ -170,7 +172,7 @@ export interface IBluetoothManager /*extends IDisposable*/ {
 
 export interface IDeviceRegistryItem {
   identifier: string;
-  factory: () => BluetoothManager.Device;
+  factory: (native: BluetoothDevice) =>Promise<BluetoothManager.Device | undefined>;
   options: DeviceOptions;
 }
 

@@ -18,6 +18,15 @@ import { Dialog, showDialog } from '@jupyterlab/apputils';
 import { RegistryDialogView } from './RegistryDialogView';*/
 import { Widget } from '@lumino/widgets';
 
+export async function getServicesFromDevice(
+  device: BluetoothDevice
+): Promise<Array<BluetoothRemoteGATTService> | undefined> {
+  const server = await device.gatt?.connect();
+  const services = await server?.getPrimaryServices(); // Get all services exposed by the device
+  return services;
+}
+
+
 const BluetoothManagerPlugin: JupyterFrontEndPlugin<IBluetoothManager> = {
   id: 'bluetooh-manager:bluetooth-manager-plugin',
   description: 'Provides the bluetooth manager',
@@ -61,7 +70,7 @@ const BluetoothSidebarPlugin: JupyterFrontEndPlugin<void> = {
     app.commands.addCommand(CommandIDs.openDevicesRegistryDialog, {
       execute: async () => {
         showDialog({
-          title: 'Select an item from the registry',
+          title: 'Select device type',
           body: new DropDownRegistry(bluetoothManager.registry),
           buttons: [
             Dialog.okButton({ label: 'OK' }),
@@ -71,6 +80,7 @@ const BluetoothSidebarPlugin: JupyterFrontEndPlugin<void> = {
           if (result.button.accept) {
             bluetoothManager.registry.itemsList.forEach(async item => {
               if (item.identifier === result.value) {
+                
                 await bluetoothManager.connectDevice(item);
               } else {
                 console.warn(`There is no corresponding item in the registry`);
