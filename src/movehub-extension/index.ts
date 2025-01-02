@@ -72,25 +72,21 @@ const LegoBoostControlPanelPlugin: JupyterFrontEndPlugin<void> = {
 
     app.commands.addCommand(CommandIDs.addLegoBoostControlPanel, {
       execute: args => {
-        console.log('bluetooth manager');
-        console.log('bluetooth manager:', bluetoothManager.devicesList);
         const result = bluetoothManager.devicesList.filter(
           device => device instanceof MoveHub
         );
-        const device: MoveHub = result[0];
-        console.log(typeof(device))
-        const model = new MoveHubPanelModel(device);
-        const view = new MoveHubPanelView(model, translator);
-        view.addClass('jp-lego-boost-control-panel');
-        view.id = 'lego-boost-control-panel';
-        view.title.label = 'Lego Boost Control Panel';
-        view.title.closable = true;
-        app.shell.add(view, 'main');
-        /*} else {
-              throw new Error('The device is not a Move Hub.');
-            }*/
-        // }
-        //);
+        if (result) {
+          const device = result[result.length - 1] as MoveHub; /* the last added MoveHub device*/
+          const model = new MoveHubPanelModel(device);
+          const view = new MoveHubPanelView(model, translator);
+          view.addClass('jp-lego-boost-control-panel');
+          view.id = 'lego-boost-control-panel';
+          view.title.label = 'Lego Boost Control Panel';
+          view.title.closable = true;
+          app.shell.add(view, 'main');
+        } else {
+          throw new Error('The device is not a Move Hub.');
+        }
       },
 
       caption: trans.__('Add a Lego Boost control panel.'),
