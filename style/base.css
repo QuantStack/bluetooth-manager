@@ -5,11 +5,53 @@
 */
 
 .color-pickers-container {
-  margin: auto;
-  width: 400px;
-  height: 100px;
+  /*margin: auto ;*/
+  background-color: aquamarine;
 }
 
-.lego-boost-panel-title {
+.inputs_with_buttons_container {
+  /*max-width: 45%;*/
+  background-color: orange;
+}
+
+.lego-boost-vernie-panel-title {
   text-align: center;
+}
+
+.move-form {
+  margin: auto ;
+
+}
+
+.move-input-field {
+  height: 1rem;
+  width: 4rem;
+  margin-left: 1rem;
+}
+
+.move-input-with-button {
+  display: flex;
+  align-items: center; /* vertically center the items */
+  gap: 1rem;
+}
+
+.move-validation-button{
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  width: 4rem;
+  height: 1.5rem;
+}
+
+h4 {
+  margin: 0.25rem;
+}
+
+control-components-container {
+  display: flex;
+  align-items: center; /* vertically center the items */
+  gap: 1rem;
+  background-color: yellow;
 }

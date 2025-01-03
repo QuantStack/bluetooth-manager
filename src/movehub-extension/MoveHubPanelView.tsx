@@ -1,7 +1,7 @@
 import { MoveHubPanelModel } from './MoveHubPanelModel';
 import { VDomRenderer } from '@jupyterlab/ui-components';
 import { ITranslator /*nullTranslator*/ } from '@jupyterlab/translation';
-import { ColorSelector, colorValues } from './components/ColorSelector'
+import { ColorSelector, colorValues } from './components/ColorSelector';
 import { DriveForm } from './components/DriveForm';
 import { TurnForm } from './components/TurnForm';
 import { MoveHub } from './moveHub';
@@ -13,10 +13,18 @@ interface IMoveHubUI {
 export function MoveHubUI(props: IMoveHubUI) {
   return (
     <>
-      <h2 className="lego-boost-panel-title">Lego Boost control panel</h2>
-      <ColorSelector hub={props.device.hub} colorValues={colorValues} />
-      <DriveForm hub={props.device.hub} />
-      <TurnForm hub={props.device.hub} />
+      <h2 className='lego-boost-vernie-panel-title'>
+        Vernie LEGO® Boost control panel
+      </h2>
+      <div className='control-components-container'>
+        <div className='inputs_with_buttons_container'>
+          <DriveForm hub={props.device.hub} />
+          <TurnForm hub={props.device.hub} />
+        </div>
+        <div>
+          <ColorSelector hub={props.device.hub} colorValues={colorValues} />
+        </div>
+      </div>
     </>
   );
 }

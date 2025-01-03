@@ -4,15 +4,20 @@ export type Motor = 'A' | 'B';
 
 export type TurnDirection = 'left' | 'right';
 
+export type Port = {
+  action: string;
+  angle: number;
+};
+
 /** Information from Lego Boost motors and sensors */
 export type DeviceInfo = {
   ports: {
-    A: { action: string; angle: number };
-    B: { action: string; angle: number };
-    AB: { action: string; angle: number };
-    C: { action: string; angle: number };
-    D: { action: string; angle: number };
-    LED: { action: string; angle: number };
+    A: Port;
+    B: Port;
+    AB: Port;
+    C: Port;
+    D: Port;
+    LED: Port;
   };
   tilt: { roll: number; pitch: number };
   distance: number;

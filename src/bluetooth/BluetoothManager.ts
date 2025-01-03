@@ -4,12 +4,8 @@ import { Signal } from '@lumino/signaling';
 //import { IDisposable } from '@lumino/disposable';
 import { Token } from '@lumino/coreutils';
 import { DeviceOptions } from './DeviceOptions';
-export namespace CommandIDs {
-  export const connectDevice =
-    'bluetooth-manager:connect-device';
-    export const disconnectDevice =
-    'bluetooth-manager:disconnect-device';
-}
+
+
 
 /**
  * A class used to update the list of connected device and related signals used to rerender the connected devices section.
@@ -45,7 +41,6 @@ export class BluetoothManager implements IBluetoothManager {
       );
       const device = await registryItem.factory(native);
       if (device) {
-        console.log('A signal is emitted');
         this.connectedADevice.emit(device!);
         this.addDeviceToList(device!);
         return device;

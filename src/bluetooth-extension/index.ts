@@ -16,9 +16,16 @@ import { Dialog, showDialog } from '@jupyterlab/apputils';
 import { Widget } from '@lumino/widgets';
 
 export namespace CommandIDs {
-
-    export const openDevicesRegistryDialog =
+  export const openDevicesRegistryDialog =
     'bluetooth-manager:open-dialog-for-devices-registry';
+  export const connectDevice = 'bluetooth-manager:connect-device';
+  export const disconnectDevice = 'bluetooth-manager:disconnect-device';
+}
+
+export function buildIdentifier(device: BluetoothManager.Device): string {
+  const identifier =
+    device.native.name?.replace(/\s+/g, '-') + '-' + device.native.id;
+  return identifier;
 }
 export async function getServicesFromDevice(
   device: BluetoothDevice
@@ -27,7 +34,6 @@ export async function getServicesFromDevice(
   const services = await server?.getPrimaryServices(); // Get all services exposed by the device
   return services;
 }
-
 
 const BluetoothManagerPlugin: JupyterFrontEndPlugin<IBluetoothManager> = {
   id: 'bluetooh-manager:bluetooth-manager-plugin',
@@ -67,6 +73,36 @@ const BluetoothSidebarPlugin: JupyterFrontEndPlugin<void> = {
     );
     let runningItemsList: Array<IRunningSessions.IRunningItem>;
 
+    function createTestFunction(device: BluetoothManager.Device) {
+      return function test(node: HTMLElement): boolean {
+        const testString = buildIdentifier(device);
+        return node.title === testString; // example additional logic using device
+      };
+    }
+
+    commands.addCommand(CommandIDs.disconnectDevice, {
+      execute: async args => {
+        bluetoothManager.devicesList.filter(item => {
+          const testWithDevice = createTestFunction(item);
+          const node = app.contextMenuHitTest(testWithDevice);
+          const identifier = buildIdentifier(item);
+          if (identifier === node?.title) {
+            console.warn('It is a match');
+            bluetoothManager.disconnectDevice(item);
+          }
+        });
+      },
+
+      caption: trans.__('Disconnect device.'),
+      label: trans.__('Disconnect device.')
+    });
+    /* Adding commands to the context menu of the relevant connected device*/
+    app.contextMenu.addItem({
+      command: CommandIDs.disconnectDevice,
+      selector: `jp-tree-item.jp-RunningSessions-item.jp-bluetooth-Move-Hub`,
+      rank: 0
+    });
+
     app.commands.addCommand(CommandIDs.openDevicesRegistryDialog, {
       execute: async () => {
         showDialog({
@@ -80,7 +116,6 @@ const BluetoothSidebarPlugin: JupyterFrontEndPlugin<void> = {
           if (result.button.accept) {
             bluetoothManager.registry.itemsList.forEach(async item => {
               if (item.identifier === result.value) {
-                
                 await bluetoothManager.connectDevice(item);
               } else {
                 console.warn(`There is no corresponding item in the registry`);
@@ -91,7 +126,7 @@ const BluetoothSidebarPlugin: JupyterFrontEndPlugin<void> = {
       }
     });
     managers.add({
-      name: trans.__('Connected Devices'),
+      name: trans.__('Bluetooth Devices'),
       supportsMultipleViews: false,
       running: () => {
         runningItemsList = [];

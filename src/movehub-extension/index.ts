@@ -13,8 +13,8 @@ import {
 } from '../bluetooth/BluetoothManager';
 import { MoveHub } from './moveHub';
 export namespace CommandIDs {
-  export const addLegoBoostControlPanel =
-    'bluetooth-manager:add-lego-boost-control-panel';
+  export const addVernieLEGOBoostControlPanel =
+    'bluetooth-manager:add-vernie-lego-boost-control-panel';
 }
 
 const moveHubServiceUUID = '00001623-1212-efde-1623-785feabcd123';
@@ -31,7 +31,7 @@ const MoveHubRegisterPlugin: JupyterFrontEndPlugin<void> = {
   ): void => {
     console.log('JupyterLab extension move-hub-plugin is activated!');
     const movehubRegistryItem: IDeviceRegistryItem = {
-      identifier: 'LEGO® MoveHub',
+      identifier: 'LEGO® Move Hub',
       options: {
         acceptAllDevices: false,
         filters: [{ services: [moveHubServiceUUID] }],
@@ -54,9 +54,9 @@ const MoveHubRegisterPlugin: JupyterFrontEndPlugin<void> = {
   }
 };
 
-const LegoBoostControlPanelPlugin: JupyterFrontEndPlugin<void> = {
-  id: 'bluetooth-manager:lego-boost-control-panel-plugin',
-  description: 'Provides the ui to control the legoboost robot.',
+const VernieLEGOBoostControlPanelPlugin: JupyterFrontEndPlugin<void> = {
+  id: 'bluetooth-manager:vernie-control-panel-plugin',
+  description: 'Provides the ui to control Vernie robot.',
   requires: [ITranslator, IBluetoothManager],
   autoStart: true,
   activate: (
@@ -70,7 +70,7 @@ const LegoBoostControlPanelPlugin: JupyterFrontEndPlugin<void> = {
 
     const trans = translator.load('jupyterlab');
 
-    app.commands.addCommand(CommandIDs.addLegoBoostControlPanel, {
+    app.commands.addCommand(CommandIDs.addVernieLEGOBoostControlPanel, {
       execute: args => {
         const result = bluetoothManager.devicesList.filter(
           device => device instanceof MoveHub
@@ -79,9 +79,9 @@ const LegoBoostControlPanelPlugin: JupyterFrontEndPlugin<void> = {
           const device = result[result.length - 1] as MoveHub; /* the last added MoveHub device*/
           const model = new MoveHubPanelModel(device);
           const view = new MoveHubPanelView(model, translator);
-          view.addClass('jp-lego-boost-control-panel');
-          view.id = 'lego-boost-control-panel';
-          view.title.label = 'Lego Boost Control Panel';
+          view.addClass('jp-lego-boost-vernie-control-panel');
+          view.id = 'lego-boost-vernie-control-panel';
+          view.title.label = 'LEGO® Boost Vernie Control Panel';
           view.title.closable = true;
           app.shell.add(view, 'main');
         } else {
@@ -89,12 +89,12 @@ const LegoBoostControlPanelPlugin: JupyterFrontEndPlugin<void> = {
         }
       },
 
-      caption: trans.__('Add a Lego Boost control panel.'),
-      label: trans.__('Add a Lego Boost Control Panel')
+      caption: trans.__('Add a Vernie LEGO® Boost control panel.'),
+      label: trans.__('Add a Vernie LEGO® Boost Control Panel')
     });
 
     app.contextMenu.addItem({
-      command: CommandIDs.addLegoBoostControlPanel,
+      command: CommandIDs.addVernieLEGOBoostControlPanel,
       selector: `jp-tree-item.jp-RunningSessions-item.jp-bluetooth-Move-Hub`,
       rank: 1
     });
@@ -103,6 +103,6 @@ const LegoBoostControlPanelPlugin: JupyterFrontEndPlugin<void> = {
 
 const MoveHubExtensionPlugins: JupyterFrontEndPlugin<any>[] = [
   MoveHubRegisterPlugin,
-  LegoBoostControlPanelPlugin
+  VernieLEGOBoostControlPanelPlugin
 ];
 export default MoveHubExtensionPlugins;

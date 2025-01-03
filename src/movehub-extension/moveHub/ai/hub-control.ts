@@ -79,12 +79,10 @@ class HubControl {
       this.device.tilt.pitch = pitch;
     });
 
-    this.hub.emitter.on('rotation', (rotation: any) => {
+    this.hub.emitter.on('rotation', (rotation: { port: keyof DeviceInfo['ports']; angle: number }) => {
       const { port, angle } = rotation;
-      console.log(`port=${port}, angle=${angle}`)
-      //this.device.ports[port].angle = angle;
+      this.device.ports[port].angle = angle;
     });
-
     await this.hub.ledAsync('red');
     await this.hub.ledAsync('yellow');
     await this.hub.ledAsync('green');

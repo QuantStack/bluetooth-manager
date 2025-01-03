@@ -204,8 +204,5 @@
             "selector-no-vendor-prefix": null,
             "value-no-vendor-prefix": null
         }
-    },
-    "resolutions": {
-        "lego-boost-browser": "portal:/home/fhaudin/dev/robots/lego-boost-browser"
     }
 }
