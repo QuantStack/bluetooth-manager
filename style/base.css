@@ -5,13 +5,11 @@
 */
 
 .color-pickers-container {
-  /*margin: auto ;*/
-  background-color: aquamarine;
+  margin: auto ;
 }
 
 .inputs_with_buttons_container {
-  /*max-width: 45%;*/
-  background-color: orange;
+  max-width: 45%;
 }
 
 .lego-boost-vernie-panel-title {

@@ -15,6 +15,7 @@ import {
 import { Dialog, showDialog } from '@jupyterlab/apputils';
 import { Widget } from '@lumino/widgets';
 
+
 export namespace CommandIDs {
   export const openDevicesRegistryDialog =
     'bluetooth-manager:open-dialog-for-devices-registry';
@@ -22,17 +23,9 @@ export namespace CommandIDs {
   export const disconnectDevice = 'bluetooth-manager:disconnect-device';
 }
 
-export function buildIdentifier(device: BluetoothManager.Device): string {
-  const identifier =
-    device.native.name?.replace(/\s+/g, '-') + '-' + device.native.id;
+export function buildIdentifier(native: BluetoothDevice): string {
+  const identifier = native.name?.replace(/\s+/g, '-') + '-' + native.id;
   return identifier;
-}
-export async function getServicesFromDevice(
-  device: BluetoothDevice
-): Promise<Array<BluetoothRemoteGATTService> | undefined> {
-  const server = await device.gatt?.connect();
-  const services = await server?.getPrimaryServices(); // Get all services exposed by the device
-  return services;
 }
 
 const BluetoothManagerPlugin: JupyterFrontEndPlugin<IBluetoothManager> = {
@@ -41,17 +34,17 @@ const BluetoothManagerPlugin: JupyterFrontEndPlugin<IBluetoothManager> = {
   provides: IBluetoothManager,
   autoStart: true,
   activate: (app: JupyterFrontEnd): IBluetoothManager => {
-    console.log('bluetooth-manager-plugin is activated.');
-    return new BluetoothManager();
+    console.log('JupyterLab bluetooth-manager-plugin is activated!');
+    const bluetoothManager = new BluetoothManager();
+    bluetoothManager.deviceListChanged.connect(
+      async (sender, deviceList: Array<BluetoothManager.Device>) => {
+        console.warn('The list of devices has been updated and is now: ', deviceList);
+      }
+    );
+  
+    return bluetoothManager;
   }
 };
-/*function getIdentifierList(bluetoothManager: IBluetoothManager) {
-  let identifierList: Array<string> = [];
-  bluetoothManager.registry.itemsList.forEach(item => {
-    identifierList.push(item.identifier);
-  });
-  return identifierList;
-}*/
 
 const BluetoothSidebarPlugin: JupyterFrontEndPlugin<void> = {
   id: 'bluetooh-manager:bluetooth-sidebar-plugin',
@@ -65,7 +58,7 @@ const BluetoothSidebarPlugin: JupyterFrontEndPlugin<void> = {
     translator: ITranslator,
     bluetoothManager: IBluetoothManager
   ): void => {
-    console.log('bluetooth-manager plugin is activated.');
+    console.log('JupyterLab bluetooth-sidebar plugin is activated!');
     const trans = translator.load('jupyterlab');
     const { commands } = app;
     const openDevicesRegistryDialogLabel = trans.__(
@@ -75,19 +68,18 @@ const BluetoothSidebarPlugin: JupyterFrontEndPlugin<void> = {
 
     function createTestFunction(device: BluetoothManager.Device) {
       return function test(node: HTMLElement): boolean {
-        const testString = buildIdentifier(device);
+        const testString = buildIdentifier(device.native);
         return node.title === testString; // example additional logic using device
       };
     }
 
     commands.addCommand(CommandIDs.disconnectDevice, {
       execute: async args => {
-        bluetoothManager.devicesList.filter(item => {
+        bluetoothManager.deviceList.filter(item => {
           const testWithDevice = createTestFunction(item);
           const node = app.contextMenuHitTest(testWithDevice);
-          const identifier = buildIdentifier(item);
+          const identifier = buildIdentifier(item.native);
           if (identifier === node?.title) {
-            console.warn('It is a match');
             bluetoothManager.disconnectDevice(item);
           }
         });
@@ -118,7 +110,7 @@ const BluetoothSidebarPlugin: JupyterFrontEndPlugin<void> = {
               if (item.identifier === result.value) {
                 await bluetoothManager.connectDevice(item);
               } else {
-                console.warn(`There is no corresponding item in the registry`);
+                console.warn(`There is no corresponding item in the registry!`);
               }
             });
           }
@@ -130,18 +122,23 @@ const BluetoothSidebarPlugin: JupyterFrontEndPlugin<void> = {
       supportsMultipleViews: false,
       running: () => {
         runningItemsList = [];
-        bluetoothManager.devicesList.forEach(device => {
-          runningItemsList.push(new BluetoothDeviceRunningItem(device));
+        bluetoothManager.deviceList.forEach(device => {
+          runningItemsList.push(
+            new BluetoothDeviceRunningItem(
+              device,
+              bluetoothManager as BluetoothManager
+            )
+          );
         });
         return runningItemsList;
       },
       shutdownAll: () => {
-        bluetoothManager.removeAllDevices(bluetoothManager.devicesList);
+        bluetoothManager.removeAllDevices(bluetoothManager.deviceList);
       },
       refreshRunning: () => {
         return void 0;
       },
-      runningChanged: bluetoothManager.devicesListChanged,
+      runningChanged: bluetoothManager.deviceListChanged,
       shutdownLabel: trans.__('Disconnect'),
       shutdownAllLabel: trans.__('Disconnect All'),
       shutdownAllConfirmationText: trans.__(

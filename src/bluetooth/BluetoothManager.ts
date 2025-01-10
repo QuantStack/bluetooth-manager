@@ -1,90 +1,94 @@
-//import { JupyterFrontEnd } from '@jupyterlab/application';
 import { Signal } from '@lumino/signaling';
-//import { Service, servicesDict } from '../services';
-//import { IDisposable } from '@lumino/disposable';
 import { Token } from '@lumino/coreutils';
 import { DeviceOptions } from './DeviceOptions';
-
-
+import { buildIdentifier } from '../bluetooth-extension';
 
 /**
  * A class used to update the list of connected device and related signals used to rerender the connected devices section.
  */
 export class BluetoothManager implements IBluetoothManager {
   constructor() {
-    this.devicesListChanged = new Signal<this, Array<BluetoothManager.Device>>(
+    this.deviceListChanged = new Signal<this, Array<BluetoothManager.Device>>(
       this
     );
-    this.connectedADevice = new Signal<this, BluetoothManager.Device>(this);
     this.registeredByAPlugin = new Signal<
       this,
       BluetoothManager.DeviceRegistry
     >(this);
     this._registry = new BluetoothManager.DeviceRegistry();
-    this._devicesList = [];
+    this._deviceList = [];
+    this.identifierRegistry = [];
   }
 
-  get devicesList(): Array<BluetoothManager.Device> {
-    return this._devicesList;
+  get deviceList(): Array<BluetoothManager.Device> {
+    return this._deviceList;
   }
 
   get registry(): BluetoothManager.DeviceRegistry {
     return this._registry;
   }
-
   async connectDevice(
     registryItem: IDeviceRegistryItem
-  ): Promise<BluetoothManager.Device | undefined> {
-    if (registryItem) {
-      const native = await navigator.bluetooth.requestDevice(
-        registryItem.options
-      );
-      const device = await registryItem.factory(native);
-      if (device) {
-        this.connectedADevice.emit(device!);
-        this.addDeviceToList(device!);
-        return device;
-      } else throw new Error('There is no available device to connect.');
-    } else return;
+  ): Promise<BluetoothManager.Device> {
+    const native = await this.requestDevice(registryItem);
+    const device = await registryItem.factory(native!);
+    if (device?.isConnected) {
+      const identifier = buildIdentifier(device.native);
+      this.addDeviceToList(device!);
+   
+      device!.OnConnectionChanged.connect(
+        async (sender, isConnected: boolean) => {
+          if (isConnected === false) {
+            console.warn(
+              `The connection state for device identified as ${identifier} has changed and it is now set to false: ${isConnected}`,
+            
+            );
+            this.removeDeviceFromList(device!);
+            
+
+          }
+        }
+      )
+    }
+
+    return device!;
   }
 
-  async disconnectDevice(device: BluetoothManager.Device): Promise<void> {
-    device.disconnect();
-    this.removeDeviceFromList(device);
+  async disconnectDevice(device: BluetoothManager.Device) {
+    
+    const isDisconnected = await device.disconnect();
+    if (isDisconnected){
+      this.removeDeviceFromList(device)
+    }
   }
 
   // Method to add an item to the list
   addDeviceToList(device: BluetoothManager.Device): void {
-    this._devicesList.push(device);
+    const identifier = buildIdentifier(device.native);
+    if (!(identifier in this.identifierRegistry)) {
+      this._deviceList.push(device);
+      this.identifierRegistry.push(identifier);
+    } else {
+      console.warn('The device is already in the identifierRegistry');
+    }
     // Emit the signal when the list changes
-
-    this.devicesListChanged.emit(this._devicesList);
-    console.warn(
-      `A device is added and the list has ${this._devicesList.length} devices`
-    );
+    this.deviceListChanged.emit(this._deviceList);
   }
 
   // Method to remove an item from the list
   removeDeviceFromList(device: BluetoothManager.Device): void {
-    console.warn('Before removing, the list of devices is:', this._devicesList);
-    const index = this._devicesList.indexOf(device);
+    const index = this._deviceList.indexOf(device);
     if (index > -1) {
-      this._devicesList.splice(index, 1);
+      this._deviceList.splice(index, 1);
+      this.identifierRegistry.splice(index, 1);
       // Emit the signal when the list changes
-      this.devicesListChanged.emit(this._devicesList);
+      this.deviceListChanged.emit(this._deviceList);
     }
-    console.warn(
-      `A device is removed and the list has ${this._devicesList.length} devices`
-    );
-    console.warn('After removing, the list of devices is:', this._devicesList);
   }
-
   removeAllDevices() {
-    this._devicesList.forEach((device, index) => {
-      console.warn(`device n°${index + 1} with deviceID ${device.native.id}`);
-      device.disconnect();
+    this._deviceList.forEach((device, index) => {
       this.removeDeviceFromList(device);
-      this.devicesListChanged.emit(this._devicesList);
+      this.deviceListChanged.emit(this._deviceList);
     });
   }
 
@@ -92,51 +96,113 @@ export class BluetoothManager implements IBluetoothManager {
     this._registry.add(registryItem);
     this.registeredByAPlugin.emit(this._registry);
     console.warn(
-      `New item from category ${registryItem.identifier} is added to the registry`
+      `New item from category ${registryItem.identifier} is added to the registry.`
     );
     return this._registry;
   }
-  private _devicesList: Array<BluetoothManager.Device>;
-  public devicesListChanged: Signal<this, Array<BluetoothManager.Device>>;
-  public connectedADevice: Signal<this, BluetoothManager.Device>;
+
+  async requestDevice(
+    registryItem: IDeviceRegistryItem
+  ): Promise<BluetoothDevice | undefined> {
+    try {
+      const native = await navigator.bluetooth.requestDevice(
+        registryItem.options
+      );
+      return native;
+    } catch (error) {
+      console.error('No bluetooth device could be requested ' + error);
+      return undefined;
+    }
+  }
+  private _deviceList: Array<BluetoothManager.Device>;
+  public deviceListChanged: Signal<this, Array<BluetoothManager.Device>>;
   public registeredByAPlugin: Signal<
     BluetoothManager,
     BluetoothManager.DeviceRegistry
   >;
   //public disconnectedADevice: Signal<this, string>;
   private _registry: BluetoothManager.DeviceRegistry;
+  public identifierRegistry: Array<string>;
 }
 
 export namespace BluetoothManager {
-  export class Device /*implements IDisposable*/ {
-    /*isDisposed: boolean;
-    dispose(): void {}*/
+  export class Device {
     public isConnected: boolean | undefined;
     public native: BluetoothDevice;
+    public OnConnectionChanged: Signal<this, boolean>;
 
-    async connect(registryItem: IDeviceRegistryItem): Promise<BluetoothDevice> {
-      this.native = await navigator.bluetooth.requestDevice(
-        registryItem.options
-      );
+    constructor(native: BluetoothDevice) {
+      this.OnConnectionChanged = new Signal<this, boolean>(this);
+      this.isConnected = false;
+      this.native = native;
+    }
 
-      this.native.addEventListener('gattserverdisconnected', async event => {
-        console.warn('Device got disconnected');
+    async connectAndGetAllServices(
+      native: BluetoothDevice
+    ): Promise<Array<BluetoothRemoteGATTService>> {
+      this.native.addEventListener('gattserverdisconnected', event => {
+        this.isConnected = false;
+        this.OnConnectionChanged.emit(this.isConnected);
       });
+
+      await this.native.gatt?.connect();
       this.isConnected = true;
-      return this.native;
+      this.OnConnectionChanged.emit(this.isConnected);
+      const services = await native.gatt?.getPrimaryServices(); // Get all services exposed by the device
+
+      if (!services || services.length === 0) {
+        throw new Error('No services found on the device.');
+      } else return services;
+    }
+
+    async getService(
+      native: BluetoothDevice,
+      selectedServiceUUID: string
+    ): Promise<BluetoothRemoteGATTService | undefined> {
+      const services = await this.connectAndGetAllServices(native);
+      const selectedService = services.find(
+        service => service.uuid === selectedServiceUUID
+      );
+      if (selectedService) {
+        return selectedService;
+      } else {
+        return;
+      }
+    }
+
+    async getAllCharacteristics(
+      native: BluetoothDevice,
+      serviceUUID: string
+    ): Promise<Array<BluetoothRemoteGATTCharacteristic> | undefined> {
+      const service = await this.getService(native, serviceUUID);
+      if (service) {
+        return service.getCharacteristics();
+      } else {
+        return;
+      }
+    }
+    async getCharacteristic(
+      native: BluetoothDevice,
+      serviceUUID: string,
+      characteristicUUID: string
+    ): Promise<BluetoothRemoteGATTCharacteristic | undefined> {
+      const service = await this.getService(native, serviceUUID);
+      const characteristic = service?.getCharacteristic(characteristicUUID);
+      return characteristic;
     }
 
     async disconnect(): Promise<boolean> {
-      console.warn('Disconnect is called!');
       if (this.native) {
         this.native.gatt?.disconnect();
         this.isConnected = false;
+        this.OnConnectionChanged.emit(this.isConnected);
         return true;
       }
       this.isConnected = true;
       return false;
     }
   }
+
   export class DeviceRegistry implements IDeviceRegistry {
     private _registry: Array<IDeviceRegistryItem>;
     public registryItem: IDeviceRegistryItem;
@@ -160,19 +226,15 @@ export interface IBluetoothManager /*extends IDisposable*/ {
   addDeviceToList(Device: BluetoothManager.Device): void;
   removeDeviceFromList(Device: BluetoothManager.Device): void;
   removeAllDevices(Devices: Array<BluetoothManager.Device>): void;
-  connectDevice(
-    registryItem: IDeviceRegistryItem
-  ): Promise<BluetoothManager.Device | undefined>;
-  disconnectDevice(Device: BluetoothManager.Device): Promise<void>;
   register(registryItem: IDeviceRegistryItem): BluetoothManager.DeviceRegistry;
-  devicesListChanged: Signal<BluetoothManager, Array<BluetoothManager.Device>>;
+  connectDevice(registryItem: IDeviceRegistryItem): void;
+  disconnectDevice(device: BluetoothManager.Device): void;
+  deviceListChanged: Signal<BluetoothManager, Array<BluetoothManager.Device>>;
   registeredByAPlugin: Signal<
     BluetoothManager,
     BluetoothManager.DeviceRegistry
   >;
-  connectedADevice: Signal<BluetoothManager, BluetoothManager.Device>;
-  //get disconnectedADevice(): Signal<BluetoothManager, string>;
-  get devicesList(): Array<BluetoothManager.Device>;
+  get deviceList(): Array<BluetoothManager.Device>;
   get registry(): BluetoothManager.DeviceRegistry;
 }
 

@@ -5,6 +5,7 @@ import { ColorSelector, colorValues } from './components/ColorSelector';
 import { DriveForm } from './components/DriveForm';
 import { TurnForm } from './components/TurnForm';
 import { MoveHub } from './moveHub';
+import VernieComponent from './components/Vernie';
 
 interface IMoveHubUI {
   device: MoveHub;
@@ -16,6 +17,7 @@ export function MoveHubUI(props: IMoveHubUI) {
       <h2 className='lego-boost-vernie-panel-title'>
         Vernie LEGO® Boost control panel
       </h2>
+      <VernieComponent/>
       <div className='control-components-container'>
         <div className='inputs_with_buttons_container'>
           <DriveForm hub={props.device.hub} />
@@ -24,6 +26,7 @@ export function MoveHubUI(props: IMoveHubUI) {
         <div>
           <ColorSelector hub={props.device.hub} colorValues={colorValues} />
         </div>
+       
       </div>
     </>
   );

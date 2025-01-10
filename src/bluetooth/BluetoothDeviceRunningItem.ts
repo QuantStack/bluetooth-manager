@@ -6,13 +6,14 @@ import { buildIdentifier } from '../bluetooth-extension';
 export class BluetoothDeviceRunningItem
   implements IRunningSessions.IRunningItem
 {
-  constructor(device: BluetoothManager.Device) {
+  constructor(device: BluetoothManager.Device, manager: BluetoothManager) {
     this._device = device;
+    this.manager = manager;
 
     if (this._device.native.name) {
       let deviceName = this._device.native.name;
       this.className = 'jp-bluetooth-' + deviceName.replace(/\s+/g, '-');
-      console.log('className:', this.className);
+  
     }
   }
 
@@ -26,7 +27,7 @@ export class BluetoothDeviceRunningItem
     return this._device.native.name + '\t' + this._device.native.id;
   }
   labelTitle() {
-    const title = buildIdentifier(this._device);
+    const title = buildIdentifier(this._device.native);
     return title;
   }
 

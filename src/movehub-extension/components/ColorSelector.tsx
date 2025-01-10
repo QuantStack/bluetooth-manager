@@ -52,7 +52,6 @@ export const ColorSelector = (props: IColorPickerProps) => {
                 onClick={() => {
                   try {
                     const colorString = colorOptionsDict[color]; // Map color to its corresponding value
-                    console.log(`You clicked on: ${colorString}`);
                     hub.ledAsync(colorString); // Directly set the LED color
                     setSelectedColor(color); // Update selected color state
                   } catch (error) {

@@ -1,9 +1,9 @@
 import { HubAsync } from './moveHub/hub/hubAsync';
 import { BluetoothManager } from '../bluetooth/BluetoothManager';
-import { getServicesFromDevice } from '../bluetooth-extension';
 import { HubControl } from './moveHub/ai/hub-control';
 import { DeviceConfiguration, DEFAULT_CONFIG } from './moveHub/hub/hubAsync';
 import { ControlData, DeviceInfo } from './moveHub/types';
+import { moveHubCharacteristicUUID, moveHubServiceUUID } from '.';
 
 export const defaultConfiguration: DeviceConfiguration = {
   distanceModifier: DEFAULT_CONFIG.METRIC_MODIFIER,
@@ -59,54 +59,36 @@ export class MoveHub extends BluetoothManager.Device {
   }
 
   async initDevice(): Promise<MoveHub> {
-    try {
-      const services = await getServicesFromDevice(this.native); // Await services directly
+    const characteristic = await this.getCharacteristic(
+      this.native,
+      moveHubServiceUUID,
+      moveHubCharacteristicUUID
+    );
 
-      if (!services || services.length === 0) {
-        throw new Error('No services found on the device.');
-      }
-      for (const service of services) {
-        if (service.uuid === '00001623-1212-efde-1623-785feabcd123') {
-          const characteristics = await service.getCharacteristic(
-            '00001624-1212-efde-1623-785feabcd123'
-          );
-          if (!characteristics) {
-            throw new Error(
-              'Characteristics not found for the specified service.'
-            );
-          }
-          console.log('Characteristics fetched:', characteristics);
-          // Initialize hub
-          this.hub = new HubAsync(characteristics, defaultConfiguration);
-          this.hub.logDebug = this.logDebug;
+    // Initialize hub
+    if (characteristic !== undefined) {
+      this.hub = new HubAsync(characteristic, defaultConfiguration);
+      this.hub.logDebug = this.logDebug;
 
-          // Register events
-          // Ensure hub is fully configured before returning
-          await new Promise(resolve => {
-            this.hub.emitter.on('connect', () => {
-              this.hub.afterInitialization();
-              const hubControl = new HubControl(
-                deviceInfo,
-                controlData,
-                defaultConfiguration
-              );
-              hubControl.start(this.hub);
+      // Register events
+      // Ensure hub is fully configured before returning
+      this.hub.emitter.on('connect', () => {
+        this.hub.afterInitialization();
+        const hubControl = new HubControl(
+          deviceInfo,
+          controlData,
+          defaultConfiguration
+        );
+        hubControl.start(this.hub);
 
-              setInterval(() => {
-                hubControl.update();
-              }, 100);
-
-              resolve(true);
-            });
-          });
-          break;
-        }
-      }
-
-      return this;
-    } catch (error) {
-      console.error('Error during device initialization:', error);
-      throw error; 
+        setInterval(() => {
+          hubControl.update();
+        }, 100);
+      });
+    } else {
+      console.warn('There is no characteristic available on this service.');
     }
+
+    return this;
   }
 }
