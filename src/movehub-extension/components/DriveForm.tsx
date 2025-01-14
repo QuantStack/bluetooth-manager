@@ -16,18 +16,26 @@ export function DriveForm(props: IDriveFormProps) {
   };
 
   return (
-    <form onSubmit={driveSubmit} className="move-form">
-      <h4>Move forward or backward (in cm)</h4>
-      <div className="move-input-with-button">
-        <InputField
-          type="Distance"
-          value={distance}
-          onChange={setDistance}
-          placeholder="Enter a distance (in cm)"
-        />
-        <button type="submit" className="move-validation-button">
-          Drive
-        </button>
+    <form onSubmit={driveSubmit}>
+      <div className="move-form-main-container">
+        <div className="move-input-field-text">
+          <h4>Move forward or backward (in cm)</h4>
+        </div>
+        <div className="move-input-field-with-button">
+          <div>
+            <InputField
+              type="Distance"
+              value={distance}
+              onChange={setDistance}
+              placeholder="Enter a distance (in cm)"
+            />
+          </div>
+          <div>
+            <button type="submit" className="move-validation-button">
+              Drive
+            </button>
+          </div>
+        </div>
       </div>
     </form>
   );

@@ -17,18 +17,26 @@ export function TurnForm(props: ITurnFormProps) {
   };
 
   return (
-    <form onSubmit={turnSubmit} className="move-form">
-      <h4>Turn by an angle (in degrees)</h4>
-      <div className="move-input-with-button">
-        <InputField
-          type="angle"
-          value={angle}
-          onChange={setAngle}
-          placeholder="Enter a angle (in degrees)"
-        />
-        <button className="move-validation-button" type="submit">
-          Turn
-        </button>
+    <form onSubmit={turnSubmit}>
+      <div className="move-form-main-container">
+        <div className="move-input-field-text">
+          <h4>Turn by an angle (in degrees)</h4>
+        </div>
+        <div className="move-input-field-with-button">
+          <div>
+            <InputField
+              type="angle"
+              value={angle}
+              onChange={setAngle}
+              placeholder="Enter a angle (in degrees)"
+            />
+          </div>
+          <div>
+            <button className="move-validation-button" type="submit">
+              Turn
+            </button>
+          </div>
+        </div>
       </div>
     </form>
   );
