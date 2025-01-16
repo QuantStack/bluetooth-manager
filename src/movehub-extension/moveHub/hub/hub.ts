@@ -26,7 +26,7 @@ export type LedColor =
 
 export class Hub {
   emitter: EventEmitter<any> = new EventEmitter<any>();
-  bluetooth: BluetoothRemoteGATTCharacteristic;
+  characteristic: BluetoothRemoteGATTCharacteristic;
 
   log: (message?: any, ...optionalParams: any[]) => void;
   logDebug: (message?: any, ...optionalParams: any[]) => void;
@@ -52,8 +52,8 @@ export class Hub {
     this.emitter.emit(type, data);
   }
 
-  constructor(bluetooth: BluetoothRemoteGATTCharacteristic) {
-    this.bluetooth = bluetooth;
+  constructor(characteristic: BluetoothRemoteGATTCharacteristic) {
+    this.characteristic = characteristic;
     this.log = console.log;
     this.autoSubscribe = true;
     this.ports = {};
@@ -108,7 +108,7 @@ export class Hub {
   }
 
   private addListeners() {
-    this.bluetooth.addEventListener('characteristicvaluechanged', event => {
+    this.characteristic.addEventListener('characteristicvaluechanged', event => {
       // https://googlechrome.github.io/samples/web-bluetooth/read-characteristic-value-changed.html
       // @ts-ignore
       const data = Buffer.from(event.target.value.buffer);
@@ -117,7 +117,7 @@ export class Hub {
 
     setTimeout(() => {
       // Without timout missed first characteristicvaluechanged events
-      this.bluetooth.startNotifications();
+      this.characteristic.startNotifications();
     }, 1000);
   }
 
@@ -485,7 +485,7 @@ export class Hub {
     const el: any = this.writeCue.shift();
     this.logDebug('Writing to device', el);
     this.isWriting = true;
-    this.bluetooth
+    this.characteristic
       .writeValue(el.data)
       .then(() => {
         this.isWriting = false;

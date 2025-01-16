@@ -7,8 +7,6 @@ type States = {
   [key in State]: (hub: HubControl) => void;
 };
 
-
-
 class HubControl {
   hub: HubAsync | null;
   device: DeviceInfo;

@@ -39,7 +39,7 @@ const MoveHubRegisterPlugin: JupyterFrontEndPlugin<void> = {
       },
       factory: async (native: BluetoothDevice) => {
         let device = new MoveHub(native);
-        device = await device.initDevice();
+        await device.initDevice();
         const hub = device.hub;
 
         if (!hub) {

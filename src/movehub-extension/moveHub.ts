@@ -33,24 +33,29 @@ export const deviceInfo: DeviceInfo = {
   connected: false
 };
 
-/**
- * Input data to used on manual and AI control
- * @property MoveHub#controlData
- */
-export const controlData: ControlData = {
-  input: null,
-  speed: 0,
-  turnAngle: 0,
-  tilt: { roll: 0, pitch: 0 },
-  forceState: null,
-  updateInputMode: (controlData: ControlData) => null,
-  controlUpdateTime: undefined,
-  state: undefined
-};
-
 export class MoveHub extends BluetoothManager.Device {
   public configuration: DeviceConfiguration;
   public hub: HubAsync;
+  public hubControl: HubControl;
+  public controlData: ControlData;
+
+  /**
+   * Input data to used on manual and AI control
+   * @property MoveHub#controlData
+   */
+  constructor(native: BluetoothDevice) {
+    super(native);
+    this.controlData = {
+      input: null,
+      speed: 0,
+      turnAngle: 0,
+      tilt: { roll: 0, pitch: 0 },
+      forceState: null,
+      updateInputMode: (controlData: ControlData) => null,
+      controlUpdateTime: undefined,
+      state: undefined
+    };
+  }
 
   logDebug(message?: any, ...optionalParams: any[]): void {
     if (message) {
@@ -58,7 +63,13 @@ export class MoveHub extends BluetoothManager.Device {
     } else return;
   }
 
-  async initDevice(): Promise<MoveHub> {
+  private preCheck(): boolean {
+    if (!this.hub || this.hub.connected === false) return false;
+    this.hubControl.setNextState('Manual');
+    return true;
+  }
+
+  async initDevice(): Promise<void> {
     const characteristic = await this.getCharacteristic(
       this.native,
       moveHubServiceUUID,
@@ -74,21 +85,48 @@ export class MoveHub extends BluetoothManager.Device {
       // Ensure hub is fully configured before returning
       this.hub.emitter.on('connect', () => {
         this.hub.afterInitialization();
-        const hubControl = new HubControl(
+        this.hubControl = new HubControl(
           deviceInfo,
-          controlData,
+          this.controlData,
           defaultConfiguration
         );
-        hubControl.start(this.hub);
+        this.hubControl.start(this.hub);
 
         setInterval(() => {
-          hubControl.update();
+          this.hubControl.update();
         }, 100);
       });
     } else {
       console.warn('There is no characteristic available on this service.');
     }
+  }
 
-    return this;
+  /**
+   * Stop engines A and B
+   * @method MoveHub#stop
+   * @returns {Promise}
+   */
+  public async stop(): Promise<any> {
+    console.log('We are in stop method');
+    if (!this.preCheck()) return;
+    
+    else {
+      this.controlData.speed = 0;
+      this.controlData.turnAngle = 0;
+      // control datas values might have always been 0, execute force stop
+      return await this.hub.motorTimeMultiAsync(1, 0, 0);
+    }
+  }
+  
+
+  /**
+   * Update Boost motor and control configuration
+   * @method MoveHub#updateConfiguration
+   * @param {DeviceConfiguration} configuration LegoBoost motor and control configuration
+   */
+  updateConfiguration(configuration: DeviceConfiguration): void {
+    if (!this.hub) return;
+    this.hub.updateConfiguration(configuration);
+    this.hubControl.updateConfiguration(configuration);
   }
 }

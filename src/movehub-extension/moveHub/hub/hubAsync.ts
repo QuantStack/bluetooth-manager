@@ -69,8 +69,8 @@ export class HubAsync extends Hub {
   modifier: number;
   distance: number;
 
-  constructor(bluetooth: BluetoothRemoteGATTCharacteristic, configuration: DeviceConfiguration) {
-    super(bluetooth);
+  constructor(characteristic: BluetoothRemoteGATTCharacteristic, configuration: DeviceConfiguration) {
+    super(characteristic);
     validateConfiguration(configuration);
     this.configuration = configuration;
   }
@@ -305,6 +305,18 @@ export class HubAsync extends Hub {
         .then((value:any) => this.motorAngleMulti(0, 0, 0));
     }
   }
+
+  async driveToDirection(direction: number): Promise<any> {
+    if (direction > 0) return await this.driveUntil();
+    else return await this.drive(-10000);
+  }
+
+
+  /**
+   * Stop engines A and B
+   * @method MoveHub#stop
+   * @returns {Promise}
+   */
 
   /**
    * Turn until there is no object in sensors sight

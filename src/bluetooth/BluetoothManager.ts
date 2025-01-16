@@ -44,8 +44,6 @@ export class BluetoothManager implements IBluetoothManager {
             
             );
             this.removeDeviceFromList(device!);
-            
-
           }
         }
       )

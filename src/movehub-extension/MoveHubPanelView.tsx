@@ -6,29 +6,51 @@ import { DriveForm } from './components/DriveForm';
 import { TurnForm } from './components/TurnForm';
 import { MoveHub } from './moveHub';
 import VernieComponent from './components/Vernie';
+import ManualControl from './components/ManualControl';
+import { HubAsync } from './moveHub/hub/hubAsync';
 
 interface IMoveHubUI {
   device: MoveHub;
 }
 
+export interface IHubControlProps {
+  hub: HubAsync; // Declare the 'hub' property with its correct type
+}
+
 export function MoveHubUI(props: IMoveHubUI) {
   return (
     <>
-      <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center', gap: '1rem' }}>
-        <VernieComponent />
-        <h2 className="lego-boost-vernie-panel-title">
-          Vernie LEGO® Boost control panel
-        </h2>
+      <div className="movehub-ui-main-container">
+        <div
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            gap: '2rem'
+          }}
+        >
+          <h2 className="lego-boost-vernie-panel-title">
+            Vernie LEGO® Boost control panel
+          </h2>
+          <VernieComponent />
+        </div>
       </div>
       <div className="control-components-container">
-        <div className="inputs_with_buttons_container">
-          <DriveForm hub={props.device.hub} />
-          <TurnForm hub={props.device.hub} />
+        <div className="left-column">
+          <div className="inputs-with-buttons-container">
+            <DriveForm hub={props.device.hub} />
+            <TurnForm hub={props.device.hub} />
+
+            <ColorSelector hub={props.device.hub} />
+          </div>
         </div>
-        <div>
-          <ColorSelector hub={props.device.hub} />
+        <div className="right-column">
+          <div>
+            <ManualControl moveHub={props.device} />
+          </div>
         </div>
       </div>
+
     </>
   );
 }

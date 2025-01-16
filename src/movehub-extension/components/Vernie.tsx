@@ -6,7 +6,7 @@ const VernieSVGUrl = `data:image/svg+xml;base64,${btoa(VernieSVG)}`;
 const VernieComponent: React.FC = () => {
   return (
     <div>
-      <img src={VernieSVGUrl} alt="Vernie happy face" height="75px"/>
+      <img src={VernieSVGUrl} alt="Vernie happy face" height="45px"/>
     </div>
   );
 };

@@ -1,6 +1,5 @@
 import { useState } from 'react';
-//import { Button, Grid2 } from '@mui/material';
-import { HubAsync } from '../moveHub/hub/hubAsync';
+import { IHubControlProps } from '../MoveHubPanelView';
 import Select from 'react-select';
 const colorOptions = [
   { value: '#cecece', label: 'off' },
@@ -14,25 +13,6 @@ const colorOptions = [
   { value: '#f00020', label: 'red' },
   { value: '#ffffff', label: 'white' }
 ];
-
-/*const colorOptionsDict: Record<string, string> = {
-  '#cecece': 'off',
-  '#ffc0cb': 'pink',
-  '#800080': 'purple',
-  '#0000ff': 'blue',
-  '#00ffff': 'cyan',
-  '#008000': 'green',
-  '#ffff00': 'yellow',
-  '#ed7f10': 'orange',
-  '#f00020': 'red',
-  '#ffffff': 'white'
-};*/
-
-//export const colorValues = Object.keys(colorOptionsDict);
-
-export interface IColorPickerProps {
-  hub: HubAsync; // Declare the 'hub' property with its correct type
-}
 
 const customStyles = {
   control: (provided: any) => ({
@@ -77,10 +57,9 @@ const customStyles = {
     cursor: 'pointer'
   })
 };
-export function ColorSelector(props: IColorPickerProps) {
+export function ColorSelector(props: IHubControlProps) {
   const [selectedColor, setSelectedColor] = useState('#FFFFFF');
   const hub = props.hub;
-  console.log('selectedColor:', selectedColor);
   if (!hub || !hub.emitter || !hub.ledAsync) {
     console.error('Hub is not properly initialized:', hub);
     return <div>Error: Hub is not initialized</div>;
@@ -96,11 +75,9 @@ export function ColorSelector(props: IColorPickerProps) {
           styles={customStyles}
           options={colorOptions}
           onChange={selectedOption => {
-            console.log('Value has changed');
             try {
               if (selectedOption) {
                 const colorString = selectedOption.label; // Map color to its corresponding value
-                console.log('colorString:', colorString);
                 hub.ledAsync(colorString); // Directly set the LED color
                 setSelectedColor(selectedOption.value); // Update selected color state
               }
