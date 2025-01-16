@@ -21,6 +21,7 @@
   align-items: center;
   justify-content: center;
 }
+
 .move-form-main-container {
   max-width: 100%;
   display: flex;
@@ -28,8 +29,8 @@
   justify-items: center;
   gap: 16px;
   margin-bottom: 8px;
-
 }
+
 .move-input-field-text {
   width: 50%;
 }
@@ -82,14 +83,12 @@
   width: 50%;
 }
 
-
 h4 {
   margin: 0.25rem;
 }
 
 .manual-control-container {
-  display: flex;
-  align-items: center;
+
 }
 
 .manual-control-grid {
@@ -100,7 +99,7 @@ h4 {
   margin-top: 20px;
   margin-left: 0px;
   margin-right: 0px;
-  width:144px;
+  width: 144px;
 }
 
 .manual-control-grid-item {

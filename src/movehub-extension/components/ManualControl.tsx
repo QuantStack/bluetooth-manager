@@ -31,7 +31,6 @@ export default function ManualControl(props: IManualControlProps) {
       src: caretUpSVGUrl,
       alt: 'Image 2',
       handleClick: async () => {
-        //await this.props.moveHub.driveToDirection();
         await props.moveHub.hub.driveToDirection(1);
       }
     },
@@ -93,9 +92,6 @@ export default function ManualControl(props: IManualControlProps) {
 
   return (
     <div className="manual-control-container">
-      <div className="move-input-field-text">
-        <h4>Drive the robot with the buttons</h4>
-      </div>
       <div className="manual-control-grid">
         {images.map(image => (
           <div className="manual-control-grid-item">

@@ -29,34 +29,33 @@ export class BluetoothManager implements IBluetoothManager {
   }
   async connectDevice(
     registryItem: IDeviceRegistryItem
-  ): Promise<BluetoothManager.Device> {
+  ): Promise<BluetoothManager.Device | undefined> {
     const native = await this.requestDevice(registryItem);
-    const device = await registryItem.factory(native!);
-    if (device?.isConnected) {
-      const identifier = buildIdentifier(device.native);
-      this.addDeviceToList(device!);
-   
-      device!.OnConnectionChanged.connect(
-        async (sender, isConnected: boolean) => {
-          if (isConnected === false) {
-            console.warn(
-              `The connection state for device identified as ${identifier} has changed and it is now set to false: ${isConnected}`,
-            
-            );
-            this.removeDeviceFromList(device!);
-          }
-        }
-      )
-    }
+    if (native) {
+      const device = await registryItem.factory(native);
+      if (device && device.isConnected) {
+        const identifier = buildIdentifier(device.native);
+        this.addDeviceToList(device!);
 
-    return device!;
+        device!.OnConnectionChanged.connect(
+          async (sender, isConnected: boolean) => {
+            if (isConnected === false) {
+              console.warn(
+                `The connection state for device identified as ${identifier} has changed and it is now set to false: ${isConnected}`
+              );
+              this.removeDeviceFromList(device!);
+            }
+          }
+        );
+        return device;
+      }
+    }
   }
 
   async disconnectDevice(device: BluetoothManager.Device) {
-    
     const isDisconnected = await device.disconnect();
-    if (isDisconnected){
-      this.removeDeviceFromList(device)
+    if (isDisconnected) {
+      this.removeDeviceFromList(device);
     }
   }
 
@@ -108,8 +107,7 @@ export class BluetoothManager implements IBluetoothManager {
       );
       return native;
     } catch (error) {
-      console.error('No bluetooth device could be requested ' + error);
-      return undefined;
+      console.error(error);
     }
   }
   private _deviceList: Array<BluetoothManager.Device>;
@@ -135,9 +133,9 @@ export namespace BluetoothManager {
       this.native = native;
     }
 
-    async connectAndGetAllServices(
-      native: BluetoothDevice
-    ): Promise<Array<BluetoothRemoteGATTService>> {
+    async connectAndGetAllServices(): Promise<
+      Array<BluetoothRemoteGATTService> | undefined
+    > {
       this.native.addEventListener('gattserverdisconnected', event => {
         this.isConnected = false;
         this.OnConnectionChanged.emit(this.isConnected);
@@ -146,47 +144,62 @@ export namespace BluetoothManager {
       await this.native.gatt?.connect();
       this.isConnected = true;
       this.OnConnectionChanged.emit(this.isConnected);
-      const services = await native.gatt?.getPrimaryServices(); // Get all services exposed by the device
-
+      const services = await this.native.gatt?.getPrimaryServices();
       if (!services || services.length === 0) {
         throw new Error('No services found on the device.');
       } else return services;
     }
 
     async getService(
-      native: BluetoothDevice,
       selectedServiceUUID: string
     ): Promise<BluetoothRemoteGATTService | undefined> {
-      const services = await this.connectAndGetAllServices(native);
-      const selectedService = services.find(
-        service => service.uuid === selectedServiceUUID
-      );
-      if (selectedService) {
-        return selectedService;
-      } else {
-        return;
+      try {
+        const services = await this.connectAndGetAllServices();
+        if (services) {
+          const selectedService = services.find(
+            service => service.uuid === selectedServiceUUID
+          );
+          return selectedService;
+        } else {
+          console.error('Services could not be reached.');
+        }
+      } catch (error) {
+        console.error('The selected service could not be found', error);
       }
     }
 
     async getAllCharacteristics(
-      native: BluetoothDevice,
       serviceUUID: string
     ): Promise<Array<BluetoothRemoteGATTCharacteristic> | undefined> {
-      const service = await this.getService(native, serviceUUID);
-      if (service) {
-        return service.getCharacteristics();
-      } else {
-        return;
+      try {
+        const service = await this.getService(serviceUUID);
+        if (service) {
+          return service.getCharacteristics();
+        } else {
+          console.error('The requested service is not available.');
+        }
+      } catch (error) {
+        console.error(
+          'There is no available characteristics on the requested service.',
+          error
+        );
       }
     }
+
     async getCharacteristic(
-      native: BluetoothDevice,
       serviceUUID: string,
       characteristicUUID: string
     ): Promise<BluetoothRemoteGATTCharacteristic | undefined> {
-      const service = await this.getService(native, serviceUUID);
-      const characteristic = service?.getCharacteristic(characteristicUUID);
-      return characteristic;
+      try {
+        const service = await this.getService(serviceUUID);
+        if (service) {
+          return service.getCharacteristic(characteristicUUID);
+        } else {
+          console.error('The requested service is not available.');
+        }
+      } catch (error) {
+        console.error('The requested characteristic is not available.', error);
+      }
     }
 
     async disconnect(): Promise<boolean> {

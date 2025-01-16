@@ -12,7 +12,6 @@ export function TurnForm(props: ITurnFormProps) {
 
   const turnSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    console.log('Submitted angle:', angle);
     hub.turn(Number(angle));
   };
 

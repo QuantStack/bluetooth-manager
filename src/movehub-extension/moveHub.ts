@@ -71,7 +71,6 @@ export class MoveHub extends BluetoothManager.Device {
 
   async initDevice(): Promise<void> {
     const characteristic = await this.getCharacteristic(
-      this.native,
       moveHubServiceUUID,
       moveHubCharacteristicUUID
     );
@@ -107,7 +106,6 @@ export class MoveHub extends BluetoothManager.Device {
    * @returns {Promise}
    */
   public async stop(): Promise<any> {
-    console.log('We are in stop method');
     if (!this.preCheck()) return;
     
     else {

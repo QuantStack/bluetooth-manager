@@ -59,6 +59,7 @@ const customStyles = {
 };
 export function ColorSelector(props: IHubControlProps) {
   const [selectedColor, setSelectedColor] = useState('#FFFFFF');
+  console.log(selectedColor)
   const hub = props.hub;
   if (!hub || !hub.emitter || !hub.ledAsync) {
     console.error('Hub is not properly initialized:', hub);
