@@ -40,17 +40,15 @@ export function MoveHubUI(props: IMoveHubUI) {
           <div className="inputs-with-buttons-container">
             <DriveForm hub={props.device.hub} />
             <TurnForm hub={props.device.hub} />
-
             <ColorSelector hub={props.device.hub} />
           </div>
         </div>
         <div className="right-column">
           <div>
-            <ManualControl moveHub={props.device} />
+            <ManualControl moveHub={props.device}/>
           </div>
         </div>
       </div>
-
     </>
   );
 }

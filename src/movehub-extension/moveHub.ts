@@ -16,28 +16,14 @@ export const defaultConfiguration: DeviceConfiguration = {
   turnSpeed: DEFAULT_CONFIG.TURN_SPEED
 };
 
-export const deviceInfo: DeviceInfo = {
-  ports: {
-    A: { action: '', angle: 0 },
-    B: { action: '', angle: 0 },
-    AB: { action: '', angle: 0 },
-    C: { action: '', angle: 0 },
-    D: { action: '', angle: 0 },
-    LED: { action: '', angle: 0 }
-  },
-  tilt: { roll: 0, pitch: 0 },
-  distance: Number.MAX_SAFE_INTEGER,
-  rssi: 0,
-  color: '',
-  error: '',
-  connected: false
-};
 
 export class MoveHub extends BluetoothManager.Device {
   public configuration: DeviceConfiguration;
   public hub: HubAsync;
   public hubControl: HubControl;
   public controlData: ControlData;
+  public deviceInfo: DeviceInfo;
+  public defaultConfiguration : DeviceConfiguration
 
   /**
    * Input data to used on manual and AI control
@@ -54,6 +40,33 @@ export class MoveHub extends BluetoothManager.Device {
       updateInputMode: (controlData: ControlData) => null,
       controlUpdateTime: undefined,
       state: undefined
+    };
+
+    this.deviceInfo = {
+      ports: {
+        A: { action: '', angle: 0 },
+        B: { action: '', angle: 0 },
+        AB: { action: '', angle: 0 },
+        C: { action: '', angle: 0 },
+        D: { action: '', angle: 0 },
+        LED: { action: '', angle: 0 }
+      },
+      tilt: { roll: 0, pitch: 0 },
+      distance: Number.MAX_SAFE_INTEGER,
+      rssi: 0,
+      color: '',
+      error: '',
+      connected: false
+    };
+    this.defaultConfiguration = {
+      distanceModifier: DEFAULT_CONFIG.METRIC_MODIFIER,
+      turnModifier: DEFAULT_CONFIG.TURN_MODIFIER,
+      defaultClearDistance: DEFAULT_CONFIG.DEFAULT_CLEAR_DISTANCE,
+      defaultStopDistance: DEFAULT_CONFIG.DEFAULT_STOP_DISTANCE,
+      leftMotor: DEFAULT_CONFIG.LEFT_MOTOR,
+      rightMotor: DEFAULT_CONFIG.RIGHT_MOTOR,
+      driveSpeed: DEFAULT_CONFIG.DRIVE_SPEED,
+      turnSpeed: DEFAULT_CONFIG.TURN_SPEED
     };
   }
 
@@ -85,7 +98,7 @@ export class MoveHub extends BluetoothManager.Device {
       this.hub.emitter.on('connect', () => {
         this.hub.afterInitialization();
         this.hubControl = new HubControl(
-          deviceInfo,
+          this.deviceInfo,
           this.controlData,
           defaultConfiguration
         );

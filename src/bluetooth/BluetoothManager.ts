@@ -34,29 +34,19 @@ export class BluetoothManager implements IBluetoothManager {
     if (native) {
       const device = await registryItem.factory(native);
       if (device && device.isConnected) {
-        const identifier = buildIdentifier(device.native);
         this.addDeviceToList(device!);
 
-        device!.OnConnectionChanged.connect(
-          async (sender, isConnected: boolean) => {
-            if (isConnected === false) {
-              console.warn(
-                `The connection state for device identified as ${identifier} has changed and it is now set to false: ${isConnected}`
-              );
-              this.removeDeviceFromList(device!);
-            }
-          }
-        );
+        device.OnDisconnected.connect(async () => {
+          this.removeDeviceFromList(device);
+        });
+
         return device;
       }
     }
   }
 
   async disconnectDevice(device: BluetoothManager.Device) {
-    const isDisconnected = await device.disconnect();
-    if (isDisconnected) {
-      this.removeDeviceFromList(device);
-    }
+    await device.disconnect();
   }
 
   // Method to add an item to the list
@@ -74,6 +64,7 @@ export class BluetoothManager implements IBluetoothManager {
 
   // Method to remove an item from the list
   removeDeviceFromList(device: BluetoothManager.Device): void {
+    console.warn('removeDeviceFromList is called!', device);
     const index = this._deviceList.indexOf(device);
     if (index > -1) {
       this._deviceList.splice(index, 1);
@@ -82,6 +73,7 @@ export class BluetoothManager implements IBluetoothManager {
       this.deviceListChanged.emit(this._deviceList);
     }
   }
+
   removeAllDevices() {
     this._deviceList.forEach((device, index) => {
       this.removeDeviceFromList(device);
@@ -116,7 +108,6 @@ export class BluetoothManager implements IBluetoothManager {
     BluetoothManager,
     BluetoothManager.DeviceRegistry
   >;
-  //public disconnectedADevice: Signal<this, string>;
   private _registry: BluetoothManager.DeviceRegistry;
   public identifierRegistry: Array<string>;
 }
@@ -125,10 +116,12 @@ export namespace BluetoothManager {
   export class Device {
     public isConnected: boolean | undefined;
     public native: BluetoothDevice;
-    public OnConnectionChanged: Signal<this, boolean>;
+    public OnConnected: Signal<this, boolean>;
+    public OnDisconnected: Signal<this, boolean>;
 
     constructor(native: BluetoothDevice) {
-      this.OnConnectionChanged = new Signal<this, boolean>(this);
+      this.OnConnected = new Signal<this, boolean>(this);
+      this.OnDisconnected = new Signal<this, boolean>(this);
       this.isConnected = false;
       this.native = native;
     }
@@ -138,16 +131,24 @@ export namespace BluetoothManager {
     > {
       this.native.addEventListener('gattserverdisconnected', event => {
         this.isConnected = false;
-        this.OnConnectionChanged.emit(this.isConnected);
+        this.OnDisconnected.emit(true);
       });
 
       await this.native.gatt?.connect();
       this.isConnected = true;
-      this.OnConnectionChanged.emit(this.isConnected);
+      this.OnConnected.emit(true);
       const services = await this.native.gatt?.getPrimaryServices();
       if (!services || services.length === 0) {
         throw new Error('No services found on the device.');
       } else return services;
+    }
+
+    async disconnect(): Promise<void> {
+      if (this.native) {
+        this.native.gatt?.disconnect();
+        this.isConnected = false;
+      }
+      //this.isConnected = true;
     }
 
     async getService(
@@ -200,17 +201,6 @@ export namespace BluetoothManager {
       } catch (error) {
         console.error('The requested characteristic is not available.', error);
       }
-    }
-
-    async disconnect(): Promise<boolean> {
-      if (this.native) {
-        this.native.gatt?.disconnect();
-        this.isConnected = false;
-        this.OnConnectionChanged.emit(this.isConnected);
-        return true;
-      }
-      this.isConnected = true;
-      return false;
     }
   }
 

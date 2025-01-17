@@ -93,10 +93,10 @@ export default function ManualControl(props: IManualControlProps) {
   return (
     <div className="manual-control-container">
       <div className="manual-control-grid">
-        {images.map(image => (
+        {images.map((image, index) => (
           <div className="manual-control-grid-item">
             <button
-              key={image.id}
+              key={index}
               onClick={image.handleClick} // Use the custom handleClick for each image
               className="image-button"
             >
