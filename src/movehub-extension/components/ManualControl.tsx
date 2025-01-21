@@ -12,11 +12,11 @@ const caretDownSVGUrl = `data:image/svg+xml;base64,${btoa(caretDownSVG)}`;
 const caretLeftSVGUrl = `data:image/svg+xml;base64,${btoa(caretLeftSVG)}`;
 const caretRightSVGUrl = `data:image/svg+xml;base64,${btoa(caretRightSVG)}`;
 
-interface IManualControlProps {
+export interface IMoveHubControlProps {
   moveHub: MoveHub;
 }
 
-export default function ManualControl(props: IManualControlProps) {
+export default function ManualControl(props: IMoveHubControlProps) {
   const images = [
     {
       id: 1,

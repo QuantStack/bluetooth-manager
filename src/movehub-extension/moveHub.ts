@@ -1,9 +1,10 @@
 import { HubAsync } from './moveHub/hub/hubAsync';
 import { BluetoothManager } from '../bluetooth/BluetoothManager';
-import { HubControl } from './moveHub/ai/hub-control';
+import { HubControl } from './moveHub/hub-control';
 import { DeviceConfiguration, DEFAULT_CONFIG } from './moveHub/hub/hubAsync';
 import { ControlData, DeviceInfo } from './moveHub/types';
 import { moveHubCharacteristicUUID, moveHubServiceUUID } from '.';
+
 
 export const defaultConfiguration: DeviceConfiguration = {
   distanceModifier: DEFAULT_CONFIG.METRIC_MODIFIER,
@@ -16,6 +17,22 @@ export const defaultConfiguration: DeviceConfiguration = {
   turnSpeed: DEFAULT_CONFIG.TURN_SPEED
 };
 
+export const defaultDeviceInfo: DeviceInfo = {
+  ports: {
+    A: { action: '', angle: 0 },
+    B: { action: '', angle: 0 },
+    AB: { action: '', angle: 0 },
+    C: { action: '', angle: 0 },
+    D: { action: '', angle: 0 },
+    LED: { action: '', angle: 0 }
+  },
+  tilt: { roll: 0, pitch: 0 },
+  distance: Number.MAX_SAFE_INTEGER,
+  rssi: 0,
+  color: '',
+  error: '',
+  connected: false
+};
 
 export class MoveHub extends BluetoothManager.Device {
   public configuration: DeviceConfiguration;
@@ -23,7 +40,8 @@ export class MoveHub extends BluetoothManager.Device {
   public hubControl: HubControl;
   public controlData: ControlData;
   public deviceInfo: DeviceInfo;
-  public defaultConfiguration : DeviceConfiguration
+  public defaultConfiguration: DeviceConfiguration;
+
 
   /**
    * Input data to used on manual and AI control
@@ -42,22 +60,7 @@ export class MoveHub extends BluetoothManager.Device {
       state: undefined
     };
 
-    this.deviceInfo = {
-      ports: {
-        A: { action: '', angle: 0 },
-        B: { action: '', angle: 0 },
-        AB: { action: '', angle: 0 },
-        C: { action: '', angle: 0 },
-        D: { action: '', angle: 0 },
-        LED: { action: '', angle: 0 }
-      },
-      tilt: { roll: 0, pitch: 0 },
-      distance: Number.MAX_SAFE_INTEGER,
-      rssi: 0,
-      color: '',
-      error: '',
-      connected: false
-    };
+    this.deviceInfo = defaultDeviceInfo;
     this.defaultConfiguration = {
       distanceModifier: DEFAULT_CONFIG.METRIC_MODIFIER,
       turnModifier: DEFAULT_CONFIG.TURN_MODIFIER,
@@ -69,7 +72,6 @@ export class MoveHub extends BluetoothManager.Device {
       turnSpeed: DEFAULT_CONFIG.TURN_SPEED
     };
   }
-
   logDebug(message?: any, ...optionalParams: any[]): void {
     if (message) {
       //console.warn(message);
@@ -78,7 +80,6 @@ export class MoveHub extends BluetoothManager.Device {
 
   private preCheck(): boolean {
     if (!this.hub || this.hub.connected === false) return false;
-    this.hubControl.setNextState('Manual');
     return true;
   }
 
@@ -120,7 +121,6 @@ export class MoveHub extends BluetoothManager.Device {
    */
   public async stop(): Promise<any> {
     if (!this.preCheck()) return;
-    
     else {
       this.controlData.speed = 0;
       this.controlData.turnAngle = 0;
@@ -128,7 +128,6 @@ export class MoveHub extends BluetoothManager.Device {
       return await this.hub.motorTimeMultiAsync(1, 0, 0);
     }
   }
-  
 
   /**
    * Update Boost motor and control configuration

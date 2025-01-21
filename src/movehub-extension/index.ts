@@ -1,5 +1,5 @@
-import { MoveHubPanelModel } from './MoveHubPanelModel';
-import { MoveHubPanelView } from './MoveHubPanelView';
+import { MoveHubPanelModel } from './moveHubPanelModel';
+import { MoveHubPanelView } from './moveHubPanelView';
 import {
   JupyterFrontEnd,
   JupyterFrontEndPlugin

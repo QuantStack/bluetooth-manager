@@ -1,5 +1,5 @@
-import { useState } from 'react';
-import { IHubControlProps } from '../MoveHubPanelView';
+//import { useState } from 'react';
+import { IHubControlProps } from '../moveHubPanelView';
 import Select from 'react-select';
 const colorOptions = [
   { value: '#cecece', label: 'off' },
@@ -58,8 +58,7 @@ const customStyles = {
   })
 };
 export function ColorSelector(props: IHubControlProps) {
-  const [selectedColor, setSelectedColor] = useState('#FFFFFF');
-  console.log(selectedColor)
+  /*const [selectedColor, setSelectedColor] = useState<string>('blue');*/
   const hub = props.hub;
   if (!hub || !hub.emitter || !hub.ledAsync) {
     console.error('Hub is not properly initialized:', hub);
@@ -80,7 +79,7 @@ export function ColorSelector(props: IHubControlProps) {
               if (selectedOption) {
                 const colorString = selectedOption.label; // Map color to its corresponding value
                 hub.ledAsync(colorString); // Directly set the LED color
-                setSelectedColor(selectedOption.value); // Update selected color state
+                /*setSelectedColor(selectedOption.value); // Update selected color state*/
               }
             } catch (error) {
               console.error('Failed to change LED color:', error);

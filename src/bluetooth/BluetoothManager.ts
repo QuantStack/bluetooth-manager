@@ -2,9 +2,10 @@ import { Signal } from '@lumino/signaling';
 import { Token } from '@lumino/coreutils';
 import { DeviceOptions } from './DeviceOptions';
 import { buildIdentifier } from '../bluetooth-extension';
+import { IDisposable } from '@lumino/disposable';
 
 /**
- * A class used to update the list of connected device and related signals used to rerender the connected devices section.
+ * A class used to update the list of connected device and the related signals used to rerender the connected devices section.
  */
 export class BluetoothManager implements IBluetoothManager {
   constructor() {
@@ -27,6 +28,7 @@ export class BluetoothManager implements IBluetoothManager {
   get registry(): BluetoothManager.DeviceRegistry {
     return this._registry;
   }
+
   async connectDevice(
     registryItem: IDeviceRegistryItem
   ): Promise<BluetoothManager.Device | undefined> {
@@ -36,10 +38,9 @@ export class BluetoothManager implements IBluetoothManager {
       if (device && device.isConnected) {
         this.addDeviceToList(device!);
 
-        device.OnDisconnected.connect(async () => {
+        device.disconnected.connect(async () => {
           this.removeDeviceFromList(device);
         });
-
         return device;
       }
     }
@@ -47,9 +48,10 @@ export class BluetoothManager implements IBluetoothManager {
 
   async disconnectDevice(device: BluetoothManager.Device) {
     await device.disconnect();
+    device.dispose();
   }
 
-  // Method to add an item to the list
+  // Method to add a device to the list
   addDeviceToList(device: BluetoothManager.Device): void {
     const identifier = buildIdentifier(device.native);
     if (!(identifier in this.identifierRegistry)) {
@@ -62,7 +64,7 @@ export class BluetoothManager implements IBluetoothManager {
     this.deviceListChanged.emit(this._deviceList);
   }
 
-  // Method to remove an item from the list
+  // Method to remove a device from the list
   removeDeviceFromList(device: BluetoothManager.Device): void {
     console.warn('removeDeviceFromList is called!', device);
     const index = this._deviceList.indexOf(device);
@@ -102,6 +104,7 @@ export class BluetoothManager implements IBluetoothManager {
       console.error(error);
     }
   }
+  
   private _deviceList: Array<BluetoothManager.Device>;
   public deviceListChanged: Signal<this, Array<BluetoothManager.Device>>;
   public registeredByAPlugin: Signal<
@@ -113,16 +116,19 @@ export class BluetoothManager implements IBluetoothManager {
 }
 
 export namespace BluetoothManager {
-  export class Device {
+  /* A class for device using the native bluetoothDevice from the web bluetooth API*/
+  export class Device implements IDisposable {
     public isConnected: boolean | undefined;
     public native: BluetoothDevice;
-    public OnConnected: Signal<this, boolean>;
-    public OnDisconnected: Signal<this, boolean>;
+    public connected: Signal<this, boolean>;
+    public disconnected: Signal<this, boolean>;
+    public isDisposed: boolean;
 
     constructor(native: BluetoothDevice) {
-      this.OnConnected = new Signal<this, boolean>(this);
-      this.OnDisconnected = new Signal<this, boolean>(this);
+      this.connected = new Signal<this, boolean>(this);
+      this.disconnected = new Signal<this, boolean>(this);
       this.isConnected = false;
+      this.isDisposed = false;
       this.native = native;
     }
 
@@ -131,12 +137,13 @@ export namespace BluetoothManager {
     > {
       this.native.addEventListener('gattserverdisconnected', event => {
         this.isConnected = false;
-        this.OnDisconnected.emit(true);
+        this.disconnected.emit(true);
       });
 
       await this.native.gatt?.connect();
       this.isConnected = true;
-      this.OnConnected.emit(true);
+      this.connected.emit(true);
+      this.isDisposed = false;
       const services = await this.native.gatt?.getPrimaryServices();
       if (!services || services.length === 0) {
         throw new Error('No services found on the device.');
@@ -148,7 +155,6 @@ export namespace BluetoothManager {
         this.native.gatt?.disconnect();
         this.isConnected = false;
       }
-      //this.isConnected = true;
     }
 
     async getService(
@@ -202,6 +208,14 @@ export namespace BluetoothManager {
         console.error('The requested characteristic is not available.', error);
       }
     }
+
+    dispose(): void {
+      if (this.isDisposed) {
+        return;
+      }
+      this.isDisposed = true;
+      Signal.clearData(this);
+    }
   }
 
   export class DeviceRegistry implements IDeviceRegistry {
@@ -223,7 +237,7 @@ export namespace BluetoothManager {
 /**
  * The interface for the bluetooth manager.
  */
-export interface IBluetoothManager /*extends IDisposable*/ {
+export interface IBluetoothManager {
   addDeviceToList(Device: BluetoothManager.Device): void;
   removeDeviceFromList(Device: BluetoothManager.Device): void;
   removeAllDevices(Devices: Array<BluetoothManager.Device>): void;

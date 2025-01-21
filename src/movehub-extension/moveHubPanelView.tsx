@@ -1,4 +1,4 @@
-import { MoveHubPanelModel } from './MoveHubPanelModel';
+import { MoveHubPanelModel } from './moveHubPanelModel';
 import { VDomRenderer } from '@jupyterlab/ui-components';
 import { ITranslator /*nullTranslator*/ } from '@jupyterlab/translation';
 import { ColorSelector } from './components/ColorSelector';
@@ -8,7 +8,9 @@ import { MoveHub } from './moveHub';
 import VernieComponent from './components/Vernie';
 import ManualControl from './components/ManualControl';
 import { HubAsync } from './moveHub/hub/hubAsync';
-
+import { DeviceStatus } from './components/DeviceStatus';
+//import { Hub } from './moveHub/hub/hub';
+import { HeadRotationForm } from './components/HeadRotation';
 interface IMoveHubUI {
   device: MoveHub;
 }
@@ -38,14 +40,21 @@ export function MoveHubUI(props: IMoveHubUI) {
       <div className="control-components-container">
         <div className="left-column">
           <div className="inputs-with-buttons-container">
+            <h3 style={{ color: ' #007bff' }}>Manual input control</h3>
             <DriveForm hub={props.device.hub} />
             <TurnForm hub={props.device.hub} />
+            <HeadRotationForm hub={props.device.hub} dutyCycle={100} direction={"right"}/>
+            <HeadRotationForm hub={props.device.hub} dutyCycle={-100} direction={"left"}/>
             <ColorSelector hub={props.device.hub} />
           </div>
+          <h3 style={{ color: '  #007bff' }}>
+            Move Hub real-time informations
+          </h3>
+          <DeviceStatus moveHub={props.device} />
         </div>
         <div className="right-column">
           <div>
-            <ManualControl moveHub={props.device}/>
+            <ManualControl moveHub={props.device} />
           </div>
         </div>
       </div>
