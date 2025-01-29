@@ -4,22 +4,30 @@
     https://jupyterlab.readthedocs.io/en/stable/developer/css.html
 */
 
-.movehub-ui-main-container {
+.lego-movehub-panel-main-container {
   display: flex;
   flex-direction: column;
-  align-items: center;
-  text-align: center;
   gap: 1rem;
 }
 
-.lego-boost-vernie-panel-title {
+.lego-movehub-panel-title {
   text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 2rem;
+}
+.lego-movehub-info-container {
+
+}
+
+.lego-movehub-manual-control {
+
 }
 
 .control-components-container {
   display: flex;
-  align-items: center;
-  justify-content: center;
+
 }
 
 .move-form-main-container {
@@ -32,22 +40,22 @@
 }
 
 .move-input-field-text {
-  width: 50%;
+  text-align: left;
+  width: 70%;
 }
 
 .move-input-field {
   height: 32px;
   padding: 0px;
-  border-width: 1px;
+  border-width: 0.5px;
   border-radius: 4px;
   width: 64px;
 }
 
 .move-input-field-with-button {
-  width: 50%;
+  width: 30%;
   margin: auto;
   display: flex;
-  align-items: center;
   justify-content: left;
   gap: 20px;
 }
@@ -58,7 +66,7 @@
   border: none;
   border-radius: 4px;
   cursor: pointer;
-  width: 64px;
+  width: 80px;
   height: 32px;
   padding: 0;
 }
@@ -72,7 +80,7 @@
 }
 
 .color-dropdown-container {
-  width: 50%;
+  width: 30%;
   margin: auto;
   font-display: flex;
   align-items: center;
@@ -80,7 +88,7 @@
 }
 
 .color-selector-text {
-  width: 50%;
+  width: 70%;
 }
 
 h4 {
@@ -151,4 +159,22 @@ h4 {
 
 p {
   margin: 0 0;
+}
+
+
+th.jp-RenderedHTMLCommon.td {
+  background-color: #007bff;
+  color: white;
+  width: 150px;
+  justify-content: center;
+  border-style: solid;
+  border-width: 0.5px;
+  border-radius: 4px;
+}
+
+td.jp-RenderedHTMLCommon {
+  justify-content: center;
+  border-style: solid;
+  border-width: 0.5px;
+  border-radius: 4px;
 }

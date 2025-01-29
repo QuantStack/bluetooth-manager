@@ -5,13 +5,14 @@ import { ColorSelector } from './components/ColorSelector';
 import { DriveForm } from './components/DriveForm';
 import { TurnForm } from './components/TurnForm';
 import { MoveHub } from './moveHub';
-import VernieComponent from './components/Vernie';
+//import VernieComponent from './components/Vernie';
 import ManualControl from './components/ManualControl';
 import { HubAsync } from './moveHub/hub/hubAsync';
-import { DeviceStatus } from './components/DeviceStatus';
 //import { Hub } from './moveHub/hub/hub';
 import { HeadRotationForm } from './components/HeadRotation';
-interface IMoveHubUI {
+import { DeviceInfoTable } from './components/DeviceInfoTable';
+
+interface IMoveHubPanel {
   device: MoveHub;
 }
 
@@ -19,39 +20,39 @@ export interface IHubControlProps {
   hub: HubAsync; // Declare the 'hub' property with its correct type
 }
 
-export function MoveHubUI(props: IMoveHubUI) {
+export function MoveHubPanel(props: IMoveHubPanel) {
   return (
     <>
-      <div className="movehub-ui-main-container">
-        <div
-          style={{
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            gap: '2rem'
-          }}
-        >
-          <h2 className="lego-boost-vernie-panel-title">
-            Vernie LEGO® Boost control panel
-          </h2>
-          <VernieComponent />
-        </div>
+      <div className="lego-movehub-panel-main-container">
+        <h2 className="lego-movehub-panel-title">
+          LEGO® Move Hub control panel
+        </h2>
       </div>
-      <div className="control-components-container">
-        <div className="left-column">
-          <div className="inputs-with-buttons-container">
-            <h3 style={{ color: ' #007bff' }}>Manual input control</h3>
+      <div className="lego-movehub-info-container">
+        <h3 style={{ color: '  #007bff' }}>Move Hub real-time informations</h3>
+        <DeviceInfoTable moveHub={props.device} />
+      </div>
+
+      <div className="lego-movehub-manual-control">
+        <div className="inputs-with-buttons-container">
+          <h3 style={{ color: ' #007bff' }}>Move hub manual input control</h3>
+          <div className="left-column">
             <DriveForm hub={props.device.hub} />
             <TurnForm hub={props.device.hub} />
-            <HeadRotationForm hub={props.device.hub} dutyCycle={100} direction={"right"}/>
-            <HeadRotationForm hub={props.device.hub} dutyCycle={-100} direction={"left"}/>
+            <HeadRotationForm
+              hub={props.device.hub}
+              dutyCycle={100}
+              direction={'clockwise'}
+            />
+            <HeadRotationForm
+              hub={props.device.hub}
+              dutyCycle={-100}
+              direction={'counter-clockwise'}
+            />
             <ColorSelector hub={props.device.hub} />
           </div>
-          <h3 style={{ color: '  #007bff' }}>
-            Move Hub real-time informations
-          </h3>
-          <DeviceStatus moveHub={props.device} />
         </div>
+
         <div className="right-column">
           <div>
             <ManualControl moveHub={props.device} />
@@ -79,7 +80,7 @@ export class MoveHubPanelView extends VDomRenderer<MoveHubPanelModel> {
 
     return (
       <>
-        <MoveHubUI device={this.device} />
+        <MoveHubPanel device={this.device} />
       </>
     );
   }

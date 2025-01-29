@@ -15,7 +15,7 @@ export function DeviceStatus({ moveHub }: { moveHub: MoveHub }) {
         setDeviceState({...moveHub.deviceInfo});
       },
       frequency: {
-        interval: 1000,
+        interval: 16,
         backoff: true
       },
       standby: 'when-hidden'

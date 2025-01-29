@@ -23,7 +23,8 @@ const customStyles = {
     lineHeight: '18px', // Vertically center the text inside the control
     borderRadius: '4px', // Optional: adjust border radius
     borderColor: 'black',
-    width: '150px',
+    borderWidth: '0.5px',
+    width: '168px',
     margin: '0 0',
     positon: 'absolute'
   }),
