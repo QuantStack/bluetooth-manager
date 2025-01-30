@@ -16,7 +16,7 @@ export interface IMoveHubControlProps {
   moveHub: MoveHub;
 }
 
-export default function ManualControl(props: IMoveHubControlProps) {
+export default function ManualControl({ moveHub }: IMoveHubControlProps) {
   const images = [
     {
       id: 1,
@@ -31,7 +31,7 @@ export default function ManualControl(props: IMoveHubControlProps) {
       src: caretUpSVGUrl,
       alt: 'Image 2',
       handleClick: async () => {
-        await props.moveHub.hub.driveToDirection(1);
+        await moveHub.hub.driveToDirection(1);
       }
     },
     {
@@ -47,7 +47,7 @@ export default function ManualControl(props: IMoveHubControlProps) {
       src: caretLeftSVGUrl,
       alt: 'Image 4',
       handleClick: async () => {
-        await props.moveHub.hub.turn(-90);
+        await moveHub.hub.turn(-90);
       }
     },
     {
@@ -55,7 +55,7 @@ export default function ManualControl(props: IMoveHubControlProps) {
       src: stopButtonSVGUrl,
       alt: 'Image 5',
       handleClick: async () => {
-        props.moveHub.stop();
+        moveHub.stop();
       }
     },
     {
@@ -63,7 +63,7 @@ export default function ManualControl(props: IMoveHubControlProps) {
       src: caretRightSVGUrl,
       alt: 'Image 6',
       handleClick: async () => {
-        props.moveHub.hub.turn(90);
+        moveHub.hub.turn(90);
       }
     },
     {
@@ -78,7 +78,7 @@ export default function ManualControl(props: IMoveHubControlProps) {
       id: 8,
       src: caretDownSVGUrl,
       alt: 'Image 8',
-      handleClick: async () => await props.moveHub.hub.driveToDirection(0)
+      handleClick: async () => await moveHub.hub.driveToDirection(0)
     },
     {
       id: 9,
@@ -100,7 +100,7 @@ export default function ManualControl(props: IMoveHubControlProps) {
               onClick={image.handleClick} // Use the custom handleClick for each image
               className="image-button"
             >
-              <img src={image.src} alt={image.alt} className="image" />
+              <img src={image.src} alt={image.alt} />
             </button>
           </div>
         ))}

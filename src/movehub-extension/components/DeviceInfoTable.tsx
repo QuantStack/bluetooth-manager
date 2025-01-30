@@ -28,81 +28,68 @@ export function DeviceInfoTable({ moveHub }: { moveHub: MoveHub }) {
   }, [moveHub.deviceInfo]);
   return (
     <>
-      <table className="jp-RenderedHTMLCommon table">
-        <thead>
-          <tr className="jp-RenderedHTMLCommon tr">
-          <th className="jp-RenderedHTMLCommon td"> </th>
-            <th className="jp-RenderedHTMLCommon td">Pitch</th>
-            <th className="jp-RenderedHTMLCommon td">Roll</th>
-            <th className="jp-RenderedHTMLCommon td">Distance</th>
-            <th className="jp-RenderedHTMLCommon td">Color</th>
-            <th className="jp-RenderedHTMLCommon td">LED</th>
+      <table className="custom-table">
+        <thead className="custom-table-thead">
+          <tr className="custom-table-tr">
+            <th className="custom-table-th"> </th>
+            <th className="custom-table-th">Pitch</th>
+            <th className="custom-table-th">Roll</th>
+            <th className="custom-table-th">Distance</th>
+            <th className="custom-table-th">Color</th>
+            <th className="custom-table-th">LED</th>
           </tr>
         </thead>
         <tbody>
-          <tr className="jp-RenderedHTMLCommon tr">
-          <td className="jp-RenderedHTMLCommon td" style={{fontWeight:"600px"}}> Sensors/ LED </td>
-            <td className="jp-RenderedHTMLCommon td">
-              {deviceState.tilt.pitch} °
+          <tr className="custom-table-tr">
+            <td className="custom-table-td" style={{ fontWeight: '600px' }}>
+              {' '}
+              Sensors/ LED{' '}
             </td>
-            <td className="jp-RenderedHTMLCommon td">
-              {deviceState.tilt.roll} °
+            <td className="custom-table-td">{deviceState.tilt.pitch} °</td>
+            <td className="custom-table-td">{deviceState.tilt.roll} °</td>
+            <td className="custom-table-td">
+              {deviceState.distance === Infinity
+                ? 'Infinity'
+                : `${deviceState.distance} mm`}
             </td>
-            <td className="jp-RenderedHTMLCommon td">{deviceState.distance} mm</td>
-            <td className="jp-RenderedHTMLCommon td">{deviceState.color}</td>
-            <td className="jp-RenderedHTMLCommon td">
-              not available
-            </td>
+            <td className="custom-table-td">{deviceState.color}</td>
+            <td className="custom-table-td">not available</td>
           </tr>
         </tbody>
       </table>
-      <table className="jp-RenderedHTMLCommon table">
-        <thead>
-          <tr>
-          <th className="jp-RenderedHTMLCommon td">  </th>
-            <th className="jp-RenderedHTMLCommon td">Port A</th>
-            <th className="jp-RenderedHTMLCommon td">Port B</th>
-            <th className="jp-RenderedHTMLCommon td">Port AB</th>
-            <th className="jp-RenderedHTMLCommon td">Port C</th>
-            <th className="jp-RenderedHTMLCommon td">Port D</th>
+      <table className="custom-table">
+        <thead className="custom-table-thead">
+          <tr className="custom-table-tr">
+            <th className="custom-table-th"> </th>
+            <th className="custom-table-th">Port A</th>
+            <th className="custom-table-th">Port B</th>
+            <th className="custom-table-th">Port AB</th>
+            <th className="custom-table-th">Port C</th>
+            <th className="custom-table-th">Port D</th>
           </tr>
         </thead>
         <tbody>
           <tr>
-          <td className="jp-RenderedHTMLCommon td" style={{fontWeight:"600px"}}> Angle </td>
-            <td className="jp-RenderedHTMLCommon td">
-              {deviceState.ports.A.angle} °
+            <td className="custom-table-td" style={{ fontWeight: '600' }}>
+              {' '}
+              Angle{' '}
             </td>
-            <td className="jp-RenderedHTMLCommon td">
-              {deviceState.ports.B.angle} °
-            </td>
-            <td className="jp-RenderedHTMLCommon td">
-              {deviceState.ports.AB.angle} °
-            </td>
-            <td className="jp-RenderedHTMLCommon td">
-              {deviceState.ports.C.angle} °
-            </td>
-            <td className="jp-RenderedHTMLCommon td">
-              {deviceState.ports.D.angle} °
-            </td>
+            <td className="custom-table-td">{deviceState.ports.A.angle} °</td>
+            <td className="custom-table-td">{deviceState.ports.B.angle} °</td>
+            <td className="custom-table-td">{deviceState.ports.AB.angle} °</td>
+            <td className="custom-table-td">{deviceState.ports.C.angle} °</td>
+            <td className="custom-table-td">{deviceState.ports.D.angle} °</td>
           </tr>
-          <tr className="jp-RenderedHTMLCommon tr">
-          <td className="jp-RenderedHTMLCommon td" style={{fontWeight:"600px"}}> Action </td>
-            <td className="jp-RenderedHTMLCommon">
-              {deviceState.ports.A.action}
+          <tr className="custom-table-tr">
+            <td className="custom-table-td" style={{ fontWeight: '600' }}>
+              {' '}
+              Action{' '}
             </td>
-            <td className="jp-RenderedHTMLCommon td">
-              {deviceState.ports.B.action}
-            </td>
-            <td className="jp-RenderedHTMLCommon td">
-              {deviceState.ports.AB.action}
-            </td>
-            <td className="jp-RenderedHTMLCommon td">
-              {deviceState.ports.C.action}
-            </td>
-            <td className="jp-RenderedHTMLCommon td">
-              {deviceState.ports.D.action}
-            </td>
+            <td className="custom-table-td">{deviceState.ports.A.action}</td>
+            <td className="custom-table-td">{deviceState.ports.B.action}</td>
+            <td className="custom-table-td">{deviceState.ports.AB.action}</td>
+            <td className="custom-table-td">{deviceState.ports.C.action}</td>
+            <td className="custom-table-td">{deviceState.ports.D.action}</td>
           </tr>
         </tbody>
       </table>
