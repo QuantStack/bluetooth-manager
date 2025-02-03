@@ -1,47 +1,86 @@
 import { ColorSelector } from './ColorSelector';
-import { DriveForm } from './DriveForm';
-import { TurnForm } from './TurnForm';
-import { MoveHub } from '../moveHub';
-//import ManualControl from './ManualControl';
-import { HubAsync } from '../moveHub/hub/hubAsync';
-import { HeadRotationForm } from './HeadRotation';
 import VernieComponent from './Vernie';
 import ManualControl from './ManualControl';
-
-interface IMoveHubPanel {
-  device: MoveHub;
-}
-
-export interface IHubControlProps {
-  hub: HubAsync; // Declare the 'hub' property with its correct type
-}
+import { IMoveHubPanel } from '../moveHubPanelView';
+import { MoveForm } from './MoveForm';
 
 export function VernieControlComponent({ device }: IMoveHubPanel) {
   return (
     <>
-      <div className="vernie-control-container">
-        <div>
-          <DriveForm hub={device.hub} />
-          <TurnForm hub={device.hub} />
-          <HeadRotationForm
+      <div className="vernie-control-grid-container">
+        <div className="vernie-control-grid-item">
+          <h4 style={{ color: 'var(--jp-accept-color-normal)', margin: '0', padding: '0' }}>
+            Integrated motors
+          </h4>
+          <MoveForm
             hub={device.hub}
-            dutyCycle={100}
-            direction={'right'}
+            label={'Move forward or backward (in cm)'}
+            action={'Drive'}
+            type={'distance'}
+            buttonText={'Drive'}
           />
-          <HeadRotationForm
+          <MoveForm
             hub={device.hub}
+            label={'Turn by an angle (in °)'}
+            action={'Turn'}
+            type={'angle'}
+            buttonText={'Turn'}
+          />
+          <h4 style={{ color: 'var(--jp-accept-color-normal)', margin: '0', padding: '0' }}>
+            Other motor
+          </h4>
+          <MoveForm
+            hub={device.hub}
+            label={`Rotate Vernie's head to the left (°)`}
+            action={'Rotate D direct'}
+            buttonText={'Turn left'}
+            type={'angle'}
             dutyCycle={-100}
-            direction={'left'}
+            sense={'indirect'}
+          />
+          <MoveForm
+            hub={device.hub}
+            label={`Rotate Vernie's head to the right (°)`}
+            action={'Rotate D indirect'}
+            buttonText={'Turn right'}
+            type={'angle'}
+            dutyCycle={100}
+            sense={'indirect'}
           />
           <ColorSelector hub={device.hub} />
         </div>
-        <div style={{display:"flex", justifyContent:"center", margin: "auto"}}>
-          <div>
-            <VernieComponent />
-          </div>
-          <div>
-            <ManualControl moveHub={device} />
-          </div>
+        <div
+          className="vernie-control-grid-item"
+          style={{
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center'
+          }}
+        >
+          <VernieComponent />
+        </div>
+       
+        <div className="vernie-control-grid-item">
+          <h4 style={{ color: 'var(--jp-accept-color-normal)', margin: '0', padding: '0' }}>
+            Use the set of buttons to control Vernie's displacements
+          </h4>
+          <p style={{ margin: '8px 0', width:"250px" }} >
+            Click on the up/down arrow to drive Vernie in a continuous
+            inward/backward displacement
+          </p>
+          <p style={{ margin: '8px 0', width:"250px"  }}>
+            Click on the left/right arrow to produce a left/right quarter turn{' '}
+          </p>
+        </div>
+        <div
+          className="vernie-control-grid-item"
+          style={{
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center'
+          }}
+        >
+          <ManualControl moveHub={device} />
         </div>
       </div>
     </>

@@ -24,7 +24,7 @@ export class BluetoothDeviceRunningItem
   }
   label() {
     //return this._device.native.name+ '\u00A0'.repeat(30) + this._device.native.id;
-    return this._device.native.name + '\t' + this._device.native.id;
+    return this._device.native.name + ' (' + this._device.native.id + ')';
   }
   labelTitle() {
     const title = buildIdentifier(this._device.native);

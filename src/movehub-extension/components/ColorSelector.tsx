@@ -34,25 +34,28 @@ export function ColorSelector(props: IHubControlProps) {
   };
 
   return (
-    <div className="color-selector-main-container">
-      <div className="color-selector-text">
-        <h4>Pick a color for the LED</h4>
-      </div>
-      <div className="color-dropdown-container">
-        <select
-          className="custom-select"
-          id="color-select"
-          value={selectedColor}
-          onChange={handleColorChange}
-        >
-          <option value="">Select a color</option>{' '}
-          {/* Optional default placeholder */}
-          {colors.map(color => (
-            <option key={color} value={color}>
-              {color}
-            </option>
-          ))}
-        </select>
+    <div>
+     <h4 style={{ color: 'var(--jp-accept-color-normal)', margin:"0", padding:"0" }}>Other control</h4>
+      <div className="color-selector-main-container">
+        <div className="color-selector-text">
+        <p style={{ margin: '8px 0' }}>Pick a color for the LED</p>
+        </div>
+        <div className="color-dropdown-container">
+          <select
+            className="custom-select"
+            id="color-select"
+            value={selectedColor}
+            onChange={handleColorChange}
+          >
+            <option value="">Select a color</option>{' '}
+            {/* Optional default placeholder */}
+            {colors.map(color => (
+              <option key={color} value={color}>
+                {color}
+              </option>
+            ))}
+          </select>
+        </div>
       </div>
     </div>
   );

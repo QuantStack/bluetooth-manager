@@ -91,20 +91,18 @@ export default function ManualControl({ moveHub }: IMoveHubControlProps) {
   ];
 
   return (
-    <div className="manual-control-container">
-      <div className="manual-control-grid">
-        {images.map((image, index) => (
-          <div className="manual-control-grid-item">
-            <button
-              key={index}
-              onClick={image.handleClick} // Use the custom handleClick for each image
-              className="image-button"
-            >
-              <img src={image.src} alt={image.alt} />
-            </button>
-          </div>
-        ))}
-      </div>
+    <div className="manual-control-grid">
+      {images.map((image, index) => (
+        <div className="manual-control-grid-item">
+          <button
+            key={index}
+            onClick={image.handleClick} // Use the custom handleClick for each image
+            className="image-button"
+          >
+            <img src={image.src} alt={image.alt} />
+          </button>
+        </div>
+      ))}
     </div>
   );
 }

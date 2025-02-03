@@ -24,9 +24,9 @@ export function DropdownComponent({ device }: IMoveHubPanel) {
   const renderSelectedComponent = () => {
     switch (selectedComponent) {
       case 'A':
-        return <VernieControlComponent device={device} />;
-      case 'B':
         return <GenericControlComponent device={device} />;
+      case 'B':
+        return <VernieControlComponent device={device} />;
       case 'C':
         return <ComponentC />;
       case 'D':
@@ -42,9 +42,14 @@ export function DropdownComponent({ device }: IMoveHubPanel) {
 
   return (
     <div>
-      <select className="custom-select" onChange={handleDropdownChange} value={selectedComponent}>
-        <option value="A">Vernie</option>
-        <option value="B">Generic</option>
+      <select
+        className="custom-select"
+        style={{marginTop:"-30px"}}
+        onChange={handleDropdownChange}
+        value={selectedComponent}
+      >
+        <option value="A">Generic</option>
+        <option value="B">Vernie</option>
         <option value="C">Guitar4000</option>
         <option value="D">Frankie The Cat</option>
         <option value="E">AutoBuilder</option>

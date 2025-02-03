@@ -8,14 +8,6 @@
   padding: 0 2em;
 }
 
-
-.lego-movehub-infos-container {
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
-}
-
-
 .lego-movehub-panel-title {
   text-align: center;
   display: flex;
@@ -24,83 +16,123 @@
   gap: 2rem;
 }
 
-.vernie-control-container {
-  gap: 10px;
-  margin: auto;
+.vernie-control-grid-container {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  grid-gap: 4px;
+  justify-content: center;
+  align-items: center;
+}
+
+.vernie-control-grid-item {
+  justify-content: center;
+  align-items: center;
 }
 
 .move-form-main-container {
   display: flex;
   align-items: center;
-  justify-items: center;
+  justify-content: center;
   gap: 16px;
-  margin: 0 auto 8px auto;
+  margin-top: 0;
+  margin-bottom: 8px;
 }
 
 .move-input-field-text {
   text-align: left;
-  width: 70%;
 }
 
 .move-input-field {
-  height: 32px;
-  padding: 0px;
+  height: 24px;
+  padding: 0;
   border-width: 0.5px;
   border-radius: 4px;
   width: 54px;
 }
 
 .move-input-field-with-button {
-  width: 30%;
-  margin: auto;
+  width: 60%;
   display: flex;
   justify-content: right;
   gap: 10px;
 }
 
 .move-validation-button {
-  background-color: #007bff;
+  background-color: var(--jp-accept-color-normal);
   color: #fff;
   border: none;
   border-radius: 4px;
   cursor: pointer;
   width: 70px;
-  height: 32px;
+  height: 24px;
   padding: 0;
 }
 
 .color-selector-main-container {
-  max-width: 100%;
   display: flex;
   align-items: center;
+  justify-content: center;
+  gap: 16px;
   margin-bottom: 8px;
 }
 
-.color-dropdown-container {
-  width: 30%;
-  display: flex;
-  align-items: center;
-  justify-content: right;
-}
-
 .color-selector-text {
-  width: 70%;
+  text-align: left;
 }
 
-h4 {
-  margin: 0.25rem;
+.color-dropdown-container {
+  align-items: center;
+  display: flex;
+  justify-content: right;
+  gap: 10px;
+  margin-top: 8px;
+}
+
+
+
+@media (width< 1100px) {
+  .move-input-field-text {
+    width: 50%;
+  }
+
+  .move-input-field-with-button {
+    width: 50%;
+  }
+
+  .color-selector-text {
+    width: 50%;
+  }
+
+  .color-dropdown-container {
+    width: 50%;
+  }
+}
+
+@media (width> 1100px) {
+  .move-input-field-text {
+    width: 70;
+  }
+
+  .move-input-field-with-button {
+    width: 30%
+  }
+
+  .color-selector-text {
+    width: 70%;
+    text-align: left;
+  }
+
+  .color-dropdown-container {
+    width: 30%;
+  }
 }
 
 .manual-control-grid {
   display: grid;
-  grid-template-columns: repeat(3, 1fr); /* Creates 3 columns */
-  grid-gap: 0px; /* Adds space between images */
-  justify-items: center;
-  margin-top: 20px;
-  margin-left: 0px;
-  margin-right: 0px;
+  grid-template-columns: repeat(3, 1fr);
+  grid-gap: 0;
   width: 200px;
-  height: 200px
+  height: 200px;
 }
 
 .manual-control-grid-item {
@@ -110,18 +142,14 @@ h4 {
   align-items: center;
   justify-content: center;
   text-align: center;
-  border: 0px solid;
+  border: 0 solid;
 }
 
 .image-button {
   background-color: transparent;
-  border-width: 0px;
+  border-width: 0;
   padding: 0;
-  width: 400px;
-}
-
-p {
-  margin: 0 0;
+  width: 250px;
 }
 
 .custom-table {
@@ -132,20 +160,17 @@ p {
   color: var(--jp-ui-font-color1);
   font-size: var(--jp-ui-font-size1);
   table-layout: fixed;
-  margin-left: auto;
-  margin-bottom: 1em;
-  margin-right: auto;
-  table-layout: fixed
-
+  margin-top: 0;
+  margin-bottom: 50px;
 }
-.custom-table-thead
-{
+
+.custom-table-thead {
   border-bottom: var(--jp-border-width) solid var(--jp-border-color1);
   vertical-align: bottom;
 }
 
 .custom-table-th {
-  background-color: #007bff;
+  background-color: var(--jp-accept-color-normal);
   color: white;
   width: 150px;
   justify-content: center;
@@ -155,14 +180,15 @@ p {
   font-size: var(--jp-content-font-size1);
   line-height: var(--jp-content-line-height);
 }
- .custom-table-tr {
+
+.custom-table-tr {
   line-height: var(--jp-content-line-height);
   border-style: solid;
   border-width: 0.5px;
   border-radius: 4px;
- }
+}
 
- .custom-table-td {
+.custom-table-td {
   width: 150px;
   justify-content: center;
   border-style: solid;
@@ -171,16 +197,16 @@ p {
   font-family: var(--jp-content-font-family);
   font-size: var(--jp-content-font-size1);
   line-height: var(--jp-content-line-height);
- }
+}
 
 .custom-select {
-  height: 36px;
-    padding: 0 0;
-    line-height: 18px;
-    border-radius: 4px; 
-    border-color: black;
-    border-width: 0.5px;
-    width: 135px;
-    margin: 0 0;
-    position: 'absolute';
+  height: 24px;
+  padding: 0;
+  line-height: 18px;
+  border-radius: 4px;
+  border-color: black;
+  border-width: 0.5px;
+  width: 135px;
+  margin: 0;
+  position: absolute;
 }

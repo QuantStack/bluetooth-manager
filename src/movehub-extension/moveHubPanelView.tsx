@@ -6,7 +6,7 @@ import { HubAsync } from './moveHub/hub/hubAsync';
 import { DeviceInfoTable } from './components/DeviceInfoTable';
 import { DropdownComponent } from './components/DropdownControl';
 
-interface IMoveHubPanel {
+export interface IMoveHubPanel {
   device: MoveHub;
 }
 
@@ -22,8 +22,8 @@ export function MoveHubInfos(props: { device: MoveHub }) {
           LEGO® Move Hub control panel
         </h2>
       </div>
-      <div className="lego-movehub-info-container">
-        <h3 style={{ color: '  #007bff' }}>Move Hub real-time informations</h3>
+      <div className="lego-movehub-infos-container">
+        <h3 style={{ color: '  var(--jp-accept-color-normal)' }}>Move Hub real-time informations</h3>
         <DeviceInfoTable moveHub={props.device} />
       </div>
     </>

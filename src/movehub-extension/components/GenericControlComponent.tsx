@@ -1,15 +1,7 @@
 import { ColorSelector } from './ColorSelector';
-import { DriveForm } from './DriveForm';
-import { TurnForm } from './TurnForm';
-import { MoveHub } from '../moveHub';
-import ManualControl from './ManualControl';
 import { HubAsync } from '../moveHub/hub/hubAsync';
-import { MotorRotationForm } from './MotorRotation';
-
-interface IMoveHubPanel {
-  device: MoveHub;
-}
-
+import { MoveForm } from './MoveForm';
+import { IMoveHubPanel } from '../moveHubPanelView';
 export interface IHubControlProps {
   hub: HubAsync; // Declare the 'hub' property with its correct type
 }
@@ -17,28 +9,45 @@ export interface IHubControlProps {
 export function GenericControlComponent({ device }: IMoveHubPanel) {
   return (
     <>
-      <div className="lego-movehub-manual-control">
-        <div className="vernie-control-column">
+      <div style={{ display: 'flex', justifyContent: 'left' }}>
+        <div>
           <div>
-            <DriveForm hub={device.hub} />
-            <TurnForm hub={device.hub} />
-            <MotorRotationForm
+          <h4 style={{ color: 'var(--jp-accept-color-normal)', margin:"0", padding:"0" }}>Integrated motors</h4>
+            <MoveForm
               hub={device.hub}
-              dutyCycle={100}
-              direction={'indirect'}
+              label={'Turn motors A and B in the same sense (°)'}
+              action={'Rotate same'}
+              type={'angle'}
+              buttonText={'Rotate'}
             />
-            <MotorRotationForm
+            <MoveForm
               hub={device.hub}
+              label={'Turn motors A and B in opposite sense (°)'}
+              action={'Rotate inverse'}
+              type={'angle'}
+              buttonText={'Rotate'}
+            />
+            <h4 style={{ color: 'var(--jp-accept-color-normal)', margin:"0", padding:"0" }}>Other motor</h4>
+            <MoveForm
+              hub={device.hub}
+              label={`Rotate in direct trigonometric sense (°)`}
+              action={'Rotate D direct'}
+              buttonText={'Rotate'}
+              type={'angle'}
               dutyCycle={-100}
-              direction={'direct'}
+              sense={'indirect'}
             />
-            <ColorSelector hub={device.hub} />
-          </div>
-        </div>
+            <MoveForm
+              hub={device.hub}
+              label={`Rotate in indirect trigonometric sense (°)`}
+              action={'Rotate D indirect'}
+              buttonText={'Rotate'}
+              type={'angle'}
+              dutyCycle={100}
+              sense={'indirect'}
+            />
 
-        <div className="vernie-control-column">
-          <div>
-            <ManualControl moveHub={device} />
+            <ColorSelector hub={device.hub} />
           </div>
         </div>
       </div>
