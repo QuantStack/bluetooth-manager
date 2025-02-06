@@ -12,12 +12,26 @@ import {
   BluetoothManager
 } from '../bluetooth/BluetoothManager';
 import { MoveHub } from './moveHub';
+import { Application, IPlugin } from '@lumino/application';
+
+import { Widget } from '@lumino/widgets';
+
+import { IJupyterWidgetRegistry } from '@jupyter-widgets/base';
+
+import * as widgetExports from './widget';
+
+import { MODULE_NAME, MODULE_VERSION } from './version';
+
+const EXTENSION_ID = 'ipymovehub:plugin';
+export * from './version';
+export * from './widget';
 export namespace CommandIDs {
   export const addLEGOMoveHubControlPanel =
     'bluetooth-manager:add-lego-movehub-control-panel';
 }
 export const moveHubServiceUUID = '00001623-1212-efde-1623-785feabcd123';
 export const moveHubCharacteristicUUID = '00001624-1212-efde-1623-785feabcd123';
+
 
 const MoveHubRegisterPlugin: JupyterFrontEndPlugin<void> = {
   id: 'bluetooth-manager:move-hub-register-plugin',
@@ -109,8 +123,37 @@ const LEGOMoveHubControlPanelPlugin: JupyterFrontEndPlugin<void> = {
   }
 };
 
+/**
+ * The example plugin.
+ */
+export const examplePlugin: IPlugin<Application<Widget>, void> = {
+  id: EXTENSION_ID,
+  requires: [IJupyterWidgetRegistry],
+  activate: activateWidgetExtension,
+  autoStart: true,
+} as unknown as IPlugin<Application<Widget>, void>;
+// the "as unknown as ..." typecast above is solely to support JupyterLab 1
+// and 2 in the same codebase and should be removed when we migrate to Lumino.
+
+
+/**
+ * Activate the widget extension.
+ */
+function activateWidgetExtension(
+  app: Application<Widget>,
+  registry: IJupyterWidgetRegistry
+): void {
+  registry.registerWidget({
+    name: MODULE_NAME,
+    version: MODULE_VERSION,
+    exports: widgetExports,
+  });
+}
+
+
 const MoveHubExtensionPlugins: JupyterFrontEndPlugin<any>[] = [
   MoveHubRegisterPlugin,
-  LEGOMoveHubControlPanelPlugin
+  LEGOMoveHubControlPanelPlugin,
+  examplePlugin
 ];
 export default MoveHubExtensionPlugins;

@@ -1,3 +1,5 @@
+from .example import ExampleWidget
+
 try:
     from ._version import __version__
 except ImportError:
