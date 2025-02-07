@@ -1,4 +1,3 @@
-// Copyright (c) Florence Haudin
 // Distributed under the terms of the Modified BSD License.
 
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment

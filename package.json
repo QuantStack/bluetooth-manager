@@ -65,7 +65,8 @@
         "@jupyterlab/settingregistry": "^4.3.1",
         "@jupyterlab/ui-components": "^4.3.1",
         "base64-js": "^1.5.1",
-        "ieee754": "^1.2.1"
+        "ieee754": "^1.2.1",
+        "lego-boost-browser": "git+https://github.com/DerThorsten/lego-boost-browser.git"
     },
     "devDependencies": {
         "@jupyterlab/builder": "^4.3.1",

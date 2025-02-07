@@ -1,6 +1,3 @@
-// Copyright (c) Florence Haudin
-// Distributed under the terms of the Modified BSD License.
-
 import { Application, IPlugin } from '@lumino/application';
 
 import { Widget } from '@lumino/widgets';
@@ -14,9 +11,9 @@ import { MODULE_NAME, MODULE_VERSION } from './version';
 const EXTENSION_ID = 'ipymovehub:plugin';
 
 /**
- * The example plugin.
+ * The ipymovehub plugin.
  */
-export const examplePlugin: IPlugin<Application<Widget>, void> = {
+export const ipymovehubPlugin: IPlugin<Application<Widget>, void> = {
   id: EXTENSION_ID,
   requires: [IJupyterWidgetRegistry],
   activate: activateWidgetExtension,
@@ -25,7 +22,7 @@ export const examplePlugin: IPlugin<Application<Widget>, void> = {
 // the "as unknown as ..." typecast above is solely to support JupyterLab 1
 // and 2 in the same codebase and should be removed when we migrate to Lumino.
 
-export default examplePlugin;
+export default ipymovehubPlugin;
 
 /**
  * Activate the widget extension.
