@@ -1,4 +1,4 @@
-# Distributed under the terms of the Modified BSD License.
+# # Distributed under the terms of the Modified BSD License.
 
 # This file comes from https://github.com/jupyter-robotics/ipylgbst and has been adapted for the current extension
 #
@@ -84,11 +84,11 @@ class Sensor(object):
     def __init__(self, name):
         self.name = name
 
-    def value(self, boost):
+    def value(self, movehub):
         if self.name == "distance":
-            return boost.get_distance()
+            return movehub.get_distance()
         elif self.name == "color":
-            return boost.get_color()
+            return movehub.get_color()
         else:
             raise NotImplementedError
 
@@ -119,38 +119,49 @@ class AsyncCommandContextManager:
     def __init__(self, lane_proxy):
         self.lane_proxy = lane_proxy
         self.lane = self.lane_proxy.lane
-        self.boost = self.lane_proxy.boost
+        self.movehub = self.lane_proxy.movehub
         self._old_index = None
 
     # enter the async context manager
     async def __aenter__(self):
-        self._old_index = int(self.boost._device_info["lane_cmd_index"][self.lane])
+        self._old_index = int(self.movehub._device_info["lane_cmd_index"][self.lane])
 
-    # exit the async context manager
+    # exit the async context manager    
     async def __aexit__(self, exc_type, exc, tb):
-        # report a message
         old = self._old_index
+        print('Old Index:', old)
+
         while True:
+            print("Polling...")
             await self.lane_proxy._poll()
-            # self._log(self._device_info)
-            if "lane_cmd_index" not in self.boost._device_info:
+        
+            if "lane_cmd_index" not in self.movehub._device_info:
+                print("lane_cmd_index not in device info. Continuing to poll...")
                 continue
-            new = int(self.boost._device_info["lane_cmd_index"][self.lane])
+
+            new = int(self.movehub._device_info["lane_cmd_index"][self.lane])
+            print(f"New Index: {new}")
+
             if new > old:
+                print('New index is greater than old. Breaking loop.')
                 break
             elif new < old:
-                raise RuntimeError(f"internal error! {old=} {new=}")
+                raise RuntimeError(f"Internal error! {old=} {new=}")
+        
+            print(f"Index unchanged: {old} == {new}. Continuing to poll...")
+
+
 
 
 class MoveHubLaneProxy(object):
 
-    def __init__(self, boost, lane):
-        self.boost = boost
+    def __init__(self, movehub, lane):
+        self.movehub = movehub
         self.lane = lane
 
     async def get_distance_async(self):
         await self._poll()
-        d = self.boost._device_info["distance"]
+        d = self.movehub._device_info["distance"]
         if d is None:
             d = float("inf")
         if math.isfinite(d) and d > 255.0:
@@ -158,19 +169,19 @@ class MoveHubLaneProxy(object):
         return d
 
     async def get_roll_async(self):
-        """Get the roll angle of the Boost Move Hub."""
+        """Get the roll angle of the movehub Move Hub."""
         await self._poll()
-        return self.boost._device_info["tilt"]["roll"]
+        return self.movehub._device_info["tilt"]["roll"]
 
     async def get_pitch_async(self):
-        """Get the pitch angle of the Boost Move Hub."""
+        """Get the pitch angle of the movehub Move Hub."""
         await self._poll()
-        return self.boost._device_info["tilt"]["pitch"]
+        return self.movehub._device_info["tilt"]["pitch"]
 
     async def get_color_async(self):
         """Get the color of the Boost Move Hub."""
         await self._poll()
-        return self.boost._device_info["color"]
+        return self.movehub._device_info["color"]
 
     async def motor_angle_async(self, port, angle, power):
         """
@@ -274,6 +285,9 @@ class MoveHubLaneProxy(object):
                 await_in_frontend=True,
                 args=[str(color)],
             )
+        #if isinstance(color, LedColor):
+           #color = color.value
+        #self._send(command="ledAsync", await_in_kernel=True, await_in_frontend=True, args=[str(color)])
 
     def motor_time(self, port, seconds, power):
         """ Turn a motor for a given time:
@@ -381,29 +395,19 @@ class MoveHubLaneProxy(object):
         data["await_in_frontend"] = bool(await_in_frontend)
         data["lane"] = self.lane
         data["args"] = args
-        self.boost.send(data, [])
+        self.movehub.send(data, [])
+        print(f"Sending command: {data}")
+        
 
     def _async_command_context(self):
         return AsyncCommandContextManager(lane_proxy=self)
 
     async def _poll(self):
-        await wait_for_change(self.boost, "_device_info")
+        await wait_for_change(self.movehub, "_device_info")
 
 class MoveHubWidget(DOMWidget):
     """TODO: Add docstring here
     """
-    #_model_name = Unicode('MoveHubModel').tag(sync=True)
-    #_model_module = Unicode(module_name).tag(sync=True)
-    #_model_module_version = Unicode(module_version).tag(sync=True)
-    #_view_name = Unicode('MoveHubView').tag(sync=True)
-    #_view_module = Unicode(module_name).tag(sync=True)
-    #_view_module_version = Unicode(module_version).tag(sync=True)
-
-    #value = Unicode('Hello World').tag(sync=True)
-
-    class MoveHubWidget(DOMWidget):
-        """MoveHub Widget"""
-
     _model_name = Unicode("MoveHubModel").tag(sync=True)
     _model_module = Unicode(module_name).tag(sync=True)
     _model_module_version = Unicode(module_version).tag(sync=True)
@@ -457,7 +461,7 @@ class MoveHubWidget(DOMWidget):
             output = Output()
             display(output)
 
-        lane_proxy = MoveHubLaneProxy(boost=self, lane=0)
+        lane_proxy = MoveHubLaneProxy(movehub=self, lane=0)
         program(lane_proxy, output)
 
     def connect(self, output=None):
@@ -481,7 +485,7 @@ class MoveHubWidget(DOMWidget):
         self._log = log
 
         async with self._lane_locks[lane]:
-            lane_proxy = MoveHubLaneProxy(boost=self, lane=lane)
+            lane_proxy = MoveHubLaneProxy(movehub=self, lane=lane)
             try:
                 await lane_proxy._connect()
                 await program(lane_proxy, log)
@@ -491,4 +495,3 @@ class MoveHubWidget(DOMWidget):
                 )
                 output.append_stderr(f"{err_str}\n")
                 print("err str", err_str)
-

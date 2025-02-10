@@ -8,14 +8,17 @@ import * as widgetExports from './widget';
 
 import { MODULE_NAME, MODULE_VERSION } from './version';
 
+import { IBluetoothManager } from '../bluetooth/BluetoothManager';
+
 const EXTENSION_ID = 'ipymovehub:plugin';
+
 
 /**
  * The ipymovehub plugin.
  */
 export const ipymovehubPlugin: IPlugin<Application<Widget>, void> = {
   id: EXTENSION_ID,
-  requires: [IJupyterWidgetRegistry],
+  requires: [IJupyterWidgetRegistry, IBluetoothManager],
   activate: activateWidgetExtension,
   autoStart: true,
 } as unknown as IPlugin<Application<Widget>, void>;
@@ -27,10 +30,12 @@ export default ipymovehubPlugin;
 /**
  * Activate the widget extension.
  */
-function activateWidgetExtension(
+async function activateWidgetExtension(
   app: Application<Widget>,
-  registry: IJupyterWidgetRegistry
-): void {
+  registry: IJupyterWidgetRegistry,
+  bluetoothManager: IBluetoothManager
+): Promise<void> {
+  widgetExports.MoveHubModel.bluetoothManager = bluetoothManager
   registry.registerWidget({
     name: MODULE_NAME,
     version: MODULE_VERSION,

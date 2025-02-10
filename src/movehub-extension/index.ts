@@ -21,6 +21,24 @@ export namespace CommandIDs {
 }
 export const moveHubServiceUUID = '00001623-1212-efde-1623-785feabcd123';
 export const moveHubCharacteristicUUID = '00001624-1212-efde-1623-785feabcd123';
+export const movehubRegistryItem: IDeviceRegistryItem = {
+  identifier: 'LEGO® Move Hub',
+  options: {
+    acceptAllDevices: false,
+    filters: [{ services: [moveHubServiceUUID] }],
+    optionalServices: [moveHubServiceUUID]
+  },
+  factory: async (native: BluetoothDevice) => {
+    let device = new MoveHub(native);
+    await device.initDevice();
+    const hub = device.hub;
+
+    if (!hub) {
+      throw new Error('Hub initialization failed.');
+    }
+    return device;
+  }
+};
 
 
 const MoveHubRegisterPlugin: JupyterFrontEndPlugin<void> = {
@@ -34,25 +52,6 @@ const MoveHubRegisterPlugin: JupyterFrontEndPlugin<void> = {
     translator: ITranslator
   ): void => {
     console.log('JupyterLab move-hub-register plugin is activated!');
-    const movehubRegistryItem: IDeviceRegistryItem = {
-      identifier: 'LEGO® Move Hub',
-      options: {
-        acceptAllDevices: false,
-        filters: [{ services: [moveHubServiceUUID] }],
-        optionalServices: [moveHubServiceUUID]
-      },
-      factory: async (native: BluetoothDevice) => {
-        let device = new MoveHub(native);
-        await device.initDevice();
-        const hub = device.hub;
-
-        if (!hub) {
-          throw new Error('Hub initialization failed.');
-        }
-        return device;
-      }
-    };
-
     bluetoothManager.register(movehubRegistryItem);
     
   }

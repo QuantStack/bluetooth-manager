@@ -17,7 +17,7 @@ import { Widget } from '@lumino/widgets';
 
 
 export namespace CommandIDs {
-  export const openDevicesRegistryDialog =
+  export const openDeviceRegistryDialog =
     'bluetooth-manager:open-dialog-for-devices-registry';
   export const connectDevice = 'bluetooth-manager:connect-device';
   export const disconnectDevice = 'bluetooth-manager:disconnect-device';
@@ -61,7 +61,7 @@ const BluetoothSidebarPlugin: JupyterFrontEndPlugin<void> = {
     console.log('JupyterLab bluetooth-sidebar plugin is activated!');
     const trans = translator.load('jupyterlab');
     const { commands } = app;
-    const openDevicesRegistryDialogLabel = trans.__(
+    const openDeviceRegistryDialogLabel = trans.__(
       'Open Dialog Showing Devices Registry'
     );
     let runningItemsList: Array<IRunningSessions.IRunningItem>;
@@ -95,7 +95,7 @@ const BluetoothSidebarPlugin: JupyterFrontEndPlugin<void> = {
       rank: 0
     });
 
-    app.commands.addCommand(CommandIDs.openDevicesRegistryDialog, {
+    app.commands.addCommand(CommandIDs.openDeviceRegistryDialog, {
       execute: async () => {
         showDialog({
           title: 'Select device type',
@@ -147,9 +147,9 @@ const BluetoothSidebarPlugin: JupyterFrontEndPlugin<void> = {
       toolbarButtons: [
         new CommandToolbarButton({
           commands,
-          id: CommandIDs.openDevicesRegistryDialog,
+          id: CommandIDs.openDeviceRegistryDialog,
           icon: addIcon,
-          caption: openDevicesRegistryDialogLabel,
+          caption: openDeviceRegistryDialogLabel,
           args: { toolbar: false }
         })
       ]

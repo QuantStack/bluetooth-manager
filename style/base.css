@@ -4,7 +4,7 @@
     https://jupyterlab.readthedocs.io/en/stable/developer/css.html
 */
 .jp-lego-movehub-control-panel {
-  overflow: scroll;
+  overflow: auto;
   padding: 0 2em;
 }
 

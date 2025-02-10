@@ -54,7 +54,7 @@ export class BluetoothManager implements IBluetoothManager {
   // Method to add a device to the list
   addDeviceToList(device: BluetoothManager.Device): void {
     const identifier = buildIdentifier(device.native);
-    if (!(identifier in this.identifierRegistry)) {
+    if (this.identifierRegistry.includes(identifier)===false) {
       this._deviceList.push(device);
       this.identifierRegistry.push(identifier);
     } else {
@@ -242,7 +242,7 @@ export interface IBluetoothManager {
   removeDeviceFromList(Device: BluetoothManager.Device): void;
   removeAllDevices(Devices: Array<BluetoothManager.Device>): void;
   register(registryItem: IDeviceRegistryItem): BluetoothManager.DeviceRegistry;
-  connectDevice(registryItem: IDeviceRegistryItem): void;
+  connectDevice(registryItem: IDeviceRegistryItem): any;
   disconnectDevice(device: BluetoothManager.Device): void;
   deviceListChanged: Signal<BluetoothManager, Array<BluetoothManager.Device>>;
   registeredByAPlugin: Signal<
