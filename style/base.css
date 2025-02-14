@@ -20,19 +20,19 @@
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   grid-gap: 4px;
-  justify-content: center;
+  justify-content: left;
   align-items: center;
 }
 
 .vernie-control-grid-item {
-  justify-content: center;
+  justify-content: left;
   align-items: center;
 }
 
 .move-form-main-container {
   display: flex;
   align-items: center;
-  justify-content: center;
+  justify-content: left;
   gap: 16px;
   margin-top: 0;
   margin-bottom: 8px;
@@ -71,7 +71,7 @@
 .color-selector-main-container {
   display: flex;
   align-items: center;
-  justify-content: center;
+  justify-content: left;
   gap: 16px;
   margin-bottom: 8px;
 }
@@ -87,8 +87,6 @@
   gap: 10px;
   margin-top: 8px;
 }
-
-
 
 @media (width< 1100px) {
   .move-input-field-text {
@@ -110,20 +108,21 @@
 
 @media (width> 1100px) {
   .move-input-field-text {
-    width: 70;
+    width: 300px;
+    text-align: left ;
   }
 
   .move-input-field-with-button {
-    width: 30%
+    width: 70px;
   }
 
   .color-selector-text {
-    width: 70%;
+    width: 300px;
     text-align: left;
   }
 
   .color-dropdown-container {
-    width: 30%;
+    width: 70px;
   }
 }
 

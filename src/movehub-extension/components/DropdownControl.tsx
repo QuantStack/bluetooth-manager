@@ -2,15 +2,12 @@ import React, { useState } from 'react';
 import { MoveHub } from '../moveHub';
 import { GenericControlComponent } from './GenericControlComponent';
 import { VernieControlComponent } from './VernieControlComponent';
+import { FrankieControlComponent } from './FrankieControlComponent';
 
 interface IMoveHubPanel {
   device: MoveHub;
 }
 
-const ComponentC = () => <div>Guitar 4000</div>;
-const ComponentD = () => <div>Frankie The Cat</div>;
-const ComponentE = () => <div>AutoBuilder</div>;
-const ComponentF = () => <div>M.T.R. 4</div>;
 
 export function DropdownComponent({ device }: IMoveHubPanel) {
   const [selectedComponent, setSelectedComponent] = useState<string>('A');
@@ -28,13 +25,7 @@ export function DropdownComponent({ device }: IMoveHubPanel) {
       case 'B':
         return <VernieControlComponent device={device} />;
       case 'C':
-        return <ComponentC />;
-      case 'D':
-        return <ComponentD />;
-      case 'E':
-        return <ComponentE />;
-      case 'F':
-        return <ComponentF />;
+        return <FrankieControlComponent  device={device}/>;
       default:
         return <div>Select a control panel type from the dropdown.</div>;
     }
@@ -50,10 +41,7 @@ export function DropdownComponent({ device }: IMoveHubPanel) {
       >
         <option value="A">Generic</option>
         <option value="B">Vernie</option>
-        <option value="C">Guitar4000</option>
-        <option value="D">Frankie The Cat</option>
-        <option value="E">AutoBuilder</option>
-        <option value="F">M.T.R.4</option>
+        <option value="C">Frankie The Cat</option>
       </select>
       <div>{renderSelectedComponent()}</div>
     </div>
