@@ -6,7 +6,7 @@ import { HubAsync } from './moveHub/hub/hubAsync';
 import { DeviceInfoTable } from './components/DeviceInfoTable';
 import { DropdownComponent } from './components/DropdownControl';
 
-export interface IMoveHubPanel {
+export interface IMoveHubPanelProps {
   device: MoveHub;
 }
 
@@ -30,7 +30,7 @@ export function MoveHubInfos(props: { device: MoveHub }) {
   );
 }
 
-export function MoveHubPanel({ device }: IMoveHubPanel) {
+export function MoveHubPanel({ device }: IMoveHubPanelProps) {
   return (
     <div>
       <MoveHubInfos device={device} />

@@ -74,6 +74,7 @@ export class BluetoothManager implements IBluetoothManager {
       // Emit the signal when the list changes
       this.deviceListChanged.emit(this._deviceList);
     }
+    device.dispose();
   }
 
   removeAllDevices() {

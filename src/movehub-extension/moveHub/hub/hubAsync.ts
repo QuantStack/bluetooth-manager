@@ -131,7 +131,7 @@ export class HubAsync extends Hub {
     this.useMetric = true;
     this.modifier = 1;
 
-    this.emitter.on('rotation', rotation => (this.portData[rotation.port].angle = rotation.angle));
+    this.emitter.on('rotation', rotation => (this.portData[rotation.port].value = rotation.value));
     this.emitter.on('disconnect', () => (this.hubDisconnected = true));
     this.emitter.on('distance', distance => (this.distance = distance));
   }
@@ -207,9 +207,9 @@ export class HubAsync extends Hub {
         if (wait) {
           let beforeTurn;
           do {
-            beforeTurn = this.portData[port].angle;
+            beforeTurn = this.portData[port].value;
             await new Promise(res => setTimeout(res, CALLBACK_TIMEOUT_MS));
-          } while (this.portData[port].angle !== beforeTurn);
+          } while (this.portData[port].value !== beforeTurn);
           resolve((value:any)=>{console.log('value:', value)});
         } else {
           setTimeout(resolve, CALLBACK_TIMEOUT_MS);
@@ -235,9 +235,9 @@ export class HubAsync extends Hub {
         if (wait) {
           let beforeTurn;
           do {
-            beforeTurn = this.portData['AB'].angle;
+            beforeTurn = this.portData['AB'].value;
             await new Promise(res => setTimeout(res, CALLBACK_TIMEOUT_MS));
-          } while (this.portData['AB'].angle !== beforeTurn);
+          } while (this.portData['AB'].value !== beforeTurn);
           resolve((value:any)=>{console.log('value:', value)});
         } else {
           setTimeout(resolve, CALLBACK_TIMEOUT_MS);

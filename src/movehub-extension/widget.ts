@@ -420,11 +420,11 @@ export class MoveHubView extends DOMWidgetView {
         this.color_color.style.backgroundColor = '#444';
         //this.txt_color.textContent = `color: None`
       }
-      this.txt_port_a.textContent = `Port A:  ${deviceInfo['ports']['A']['action']} ${deviceInfo['ports']['A']['angle']}`;
-      this.txt_port_b.textContent = `Port B:  ${deviceInfo['ports']['B']['action']} ${deviceInfo['ports']['B']['angle']}`;
-      this.txt_port_ab.textContent = `Port AB: ${deviceInfo['ports']['AB']['action']} ${deviceInfo['ports']['AB']['angle']}`;
-      this.txt_port_c.textContent = `Port C:  ${deviceInfo['ports']['C']['action']} ${deviceInfo['ports']['C']['angle']}`;
-      this.txt_port_d.textContent = `Port D:  ${deviceInfo['ports']['D']['action']} ${deviceInfo['ports']['D']['angle']}`;
+      this.txt_port_a.textContent = `Port A:  ${deviceInfo['ports']['A']['action']} ${deviceInfo['ports']['A']['value']}`;
+      this.txt_port_b.textContent = `Port B:  ${deviceInfo['ports']['B']['action']} ${deviceInfo['ports']['B']['value']}`;
+      this.txt_port_ab.textContent = `Port AB: ${deviceInfo['ports']['AB']['action']} ${deviceInfo['ports']['AB']['value']}`;
+      this.txt_port_c.textContent = `Port C:  ${deviceInfo['ports']['C']['action']} ${deviceInfo['ports']['C']['value']}`;
+      this.txt_port_d.textContent = `Port D:  ${deviceInfo['ports']['D']['action']} ${deviceInfo['ports']['D']['value']}`;
     
     } else {
       this.txt_connected.textContent = 'Disconnected';

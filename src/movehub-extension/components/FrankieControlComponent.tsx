@@ -1,9 +1,9 @@
 import { ColorSelector } from './ColorSelector';
 import FrankieComponent from './Frankie';
-import { IMoveHubPanel } from '../moveHubPanelView';
+import { IMoveHubPanelProps } from '../moveHubPanelView';
 import { MoveForm } from './MoveForm';
 
-export function FrankieControlComponent({ device }: IMoveHubPanel) {
+export function FrankieControlComponent({ device }: IMoveHubPanelProps) {
   return (
     <>
       <div className="vernie-control-grid-container">
@@ -46,7 +46,7 @@ export function FrankieControlComponent({ device }: IMoveHubPanel) {
             dutyCycle={100}
             sense={'indirect'}
           />
-          <ColorSelector hub={device.hub} />
+          <ColorSelector device={device} />
         </div>
         <div
           className="vernie-control-grid-item"

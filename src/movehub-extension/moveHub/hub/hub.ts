@@ -54,6 +54,24 @@ export type LedColor =
   | 'red'
   | 'white';
 
+
+/* For the detail of the Lego boost protocol, please visit : https://lego.github.io/lego-ble-wireless-protocol-docs/*/
+/* Message header is always 3 bytes long */
+/* byte 0 : message length */ 
+/* byte 1 : always zero */ 
+/* byte 2 : message type ( for instance hub properties is 0x01) */
+/* byte 3 : property reference ( for instance battery property is 0x06) */ 
+/* byte 4 : property operation ( for instance update is 0x06) */ 
+/* byte 5 and more : payload
+*/
+
+
+export function getDeviceName(data: any): string {
+  const nameArray = data.slice(5, data.length)
+  const name = nameArray.map((byte: any) => String.fromCharCode(byte)).join('');
+  return name;
+
+}
 export class Hub {
   emitter: EventEmitter<any> = new EventEmitter<any>();
   characteristic: BluetoothRemoteGATTCharacteristic;
@@ -64,7 +82,7 @@ export class Hub {
   autoSubscribe: boolean = true;
   ports: { [key: string]: any };
   num2type: { [key: number]: Device };
-  port2num: { [key in Port]: number } ;
+  port2num: { [key in Port]: number };
   num2port: { [key: number]: string };
   num2action: { [key: number]: string };
   num2color: { [key: number]: string };
@@ -74,6 +92,7 @@ export class Hub {
   connected: boolean;
   rssi: number;
   reconnect: boolean;
+  batteryLevel: number | undefined
 
   writeCue: any = [];
   isWriting: boolean = false;
@@ -101,9 +120,9 @@ export class Hub {
       D: 0x03,
       AB: 0x10,
       LED: 0x32,
-      TILT: 0x3a,
+      TILT: 0x3a
     };
-    this.num2port = Object.entries(this.port2num).reduce((acc:any, [port, portNum]) => {
+    this.num2port = Object.entries(this.port2num).reduce((acc: any, [port, portNum]) => {
       acc[portNum] = port;
       return acc;
     }, {});
@@ -137,6 +156,8 @@ export class Hub {
     this.addListeners();
   }
 
+
+
   private addListeners() {
     this.characteristic.addEventListener('characteristicvaluechanged', event => {
       // https://googlechrome.github.io/samples/web-bluetooth/read-characteristic-value-changed.html
@@ -153,6 +174,21 @@ export class Hub {
 
   private parseMessage(data: any) {
     switch (data[2]) {
+      case 0x01: { /* Hub properties */
+        if (data.length === 6 && data[3] === 0x06 && data[4] === 0x06) { /* Property 0x06 : battery */ /* example of message: 0x06, 0x00, 0x01, 0x06, 0x06, 0x23 : payload 0x23: 35% */
+          this.batteryLevel = data[5];
+          this.log('BatteryLevel', this.batteryLevel);
+          this.emit('batteryLevel', data[5]);
+        }
+
+        if (data[3] === 0x01 && data[4] === 0x06) { /* Property 0x01 : Device name, Operation 0x06 : update */
+          const hubName = getDeviceName(data);
+          this.log('Name', hubName)
+          this.emit('hubName', hubName);
+          break;
+        }
+      }
+
       case 0x04: {
         clearTimeout(this.portInfoTimeout);
         this.portInfoTimeout = setTimeout(() => {
@@ -216,7 +252,9 @@ export class Hub {
           action: this.num2action[data[4]],
         });
         break;
+
       }
+
       default:
         this.log('unknown message type 0x' + data[2].toString(16));
         this.log('<', data);
@@ -235,7 +273,6 @@ export class Hub {
          * @param color {string}
          */
         this.emit('color', this.num2color[data[4]]);
-
         // TODO: improve distance calculation!
         let distance: number;
         if (data[7] > 0 && data[5] < 2) {
@@ -340,8 +377,8 @@ export class Hub {
       callback = dutyCycle;
       dutyCycle = 100;
     }
-  const portNum = typeof port === 'string' ? this.port2num[port as Port] : port;
-  this.write(this.encodeMotorAngle(portNum, angle, dutyCycle), callback);
+    const portNum = typeof port === 'string' ? this.port2num[port as Port] : port;
+    this.write(this.encodeMotorAngle(portNum, angle, dutyCycle), callback);
   }
 
   /**
@@ -362,40 +399,14 @@ export class Hub {
    * @param {object} raw raw data
    * @param {function} callback
    */
-  /*rawCommand(raw: RawData, callback?: () => void) {
-    // @ts-ignore
-    const buf = Buffer.from([0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00]);
-
-    /*for (const idx in raw) {
-     
-      buf.writeIntLE(raw[idx], idx);
-    }
-*/      
-    
-
-    //this.write(buf, callback);
- // }
-
-
-/* write(buf: Buffer, callback?: () => void) {
-    // Implement the write logic
-    console.log(buf);
-    if (callback) callback();
-  }*/
-
   rawCommand(raw: RawData, callback?: () => void) {
     // @ts-ignore
     const buf = Buffer.from([0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00]);
 
-    // Iterate over the properties of `raw`
     for (const idx in raw) {
-      if (Object.prototype.hasOwnProperty.call(raw, idx)) {
-        // Write each value of `raw` to the buffer at the correct index
-        buf.writeIntLE(raw[idx], parseInt(idx)); // Convert the string index to a number
-      }
+      buf.writeIntLE(raw[idx], idx);
     }
 
-    // Call `write` with the buffer and optional callback
     this.write(buf, callback);
   }
 
@@ -467,6 +478,39 @@ export class Hub {
     );
   }
 
+  /**
+   Enable hub battery 0x06, 0x00 0x01 0x06 0x02*/
+
+  enableBatteryUpdates() {
+    // @ts-ignore
+    this.write(
+      // @ts-ignore
+      Buffer.from([0x05, 0x00, 0x01, 0x06, 0x02]) /* enable updates for the battery*/
+    );
+  }
+  /*Enable hub battery 0x06, 0x00 0x01 0x06 0x02*/
+
+  enableDeviceNameUpdates() {
+    // @ts-ignore
+    this.write(
+      // @ts-ignore
+      Buffer.from([0x05, 0x00, 0x01, 0x01, 0x02]) /* enable updates for the name */
+    );
+  }
+
+  
+
+  /**
+ Change Hub name
+ */
+ setDeviceName() {
+    // @ts-ignore
+    this.write(
+      // @ts-ignore
+      Buffer.from([0x12, 0x00, 0x01, 0x01, 0x06, 0x4d, 0x6f, 0x76, 0x65, 0x20, 0x48, 0x75, 0x62]) /* write  another name : Move Hub */
+
+    );
+  }
   subscribeAll() {
     Object.entries(this.ports).forEach(([port, data]) => {
       if (data.deviceType === 'DISTANCE') {
@@ -476,6 +520,10 @@ export class Hub {
       } else if (data.deviceType === 'IMOTOR') {
         this.subscribe(parseInt(port, 10), 2);
       } else if (data.deviceType === 'MOTOR') {
+        this.subscribe(parseInt(port, 10), 2);
+      } else if (data.deviceType === 'LED') {
+        this.subscribe(parseInt(port, 10), 2);
+      } else if (data.deviceType === 'LED') {
         this.subscribe(parseInt(port, 10), 2);
       } else {
         this.logDebug(`Port subscribtion not sent: ${port}`);

@@ -19,19 +19,23 @@ export const defaultConfiguration: DeviceConfiguration = {
 
 export const defaultDeviceInfo: DeviceInfo = {
   ports: {
-    A: { action: '', angle: 0 },
-    B: { action: '', angle: 0 },
-    AB: { action: '', angle: 0 },
-    C: { action: '', angle: 0 },
-    D: { action: '', angle: 0 },
-    LED: { action: '', angle: 0 }
+    A: { action: '', value: 0 },
+    B: { action: '', value: 0 },
+    AB: { action: '', value: 0 },
+    C: { action: '', value: 0 },
+    D: { action: '', value: 0 },
+    LED: { action: '', value: 0 }
+
   },
   tilt: { roll: 0, pitch: 0 },
   distance: Number.MAX_SAFE_INTEGER,
   rssi: 0,
   color: '',
   error: '',
-  connected: false
+  connected: false,
+  ledColor: 'blue',
+  batteryLevel: undefined,
+  hubName: "Boost"
 };
 
 export class MoveHub extends BluetoothManager.Device {
@@ -86,18 +90,18 @@ export class MoveHub extends BluetoothManager.Device {
   async initDevice(): Promise<void> {
     this.connected.connect(
       async (sender, connected: boolean) => {
-      
+
         this.deviceInfo.connected = connected
-        console.warn('The connection state has changed and is now',  this.deviceInfo.connected);
+        console.warn('The connection state has changed and is now', this.deviceInfo.connected);
       })
     this.disconnected.connect(
       async (sender, disconnected: boolean) => {
-       
+
         if (disconnected) {
           this.deviceInfo.connected = false
         }
-        console.warn('The connection state has changed and is now',  this.deviceInfo.connected);
-      }
+        console.warn('The connection state has changed and is now', this.deviceInfo.connected);
+      },
     );
 
     const characteristic = await this.getCharacteristic(
@@ -109,6 +113,8 @@ export class MoveHub extends BluetoothManager.Device {
     if (characteristic !== undefined) {
       this.hub = new HubAsync(characteristic, defaultConfiguration);
       this.hub.logDebug = this.logDebug;
+      this.hub.enableBatteryUpdates();
+      this.hub.enableDeviceNameUpdates();
 
       // Register events
       // Ensure hub is fully configured before returning
@@ -337,7 +343,7 @@ export class MoveHub extends BluetoothManager.Device {
    * @param {boolean} [wait=true] will promise wait untill the turn has completed.
    * @returns {Promise}
    */
-  async turn(degrees: number, wait: boolean = true): Promise<void > {
+  async turn(degrees: number, wait: boolean = true): Promise<void> {
     if (!this.preCheck()) return;
     return await this.hub.turn(degrees, wait);
   }

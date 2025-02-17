@@ -1,5 +1,5 @@
+import { IMoveHubPanelProps } from '../moveHubPanelView';
 import { useState } from 'react';
-import { IHubControlProps } from '../moveHubPanelView';
 
 const colors = [
   'off',
@@ -14,19 +14,23 @@ const colors = [
   'white'
 ];
 
-export function ColorSelector(props: IHubControlProps) {
+
+
+export function ColorSelector({ device }: IMoveHubPanelProps) {
   const [selectedColor, setSelectedColor] = useState<string>('Select a color');
-  const hub = props.hub;
+
+  const hub = device.hub;
   if (!hub || !hub.emitter || !hub.ledAsync) {
     console.error('Hub is not properly initialized:', hub);
     return <div>Error: Hub is not initialized</div>;
   }
   const handleColorChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
-    console.log('Value has changed');
     try {
       if (selectedColor) {
-        hub.ledAsync(event.target.value); // Directly set the LED color
-        setSelectedColor(event.target.value); // Update selected color state
+        hub.ledAsync(event.target.value);
+        setSelectedColor(event.target.value);
+        device.deviceInfo = { ...device.deviceInfo, ledColor: event.target.value }
+        
       }
     } catch (error) {
       console.error('Failed to change LED color:', error);
@@ -35,10 +39,10 @@ export function ColorSelector(props: IHubControlProps) {
 
   return (
     <div>
-     <h4 style={{ color: 'var(--jp-accept-color-normal)', margin:"0", padding:"0" }}>Other control</h4>
+      <h4 style={{ color: 'var(--jp-accept-color-normal)', margin: "0", padding: "0" }}>Other control</h4>
       <div className="color-selector-main-container">
         <div className="color-selector-text">
-        <p style={{ margin: '8px 0' }}>Pick a color for the LED</p>
+          <p style={{ margin: '8px 0' }}>Pick a color for the LED</p>
         </div>
         <div className="color-dropdown-container">
           <select
@@ -48,7 +52,6 @@ export function ColorSelector(props: IHubControlProps) {
             onChange={handleColorChange}
           >
             <option value="">Select a color</option>{' '}
-            {/* Optional default placeholder */}
             {colors.map(color => (
               <option key={color} value={color}>
                 {color}

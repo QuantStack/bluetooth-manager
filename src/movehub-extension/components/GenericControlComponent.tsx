@@ -1,12 +1,12 @@
 import { ColorSelector } from './ColorSelector';
 import { HubAsync } from '../moveHub/hub/hubAsync';
 import { MoveForm } from './MoveForm';
-import { IMoveHubPanel } from '../moveHubPanelView';
+import { IMoveHubPanelProps } from '../moveHubPanelView';
 export interface IHubControlProps {
-  hub: HubAsync; // Declare the 'hub' property with its correct type
+  hub: HubAsync;
 }
 
-export function GenericControlComponent({ device }: IMoveHubPanel) {
+export function GenericControlComponent({ device }: IMoveHubPanelProps) {
   return (
     <>
       <div style={{ display: 'flex', justifyContent: 'left' }}>
@@ -35,7 +35,7 @@ export function GenericControlComponent({ device }: IMoveHubPanel) {
               buttonText={'Rotate'}
               type={'angle'}
               dutyCycle={-100}
-              sense={'indirect'}
+              sense={'direct'}
             />
             <MoveForm
               hub={device.hub}
@@ -46,8 +46,7 @@ export function GenericControlComponent({ device }: IMoveHubPanel) {
               dutyCycle={100}
               sense={'indirect'}
             />
-
-            <ColorSelector hub={device.hub} />
+            <ColorSelector device={device} />
           </div>
         </div>
       </div>

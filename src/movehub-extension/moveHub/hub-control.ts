@@ -36,7 +36,7 @@ type States = {
 
 class HubControl {
   hub: HubAsync | null;
-  device: DeviceInfo;
+  deviceInfo: DeviceInfo;
   prevDevice: DeviceInfo;
   control: ControlData;
   prevControl: ControlData;
@@ -49,7 +49,7 @@ class HubControl {
     configuration: DeviceConfiguration
   ) {
     this.hub = null;
-    this.device = deviceInfo;
+    this.deviceInfo = deviceInfo;
 
     this.control = controlData;
     this.configuration = configuration;
@@ -62,54 +62,68 @@ class HubControl {
 
   async start(hub: HubAsync) {
     this.hub = hub;
-    this.device.connected = true;
+    this.deviceInfo.connected = true;
 
     this.hub.emitter.on('error', (err: any) => {
-      this.device.err = err;
+      this.deviceInfo.err = err;
     });
 
     this.hub.emitter.on('disconnect', () => {
-      this.device.connected = false;
+      this.deviceInfo.connected = false;
     });
 
     this.hub.emitter.on('distance', (distance: any) => {
-      this.device.distance = distance;
+      this.deviceInfo.distance = distance;
     });
 
     this.hub.emitter.on('rssi', (rssi: any) => {
-      this.device.rssi = rssi;
+      this.deviceInfo.rssi = rssi;
     });
 
     this.hub.emitter.on('port', (portObject: any) => {
       const { port, action } = portObject;
-      this.device.ports[port as 'A' | 'B' | 'AB' | 'C' | 'D' | 'LED'].action =
+      this.deviceInfo.ports[port as 'A' | 'B' | 'AB' | 'C' | 'D' | 'LED'].action =
         action;
     });
 
     this.hub.emitter.on('color', (color: any) => {
-      this.device.color = color;
+      this.deviceInfo.color = color;
     });
 
     this.hub.emitter.on('tilt', (tilt: any) => {
       const { roll, pitch } = tilt;
-      this.device.tilt.roll = roll;
-      this.device.tilt.pitch = pitch;
+      this.deviceInfo.tilt.roll = roll;
+      this.deviceInfo.tilt.pitch = pitch;
     });
 
     this.hub.emitter.on(
       'rotation',
       (rotation: { port: keyof DeviceInfo['ports']; angle: number }) => {
         const { port, angle } = rotation;
-        this.device.ports[port].angle = angle;
+        this.deviceInfo.ports[port].value = angle;
       }
     );
+
+    this.hub.emitter.on('ledColor', (ledColor: any) => {
+      this.deviceInfo.ledColor = ledColor;
+    })
+
     await this.hub.ledAsync('red');
     await this.hub.ledAsync('yellow');
     await this.hub.ledAsync('green');
+    this.deviceInfo.ledColor = 'green'
+
+    this.hub.emitter.on('batteryLevel', (batteryLevel: any) => {
+      this.deviceInfo.batteryLevel = batteryLevel;
+    })
+
+    this.hub.emitter.on('hubName', (hubName: any) => {
+      this.deviceInfo.hubName = hubName;
+    })
   }
 
   async disconnect() {
-    if (this.device.connected) {
+    if (this.deviceInfo.connected) {
       await this.hub?.disconnectAsync();
     }
   }
@@ -120,7 +134,7 @@ class HubControl {
     // TODO: Deep clone
     this.prevControl = { ...this.control };
     this.prevControl.tilt = { ...this.control.tilt };
-    this.prevDevice = { ...this.device };
+    this.prevDevice = { ...this.deviceInfo };
   }
 }
 

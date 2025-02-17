@@ -34,8 +34,8 @@ export type Motor = 'A' | 'B';
 export type TurnDirection = 'left' | 'right';
 
 export type Port = {
-  action: string;
-  angle: number;
+  action: string | undefined;
+  value: number | string;
 };
 
 /** Information from Lego Boost motors and sensors */
@@ -46,7 +46,7 @@ export type DeviceInfo = {
     AB: Port;
     C: Port;
     D: Port;
-    LED: Port;
+    LED: Port
   };
   tilt: { roll: number; pitch: number };
   distance: number;
@@ -55,6 +55,9 @@ export type DeviceInfo = {
   error: string;
   connected: boolean;
   err?: any;
+  ledColor: string | undefined;
+  batteryLevel: number | undefined;
+  hubName: string | undefined;
 };
 
 /** Input data to used on manual and AI control */

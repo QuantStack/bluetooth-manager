@@ -23,22 +23,28 @@ export function MoveForm(props: IMoveFormProps) {
     switch (props.action) {
       case 'Drive':
         hub.drive(Number(inputValue));
+        break;
       case 'Turn':
         hub.turn(Number(inputValue));
+        break;
       case 'Rotate AB same':
         hub.motorAngleMultiAsync(Number(inputValue), 100, 100);
+        break
 
       case 'Rotate AB inverse':
-        hub.motorAngleMultiAsync(Number(inputValue)), -100, -100;
-
+        hub.motorAngleMultiAsync(Number(inputValue), -100, -100);
+        break;
       case 'Rotate D indirect':
         hub.motorAngle('D', Number(inputValue), 100, () => false);
+        break;
       case 'Rotate D direct':
         hub.motorAngle('D', Number(inputValue), -100, () => false);
       default:
         console.error('This action is unknown');
+        break
     }
   };
+
 
   return (
     <form onSubmit={moveSubmit}>
