@@ -137,42 +137,42 @@ export class MoveHubModel extends DOMWidgetModel {
             break;
 
           case 'led':
-            this.movehub.hub.led.apply(this.movehub, args);
+            this.movehub.led.apply(this.movehub, args);
             break;
           case 'ledAsync':
-            await this.movehub.hub.ledAsync.apply(this.movehub, args);
+            await this.movehub.ledAsync.apply(this.movehub, args);
             break;
 
           case 'motorTime':
-            this.movehub.hub.motorTime.apply(this.movehub, args);
+            this.movehub.motorTime.apply(this.movehub, args);
             break;
 
           case 'motorTimeMulti':
-            this.movehub.hub.motorTimeMulti.apply(this.movehub, args);
+            this.movehub.motorTimeMulti.apply(this.movehub, args);
             break;
 
           case 'motorTimeAsync':
-            await this.movehub.hub.motorTimeAsync.apply(this.movehub, args);
+            await this.movehub.motorTimeAsync.apply(this.movehub, args);
             break;
 
           case 'motorTimeMultiAsync':
-            await this.movehub.hub.motorTimeMultiAsync.apply(this.movehub, args);
+            await this.movehub.motorTimeMultiAsync.apply(this.movehub, args);
             break;
 
           case 'motorAngle':
-            this.movehub.hub.motorAngle.apply(this.movehub, args);
+            this.movehub.motorAngle.apply(this.movehub, args);
             break;
 
           case 'motorAngleMulti':
-            this.movehub.hub.motorAngleMulti.apply(this.movehub, args);
+            this.movehub.motorAngleMulti.apply(this.movehub, args);
             break;
 
           case 'motorAngleAsync':
-            await this.movehub.hub.motorAngleAsync.apply(this.movehub, args);
+            await this.movehub.motorAngleAsync.apply(this.movehub, args);
             break;
 
           case 'motorAngleMultiAsync':
-            await this.movehub.hub.motorAngleMultiAsync.apply(this.movehub, args);
+            await this.movehub.motorAngleMultiAsync.apply(this.movehub, args);
             break;
 
           default:

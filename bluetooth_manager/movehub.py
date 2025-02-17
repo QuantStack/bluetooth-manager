@@ -129,29 +129,20 @@ class AsyncCommandContextManager:
     # exit the async context manager    
     async def __aexit__(self, exc_type, exc, tb):
         old = self._old_index
-        print('Old Index:', old)
 
         while True:
-            print("Polling...")
             await self.lane_proxy._poll()
         
             if "lane_cmd_index" not in self.movehub._device_info:
-                print("lane_cmd_index not in device info. Continuing to poll...")
                 continue
 
             new = int(self.movehub._device_info["lane_cmd_index"][self.lane])
-            print(f"New Index: {new}")
 
             if new > old:
-                print('New index is greater than old. Breaking loop.')
                 break
             elif new < old:
                 raise RuntimeError(f"Internal error! {old=} {new=}")
         
-            print(f"Index unchanged: {old} == {new}. Continuing to poll...")
-
-
-
 
 class MoveHubLaneProxy(object):
 
@@ -396,7 +387,6 @@ class MoveHubLaneProxy(object):
         data["lane"] = self.lane
         data["args"] = args
         self.movehub.send(data, [])
-        print(f"Sending command: {data}")
         
 
     def _async_command_context(self):

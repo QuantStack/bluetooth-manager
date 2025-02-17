@@ -147,7 +147,7 @@ export class MoveHub extends BluetoothManager.Device {
   /**
    * Update Boost motor and control configuration
    * @method MoveHub#updateConfiguration
-   * @param {DeviceConfiguration} configuration LegoBoost motor and control configuration
+   * @param {DeviceConfiguration} configuration MoveHub motor and control configuration
    */
   updateConfiguration(configuration: DeviceConfiguration): void {
     if (!this.hub) return;
@@ -159,7 +159,7 @@ export class MoveHub extends BluetoothManager.Device {
 
   /**
    * Control the LED on the Move Hub
-   * @method LegoBoost#led
+   * @method MoveHub#led
    * @param {boolean|number|string} color
    * If set to boolean `false` the LED is switched off, if set to `true` the LED will be white.
    * Possible string values: `off`, `pink`, `purple`, `blue`, `lightblue`, `cyan`, `green`, `yellow`, `orange`, `red`,
@@ -172,7 +172,7 @@ export class MoveHub extends BluetoothManager.Device {
 
   /**
    * Control the LED on the Move Hub
-   * @method LegoBoost#ledAsync
+   * @method MoveHub#ledAsync
    * @param {boolean|number|string} color
    * If set to boolean `false` the LED is switched off, if set to `true` the LED will be white.
    * Possible string values: `off`, `pink`, `purple`, `blue`, `lightblue`, `cyan`, `green`, `yellow`, `orange`, `red`,
@@ -198,7 +198,7 @@ export class MoveHub extends BluetoothManager.Device {
 
   /**
    * Run a motor for specific time
-   * @method LegoBoost#motorTimeAsync
+   * @method MoveHub#motorTimeAsync
    * @param {string|number} port possible string values: `A`, `B`, `AB`, `C`, `D`.
    * @param {number} seconds
    * @param {number} [dutyCycle=100] motor power percentage from `-100` to `100`. If a negative value is given rotation
@@ -232,7 +232,7 @@ export class MoveHub extends BluetoothManager.Device {
 
   /**
    * Run both motors (A and B) for specific time
-   * @method LegoBoost#motorTimeMultiAsync
+   * @method MoveHub#motorTimeMultiAsync
    * @param {number} seconds
    * @param {number} [dutyCycleA=100] motor power percentage from `-100` to `100`. If a negative value is given rotation
    * is counterclockwise.
@@ -265,7 +265,7 @@ export class MoveHub extends BluetoothManager.Device {
 
   /**
    * Turn a motor by specific angle
-   * @method LegoBoost#motorAngleAsync
+   * @method MoveHub#motorAngleAsync
    * @param {string|number} port possible string values: `A`, `B`, `AB`, `C`, `D`.
    * @param {number} angle - degrees to turn from `0` to `2147483647`
    * @param {number} [dutyCycle=100] motor power percentage from `-100` to `100`. If a negative value is given
@@ -285,7 +285,7 @@ export class MoveHub extends BluetoothManager.Device {
 
   /**
    * Turn both motors (A and B) by specific angle
-   * @method LegoBoost#motorAngleMulti
+   * @method MoveHub#motorAngleMulti
    * @param {number} angle degrees to turn from `0` to `2147483647`
    * @param {number} dutyCycleA motor power percentage from `-100` to `100`. If a negative value is given
    * rotation is counterclockwise.
@@ -299,7 +299,7 @@ export class MoveHub extends BluetoothManager.Device {
 
   /**
    * Turn both motors (A and B) by specific angle
-   * @method LegoBoost#motorAngleMultiAsync
+   * @method MoveHub#motorAngleMultiAsync
    * @param {number} angle degrees to turn from `0` to `2147483647`
    * @param {number} [dutyCycleA=100] motor power percentage from `-100` to `100`. If a negative value is given
    * rotation is counterclockwise.
@@ -320,7 +320,7 @@ export class MoveHub extends BluetoothManager.Device {
 
   /**
    * Drive specified distance
-   * @method LegoBoost#drive
+   * @method MoveHub#drive
    * @param {number} distance distance in centimeters (default) or inches. Positive is forward and negative is backward.
    * @param {boolean} [wait=true] will promise wait untill the drive has completed.
    * @returns {Promise}
@@ -332,7 +332,7 @@ export class MoveHub extends BluetoothManager.Device {
 
   /**
    * Turn robot specified degrees
-   * @method LegoBoost#turn
+   * @method MoveHub#turn
    * @param {number} degrees degrees to turn. Negative is to the left and positive to the right.
    * @param {boolean} [wait=true] will promise wait untill the turn has completed.
    * @returns {Promise}
@@ -344,7 +344,7 @@ export class MoveHub extends BluetoothManager.Device {
 
   /**
    * Drive untill sensor shows object in defined distance
-   * @method LegoBoost#driveUntil
+   * @method MoveHub#driveUntil
    * @param {number} [distance=0] distance in centimeters (default) or inches when to stop. Distance sensor is not very sensitive or accurate.
    * By default will stop when sensor notices wall for the first time. Sensor distance values are usualy between 110-50.
    * @param {boolean} [wait=true] will promise wait untill the bot will stop.
@@ -357,7 +357,7 @@ export class MoveHub extends BluetoothManager.Device {
 
   /**
    * Turn until there is no object in sensors sight
-   * @method LegoBoost#turnUntil
+   * @method MoveHub#turnUntil
    * @param {number} [direction=1] direction to turn to. 1 (or any positive) is to the right and 0 (or any negative) is to the left.
    * @param {boolean} [wait=true] will promise wait untill the bot will stop.
    * @returns {Promise}
