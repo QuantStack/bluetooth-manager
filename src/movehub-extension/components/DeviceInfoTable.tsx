@@ -1,9 +1,7 @@
 import { useEffect, useState } from 'react';
+import { Poll } from '@lumino/polling';
 import { DeviceInfo } from '../moveHub/types';
 import { defaultDeviceInfo, MoveHub } from '../moveHub';
-import { Poll } from '@lumino/polling';
-import ColoredCircleWithText from './ConnectionStatus';
-import BatteryComponent from './BatteryGauge';
 
 export function DeviceInfoTable({ moveHub }: { moveHub: MoveHub }) {
   const [deviceState, setDeviceState] = useState<DeviceInfo>(defaultDeviceInfo);
@@ -14,7 +12,6 @@ export function DeviceInfoTable({ moveHub }: { moveHub: MoveHub }) {
       name: 'device-status-polling',
       factory: async () => {
         setDeviceState({ ...moveHub.deviceInfo });
-
       },
       frequency: {
         interval: 200,
@@ -35,39 +32,21 @@ export function DeviceInfoTable({ moveHub }: { moveHub: MoveHub }) {
         <thead className="custom-table-thead">
           <tr className="custom-table-tr">
             <th className="custom-table-th"> </th>
-            <th className="custom-table-th">Connection</th>
-            <th className="custom-table-th">LED color</th>
-            <th className="custom-table-th">Battery level</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td className="custom-table-td" style={{ fontWeight: '600' }}>
-              {'Device status'}
-            </td>
-            <td className="custom-table-td">{deviceState.connected ? <ColoredCircleWithText color={'green'} text={'connected'} /> : <ColoredCircleWithText color={'red'} text={'disconnected'} />}</td>
-            <td className="custom-table-td">{deviceState.ledColor}</td>
-            <td className="custom-table-td"><BatteryComponent device = {moveHub}/></td>
-          </tr>
-        </tbody>
-      </table>
-      <table className="custom-table">
-        <thead className="custom-table-thead">
-          <tr className="custom-table-tr">
-            <th className="custom-table-th"> </th>
             <th className="custom-table-th">Pitch</th>
             <th className="custom-table-th">Roll</th>
+            <th className="custom-table-th">Yaw</th>
             <th className="custom-table-th">Distance</th>
             <th className="custom-table-th">Color</th>
           </tr>
         </thead>
         <tbody>
           <tr className="custom-table-tr">
-          <td className="custom-table-td" style={{ fontWeight: '600' }}>
+            <td className="custom-table-td" style={{ fontWeight: '600' }}>
               {'Sensors'}
             </td>
             <td className="custom-table-td">{deviceState.tilt.pitch} °</td>
             <td className="custom-table-td">{deviceState.tilt.roll} °</td>
+            <td className="custom-table-td">{deviceState.tilt.yaw} °</td>
             <td className="custom-table-td">
               {deviceState.distance === Infinity
                 ? 'Infinity'

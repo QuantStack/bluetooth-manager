@@ -20,9 +20,7 @@ export interface DeviceOptions {
     }
   ];
   optionalServices?: Array<string>;
-  
-    
-  
+
   serviceData?: [{ service: string; dataPrefix?: string; mask?: any }];
   optionalManufacturerData?: Array<number>;
 }

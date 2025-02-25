@@ -1,14 +1,11 @@
-import React from 'react';
-import FrankieSVG from '../../../style/FrankieSchematic.svg'
+import FrankieSVG from '../../../style/FrankieSchematic.svg';
+
 const FrankieSVGUrl = `data:image/svg+xml;base64,${btoa(FrankieSVG)}`;
 
-
-const FrankieComponent: React.FC = () => {
+export default function Frankie () {
   return (
     <div>
-      <img src={FrankieSVGUrl} alt="Frankie schematics" height="300px"/>
+      <img src={FrankieSVGUrl} alt="Frankie schematics" height="200px" />
     </div>
   );
 };
-
-export default FrankieComponent;

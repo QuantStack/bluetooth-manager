@@ -27,8 +27,6 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-
-
 /*!
  * The buffer module from node.js, for the browser.
  *
@@ -131,7 +129,7 @@ function createBuffer(length: number) {
  * The `Uint8Array` prototype remains unmodified.
  */
 
-function Buffer(arg: any, encodingOrOffset: string, length: number):any {
+function Buffer(arg: any, encodingOrOffset: string, length: number): any {
   // Common case.
   if (typeof arg === 'number') {
     if (typeof encodingOrOffset === 'string') {
@@ -316,7 +314,7 @@ function fromString(string: string, encoding: string) {
   return buf;
 }
 
-function fromArrayLike(array: any ) {
+function fromArrayLike(array: any) {
   var length = array.length < 0 ? 0 : checked(array.length) | 0;
   var buf = createBuffer(length);
   for (var i = 0; i < length; i += 1) {
@@ -894,19 +892,31 @@ function arrayIndexOf(
   return -1;
 }
 
-Buffer.prototype.includes = function includes(val:any, byteOffset:any, encoding:any) {
+Buffer.prototype.includes = function includes(
+  val: any,
+  byteOffset: any,
+  encoding: any
+) {
   return this.indexOf(val, byteOffset, encoding) !== -1;
 };
 
-Buffer.prototype.indexOf = function indexOf(val:any, byteOffset:any, encoding:any) {
+Buffer.prototype.indexOf = function indexOf(
+  val: any,
+  byteOffset: any,
+  encoding: any
+) {
   return bidirectionalIndexOf(this, val, byteOffset, encoding, true);
 };
 
-Buffer.prototype.lastIndexOf = function lastIndexOf(val:any, byteOffset:any, encoding:any) {
+Buffer.prototype.lastIndexOf = function lastIndexOf(
+  val: any,
+  byteOffset: any,
+  encoding: any
+) {
   return bidirectionalIndexOf(this, val, byteOffset, encoding, false);
 };
 
-function hexWrite(buf:any, string:any, offset:number, length:number) {
+function hexWrite(buf: any, string: any, offset: number, length: number) {
   offset = Number(offset) || 0;
   var remaining = buf.length - offset;
   if (!length) {
@@ -940,21 +950,11 @@ function utf8Write(buf: any, string: string, offset: number, length: number) {
   );
 }
 
-function asciiWrite(
-  buf: any,
-  string: any,
-  offset: number,
-  length: number
-) {
+function asciiWrite(buf: any, string: any, offset: number, length: number) {
   return blitBuffer(asciiToBytes(string), buf, offset, length);
 }
 
-function latin1Write(
-  buf: any,
-  string: string,
-  offset: number,
-  length: number
-) {
+function latin1Write(buf: any, string: string, offset: number, length: number) {
   return asciiWrite(buf, string, offset, length);
 }
 
@@ -962,12 +962,7 @@ function base64Write(buf: any, string: string, offset: number, length: number) {
   return blitBuffer(base64ToBytes(string), buf, offset, length);
 }
 
-function ucs2Write(
-  buf: any,
-  string: string,
-  offset: number,
-  length: number
-) {
+function ucs2Write(buf: any, string: string, offset: number, length: number) {
   return blitBuffer(
     utf16leToBytes(string, buf.length - offset),
     buf,
@@ -2102,12 +2097,7 @@ function base64ToBytes(str: string) {
   return base64.toByteArray(base64clean(str));
 }
 
-function blitBuffer(
-  src: any,
-  dst: Array<any>,
-  offset: number,
-  length: number
-) {
+function blitBuffer(src: any, dst: Array<any>, offset: number, length: number) {
   for (var i = 0; i < length; ++i) {
     if (i + offset >= dst.length || i >= src.length) break;
     dst[i + offset] = src[i];

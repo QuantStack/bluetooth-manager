@@ -1,10 +1,10 @@
+import { MoveHub } from '../moveHub';
 import caretUpSVG from '../../../style/caret-up.svg';
 import caretDownSVG from '../../../style/caret-down.svg';
 import caretLeftSVG from '../../../style/caret-left.svg';
 import caretRightSVG from '../../../style/caret-right.svg';
 import emptySVG from '../../../style/empty.svg';
 import stopButtonSVG from '../../../style/stop-button.svg';
-import { MoveHub } from '../moveHub';
 const emptySVGUrl = `data:image/svg+xml;base64,${btoa(emptySVG)}`;
 const stopButtonSVGUrl = `data:image/svg+xml;base64,${btoa(stopButtonSVG)}`;
 const caretUpSVGUrl = `data:image/svg+xml;base64,${btoa(caretUpSVG)}`;
@@ -96,7 +96,7 @@ export default function ManualControl({ moveHub }: IMoveHubControlProps) {
         <div className="manual-control-grid-item">
           <button
             key={index}
-            onClick={image.handleClick} // Use the custom handleClick for each image
+            onClick={image.handleClick}
             className="image-button"
           >
             <img src={image.src} alt={image.alt} />

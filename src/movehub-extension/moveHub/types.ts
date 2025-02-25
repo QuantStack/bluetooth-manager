@@ -46,9 +46,9 @@ export type DeviceInfo = {
     AB: Port;
     C: Port;
     D: Port;
-    LED: Port
+    LED: Port;
   };
-  tilt: { roll: number; pitch: number };
+  tilt: { roll: number; pitch: number; yaw: number };
   distance: number;
   rssi: number;
   color: string;
@@ -57,7 +57,7 @@ export type DeviceInfo = {
   err?: any;
   ledColor: string | undefined;
   batteryLevel: number | undefined;
-  hubName: string | undefined;
+  identifier: string;
 };
 
 /** Input data to used on manual and AI control */
@@ -66,7 +66,7 @@ export type ControlData = {
   speed: number;
   turnAngle: number;
   turnDirection?: TurnDirection;
-  tilt: { roll: number; pitch: number };
+  tilt: { roll: number; pitch: number; yaw: number };
   /** Force state change manually */
   forceState: State | null;
   /** Manually toggle input mode */

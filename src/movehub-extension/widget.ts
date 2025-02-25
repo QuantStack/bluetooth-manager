@@ -19,15 +19,12 @@ The above copyright notice and this permission notice shall be included in all
 copies or substantial portions of the Software.
 */
 
-
 import {
   DOMWidgetModel,
   DOMWidgetView,
-  ISerializers,
+  ISerializers
 } from '@jupyter-widgets/base';
-
 import { MODULE_NAME, MODULE_VERSION } from './version';
-
 // Import the CSS
 import '../../style/widget.css';
 import { IBluetoothManager } from '../bluetooth/BluetoothManager';
@@ -85,25 +82,22 @@ export class MoveHubModel extends DOMWidgetModel {
       this.polling_is_running = false;
     }
   }
+
   async initialize(attributes: any, options: any) {
     super.initialize(attributes, options);
 
     const n_lanes: number = this.get('n_lanes');
     console.log(`initialize with n_lanes=${n_lanes}`, this);
-
     const name: string = this.get('name');
     console.log(`initialize with name=${name}`);
-  /*if (!(name in device_cache)) {
+    /*if (!(name in device_cache)) {
       device_cache[name] = await MoveHubModel.bluetoothManager.connectDevice(movehubRegistryItem);
     }*/
-
     //this.movehub = device_cache[name];
-    this.movehub = await MoveHubModel.bluetoothManager.connectDevice(movehubRegistryItem);
-    
-
+    this.movehub =
+      await MoveHubModel.bluetoothManager.connectDevice(movehubRegistryItem);
     this.on('msg:custom', async (command: any, buffers: any) => {
       const lane = command['lane'];
-
       this.lanes[lane] = this.lanes[lane].then(async () => {
         const await_in_kernel: boolean = command['args'];
         const await_in_frontend: boolean = command['args'];
@@ -111,7 +105,6 @@ export class MoveHubModel extends DOMWidgetModel {
         if (await_in_frontend) {
           await p;
         }
-
         if (await_in_kernel) {
           this.lane_cmd_index[lane] += 1;
           this.save_device_info();
@@ -135,46 +128,36 @@ export class MoveHubModel extends DOMWidgetModel {
           case 'poll':
             this.poll();
             break;
-
           case 'led':
             this.movehub.led.apply(this.movehub, args);
             break;
           case 'ledAsync':
             await this.movehub.ledAsync.apply(this.movehub, args);
             break;
-
           case 'motorTime':
             this.movehub.motorTime.apply(this.movehub, args);
             break;
-
           case 'motorTimeMulti':
             this.movehub.motorTimeMulti.apply(this.movehub, args);
             break;
-
           case 'motorTimeAsync':
             await this.movehub.motorTimeAsync.apply(this.movehub, args);
             break;
-
           case 'motorTimeMultiAsync':
             await this.movehub.motorTimeMultiAsync.apply(this.movehub, args);
             break;
-
           case 'motorAngle':
             this.movehub.motorAngle.apply(this.movehub, args);
             break;
-
           case 'motorAngleMulti':
             this.movehub.motorAngleMulti.apply(this.movehub, args);
             break;
-
           case 'motorAngleAsync':
             await this.movehub.motorAngleAsync.apply(this.movehub, args);
             break;
-
           case 'motorAngleMultiAsync':
             await this.movehub.motorAngleMultiAsync.apply(this.movehub, args);
             break;
-
           default:
             console.error(`unknown command "${cmd}"`);
             break;
@@ -187,10 +170,10 @@ export class MoveHubModel extends DOMWidgetModel {
 
   async connect() {
     const sleep = (ms: number) => new Promise(r => setTimeout(r, ms));
-
     if (!this.movehub.deviceInfo.connected) {
       console.log('not connected yet');
-      this.movehub = await MoveHubModel.bluetoothManager.connectDevice(movehubRegistryItem);
+      this.movehub =
+        await MoveHubModel.bluetoothManager.connectDevice(movehubRegistryItem);
       for (let i = 0; i < 30; i++) {
         await sleep(100);
         if (
@@ -209,7 +192,6 @@ export class MoveHubModel extends DOMWidgetModel {
     while (this.lane_cmd_index.length < n_lanes) {
       this.lane_cmd_index.push(0);
     }
-
     if (!this.polling_is_running) {
       this.polling_is_running = true;
       setTimeout(this.polling.bind(this), 200);
@@ -254,27 +236,22 @@ export class MoveHubModel extends DOMWidgetModel {
 export class MoveHubView extends DOMWidgetView {
   txt_connected: HTMLDivElement;
   txt_bluetooth: HTMLDivElement;
-
-  txt_pitch: HTMLDivElement;
   txt_roll: HTMLDivElement;
+  txt_pitch: HTMLDivElement;
+  txt_yaw: HTMLDivElement;
   txt_distance: HTMLDivElement;
   txt_color: HTMLDivElement;
-
   txt_port_a: HTMLDivElement;
   txt_port_b: HTMLDivElement;
   txt_port_ab: HTMLDivElement;
   txt_port_c: HTMLDivElement;
   txt_port_d: HTMLDivElement;
-
-  meter_pitch: HTMLMeterElement;
   meter_roll: HTMLMeterElement;
+  meter_pitch: HTMLMeterElement;
+  meter_yaw: HTMLMeterElement;
   meter_distance: HTMLMeterElement;
   color_color: HTMLDivElement;
-
   isWebBluetoothSupported: boolean = navigator.bluetooth ? true : false;
-
-
-  
 
   render() {
     this.el.classList.add('custom-widget');
@@ -285,12 +262,10 @@ export class MoveHubView extends DOMWidgetView {
       const bluetooth_box = document.createElement('div');
       bluetooth_box.classList.add('error-box');
       this.el.appendChild(bluetooth_box);
-
       this.txt_bluetooth = document.createElement('div');
       this.txt_bluetooth.textContent =
         "Your device doesn't support Web Bluetooth API. Try to turn on Experimental Platform Features from Chrome, by accessing the following link and turning it on: chrome://flags/#enable-experimental-web-platform-features";
       bluetooth_box.appendChild(this.txt_bluetooth);
-
       console.log(
         "Your device doesn't support Web Bluetooth API. Try to turn on Experimental Platform Features from Chrome, by accessing the following link and turning it on: chrome://flags/#enable-experimental-web-platform-features"
       );
@@ -300,7 +275,7 @@ export class MoveHubView extends DOMWidgetView {
     const connection_box = document.createElement('div');
     connection_box.classList.add('box');
     this.el.appendChild(connection_box);
-    
+
     // sensor box
     const sensor_box = document.createElement('div');
     sensor_box.classList.add('box');
@@ -310,20 +285,11 @@ export class MoveHubView extends DOMWidgetView {
     const motor_box = document.createElement('div');
     motor_box.classList.add('box');
     this.el.appendChild(motor_box);
-    
+
     // connected
     this.txt_connected = document.createElement('div');
     this.txt_connected.textContent = 'Disconnected';
     connection_box.appendChild(this.txt_connected);
-    
-    // pitch
-    this.txt_pitch = document.createElement('div');
-    this.txt_pitch.textContent = 'pitch1:';
-    sensor_box.appendChild(this.txt_pitch);
-    this.meter_pitch = document.createElement('meter');
-    sensor_box.appendChild(this.meter_pitch);
-    this.meter_pitch.min = -90;
-    this.meter_pitch.max = 90;
 
     // roll
     this.el.appendChild(document.createElement('br'));
@@ -334,7 +300,25 @@ export class MoveHubView extends DOMWidgetView {
     sensor_box.appendChild(this.meter_roll);
     this.meter_roll.min = -90;
     this.meter_roll.max = 90;
-    
+
+    // pitch
+    this.txt_pitch = document.createElement('div');
+    this.txt_pitch.textContent = 'pitch:';
+    sensor_box.appendChild(this.txt_pitch);
+    this.meter_pitch = document.createElement('meter');
+    sensor_box.appendChild(this.meter_pitch);
+    this.meter_pitch.min = -90;
+    this.meter_pitch.max = 90;
+
+    // yaw
+    this.el.appendChild(document.createElement('br'));
+    this.txt_yaw = document.createElement('div');
+    this.txt_yaw.textContent = 'yaw:';
+    sensor_box.appendChild(this.txt_yaw);
+    this.meter_yaw = document.createElement('meter');
+    sensor_box.appendChild(this.meter_yaw);
+    this.meter_yaw.min = -90;
+    this.meter_yaw.max = 90;
 
     // distance
     sensor_box.appendChild(document.createElement('br'));
@@ -361,7 +345,6 @@ export class MoveHubView extends DOMWidgetView {
     this.txt_port_a = document.createElement('div');
     this.txt_port_a.textContent = 'Port A:';
     motor_box.appendChild(this.txt_port_a);
-    
 
     motor_box.appendChild(document.createElement('br'));
     this.txt_port_b = document.createElement('div');
@@ -382,10 +365,8 @@ export class MoveHubView extends DOMWidgetView {
     this.txt_port_d = document.createElement('div');
     this.txt_port_d.textContent = 'Port D:';
     motor_box.appendChild(this.txt_port_d);
-    
 
     this.model.on('change:_device_info', this.changes, this);
-    
   }
 
   changes() {
@@ -399,7 +380,10 @@ export class MoveHubView extends DOMWidgetView {
       this.txt_roll.textContent = `roll: ${deviceInfo['tilt']['roll']}`;
 
       this.meter_pitch.value = deviceInfo['tilt']['pitch'];
-      this.txt_pitch.textContent = `pitch1: ${deviceInfo['tilt']['pitch']}`;
+      this.txt_pitch.textContent = `pitch: ${deviceInfo['tilt']['pitch']}`;
+
+      this.meter_yaw.value = deviceInfo['tilt']['yaw'];
+      this.txt_yaw.textContent = `pitch: ${deviceInfo['tilt']['yaw']}`;
 
       const distance = deviceInfo['distance'];
       if (distance !== undefined && distance !== null && isFinite(distance)) {
@@ -425,7 +409,6 @@ export class MoveHubView extends DOMWidgetView {
       this.txt_port_ab.textContent = `Port AB: ${deviceInfo['ports']['AB']['action']} ${deviceInfo['ports']['AB']['value']}`;
       this.txt_port_c.textContent = `Port C:  ${deviceInfo['ports']['C']['action']} ${deviceInfo['ports']['C']['value']}`;
       this.txt_port_d.textContent = `Port D:  ${deviceInfo['ports']['D']['action']} ${deviceInfo['ports']['D']['value']}`;
-    
     } else {
       this.txt_connected.textContent = 'Disconnected';
     }
@@ -436,5 +419,4 @@ export class MoveHubView extends DOMWidgetView {
     const model = this.model as MoveHubModel;
     model.stop_polling = true;
   }
-   
 }

@@ -4,7 +4,8 @@ import { HubControl } from './moveHub/hub-control';
 import { DeviceConfiguration, DEFAULT_CONFIG } from './moveHub/hub/hubAsync';
 import { ControlData, DeviceInfo, RawData } from './moveHub/types';
 import { moveHubCharacteristicUUID, moveHubServiceUUID } from '.';
-
+import { buildIdentifier } from '../bluetooth-extension';
+import { ObservableValue } from '@jupyterlab/observables';
 
 export const defaultConfiguration: DeviceConfiguration = {
   distanceModifier: DEFAULT_CONFIG.METRIC_MODIFIER,
@@ -25,17 +26,17 @@ export const defaultDeviceInfo: DeviceInfo = {
     C: { action: '', value: 0 },
     D: { action: '', value: 0 },
     LED: { action: '', value: 0 }
-
   },
-  tilt: { roll: 0, pitch: 0 },
+  tilt: { roll: 0, pitch: 0, yaw: 0 },
   distance: Number.MAX_SAFE_INTEGER,
   rssi: 0,
   color: '',
   error: '',
+
   connected: false,
   ledColor: 'blue',
   batteryLevel: undefined,
-  hubName: "Boost"
+  identifier: ''
 };
 
 export class MoveHub extends BluetoothManager.Device {
@@ -45,7 +46,7 @@ export class MoveHub extends BluetoothManager.Device {
   public controlData: ControlData;
   public deviceInfo: DeviceInfo;
   public defaultConfiguration: DeviceConfiguration;
-
+  public legoBuild: ObservableValue;
 
   /**
    * Input data to used on manual and AI control
@@ -57,14 +58,16 @@ export class MoveHub extends BluetoothManager.Device {
       input: null,
       speed: 0,
       turnAngle: 0,
-      tilt: { roll: 0, pitch: 0 },
+      tilt: { roll: 0, pitch: 0, yaw: 0 },
       forceState: null,
       updateInputMode: (controlData: ControlData) => null,
       controlUpdateTime: undefined,
       state: undefined
     };
 
-    this.deviceInfo = defaultDeviceInfo;
+    (this.deviceInfo = defaultDeviceInfo),
+      (this.legoBuild = new ObservableValue('Move Hub'));
+
     this.defaultConfiguration = {
       distanceModifier: DEFAULT_CONFIG.METRIC_MODIFIER,
       turnModifier: DEFAULT_CONFIG.TURN_MODIFIER,
@@ -88,21 +91,23 @@ export class MoveHub extends BluetoothManager.Device {
   }
 
   async initDevice(): Promise<void> {
-    this.connected.connect(
-      async (sender, connected: boolean) => {
-
-        this.deviceInfo.connected = connected
-        console.warn('The connection state has changed and is now', this.deviceInfo.connected);
-      })
-    this.disconnected.connect(
-      async (sender, disconnected: boolean) => {
-
-        if (disconnected) {
-          this.deviceInfo.connected = false
-        }
-        console.warn('The connection state has changed and is now', this.deviceInfo.connected);
-      },
-    );
+    this.connected.connect(async (sender, connected: boolean) => {
+      this.deviceInfo.connected = connected;
+      console.warn(
+        'The connection state has changed and is now',
+        this.deviceInfo.connected
+      );
+      this.deviceInfo.identifier = buildIdentifier(this.native);
+    });
+    this.disconnected.connect(async (sender, disconnected: boolean) => {
+      if (disconnected) {
+        this.deviceInfo.connected = false;
+      }
+      console.warn(
+        'The connection state has changed and is now',
+        this.deviceInfo.connected
+      );
+    });
 
     const characteristic = await this.getCharacteristic(
       moveHubServiceUUID,
@@ -113,8 +118,6 @@ export class MoveHub extends BluetoothManager.Device {
     if (characteristic !== undefined) {
       this.hub = new HubAsync(characteristic, defaultConfiguration);
       this.hub.logDebug = this.logDebug;
-      this.hub.enableBatteryUpdates();
-      this.hub.enableDeviceNameUpdates();
 
       // Register events
       // Ensure hub is fully configured before returning
@@ -160,8 +163,6 @@ export class MoveHub extends BluetoothManager.Device {
     this.hub.updateConfiguration(configuration);
     this.hubControl.updateConfiguration(configuration);
   }
-
-
 
   /**
    * Control the LED on the Move Hub
@@ -231,7 +232,11 @@ export class MoveHub extends BluetoothManager.Device {
    * is counterclockwise.
    * @param {function} callback
    */
-  motorTimeMulti(seconds: number, dutyCycleA: number = 100, dutyCycleB: number = 100): void {
+  motorTimeMulti(
+    seconds: number,
+    dutyCycleA: number = 100,
+    dutyCycleB: number = 100
+  ): void {
     if (!this.preCheck()) return;
     this.hub.motorTimeMulti(seconds, dutyCycleA, dutyCycleB);
   }
@@ -264,7 +269,11 @@ export class MoveHub extends BluetoothManager.Device {
    * @param {number} [dutyCycle=100] motor power percentage from `-100` to `100`. If a negative value is given
    * rotation is counterclockwise.
    */
-  motorAngle(port: string | number, angle: number, dutyCycle: number = 100): void {
+  motorAngle(
+    port: string | number,
+    angle: number,
+    dutyCycle: number = 100
+  ): void {
     if (!this.preCheck()) return;
     this.hub.motorAngle(port, angle, dutyCycle);
   }
@@ -298,7 +307,11 @@ export class MoveHub extends BluetoothManager.Device {
    * @param {number} dutyCycleB motor power percentage from `-100` to `100`. If a negative value is given
    * rotation is counterclockwise.
    */
-  motorAngleMulti(angle: number, dutyCycleA: number = 100, dutyCycleB: number = 100): void {
+  motorAngleMulti(
+    angle: number,
+    dutyCycleA: number = 100,
+    dutyCycleB: number = 100
+  ): void {
     if (!this.preCheck()) return;
     this.hub.motorAngleMulti(angle, dutyCycleA, dutyCycleB);
   }
@@ -381,7 +394,4 @@ export class MoveHub extends BluetoothManager.Device {
     if (!this.preCheck()) return;
     return this.hub.rawCommand(raw);
   }
-
-
 }
-

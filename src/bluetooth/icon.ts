@@ -1,6 +1,7 @@
 import { LabIcon } from '@jupyterlab/ui-components';
 import bluetoothConnectSvgstr from '../..//style/bluetoothConnect.svg';
-import bluetoothDisconnectSvgstr from '../../style/bluetoothDisconnect.svg';
+import bluetoothDisconnectSvgstr from '../..//style/bluetoothDisconnect.svg';
+import LegoBrickSvgstr from '../..//style/LegoBrick.svg';
 
 export const BluetoothConnectIcon = new LabIcon({
   name: '@jupyterlab/bluetooh-manager:bluetooth-connect',
@@ -10,4 +11,9 @@ export const BluetoothConnectIcon = new LabIcon({
 export const BluetoothDisconnectIcon = new LabIcon({
   name: '@jupyterlab/bluetooh-manager:bluetooth-disconnect',
   svgstr: bluetoothDisconnectSvgstr
+});
+
+export const LegoBrickIcon = new LabIcon({
+  name: '@jupyterlab/bluetooh-manager:bluetooth-lego-brick',
+  svgstr: LegoBrickSvgstr
 });

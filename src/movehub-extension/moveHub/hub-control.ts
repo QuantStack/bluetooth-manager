@@ -50,7 +50,6 @@ class HubControl {
   ) {
     this.hub = null;
     this.deviceInfo = deviceInfo;
-
     this.control = controlData;
     this.configuration = configuration;
     this.prevControl = { ...this.control };
@@ -82,8 +81,9 @@ class HubControl {
 
     this.hub.emitter.on('port', (portObject: any) => {
       const { port, action } = portObject;
-      this.deviceInfo.ports[port as 'A' | 'B' | 'AB' | 'C' | 'D' | 'LED'].action =
-        action;
+      this.deviceInfo.ports[
+        port as 'A' | 'B' | 'AB' | 'C' | 'D' | 'LED'
+      ].action = action;
     });
 
     this.hub.emitter.on('color', (color: any) => {
@@ -91,9 +91,10 @@ class HubControl {
     });
 
     this.hub.emitter.on('tilt', (tilt: any) => {
-      const { roll, pitch } = tilt;
+      const { roll, pitch, yaw } = tilt;
       this.deviceInfo.tilt.roll = roll;
       this.deviceInfo.tilt.pitch = pitch;
+      this.deviceInfo.tilt.yaw = yaw;
     });
 
     this.hub.emitter.on(
@@ -106,20 +107,18 @@ class HubControl {
 
     this.hub.emitter.on('ledColor', (ledColor: any) => {
       this.deviceInfo.ledColor = ledColor;
-    })
+    });
 
     await this.hub.ledAsync('red');
     await this.hub.ledAsync('yellow');
     await this.hub.ledAsync('green');
-    this.deviceInfo.ledColor = 'green'
-
+    this.deviceInfo.ledColor = 'green';
+    this.deviceInfo.batteryLevel = this.hub.batteryLevel;
     this.hub.emitter.on('batteryLevel', (batteryLevel: any) => {
-      this.deviceInfo.batteryLevel = batteryLevel;
-    })
-
-    this.hub.emitter.on('hubName', (hubName: any) => {
-      this.deviceInfo.hubName = hubName;
-    })
+      if (this.hub?.batteryLevel) {
+        this.deviceInfo.batteryLevel = this.hub.batteryLevel;
+      }
+    });
   }
 
   async disconnect() {

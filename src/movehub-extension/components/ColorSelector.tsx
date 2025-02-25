@@ -1,11 +1,13 @@
-import { IMoveHubPanelProps } from '../moveHubPanelView';
 import { useState } from 'react';
+import { IMoveHubPanelProps } from './MoveHubPanel';
+import ColoredCircleWithText from './ColoredCircleWithText';
 
 const colors = [
   'off',
   'pink',
   'purple',
   'blue',
+  'lightblue',
   'cyan',
   'green',
   'yellow',
@@ -14,10 +16,16 @@ const colors = [
   'white'
 ];
 
-
-
 export function ColorSelector({ device }: IMoveHubPanelProps) {
-  const [selectedColor, setSelectedColor] = useState<string>('Select a color');
+  let defaultSelectedColor: string;
+  if (device.deviceInfo.ledColor) {
+    defaultSelectedColor = device.deviceInfo.ledColor;
+  } else {
+    defaultSelectedColor = 'undefined';
+  }
+
+  const [selectedColor, setSelectedColor] =
+    useState<string>(defaultSelectedColor);
 
   const hub = device.hub;
   if (!hub || !hub.emitter || !hub.ledAsync) {
@@ -29,8 +37,10 @@ export function ColorSelector({ device }: IMoveHubPanelProps) {
       if (selectedColor) {
         hub.ledAsync(event.target.value);
         setSelectedColor(event.target.value);
-        device.deviceInfo = { ...device.deviceInfo, ledColor: event.target.value }
-        
+        device.deviceInfo = {
+          ...device.deviceInfo,
+          ledColor: event.target.value
+        };
       }
     } catch (error) {
       console.error('Failed to change LED color:', error);
@@ -39,22 +49,33 @@ export function ColorSelector({ device }: IMoveHubPanelProps) {
 
   return (
     <div>
-      <h4 style={{ color: 'var(--jp-accept-color-normal)', margin: "0", padding: "0" }}>Other control</h4>
-      <div className="color-selector-main-container">
-        <div className="color-selector-text">
-          <p style={{ margin: '8px 0' }}>Pick a color for the LED</p>
+      <h4
+        style={{
+          color: 'var(--jp-accept-color-normal)',
+          margin: '0',
+          padding: '0'
+        }}
+      >
+        LED control
+      </h4>
+      <div className="led-color-main-container">
+        <div className="led-color-text" style={{ display: 'flex' }}>
+          <p style={{ margin: '8px 0px' }}>Current color</p>
+         {(selectedColor!=='lightblue') ? <ColoredCircleWithText color={selectedColor} text={selectedColor} /> : <ColoredCircleWithText color={selectedColor} text={'light blue'} />}
         </div>
-        <div className="color-dropdown-container">
+        <div className="color-selector-container">
           <select
-            className="custom-select"
-            id="color-select"
-            value={selectedColor}
+            className="color-selector"
+            id="color-selector"
+            value={''}
             onChange={handleColorChange}
           >
-            <option value="">Select a color</option>{' '}
+            <option value="" selected hidden>
+              Pick a color
+            </option>
             {colors.map(color => (
               <option key={color} value={color}>
-                {color}
+                {(color !=='lightblue') ? color : 'light blue'}
               </option>
             ))}
           </select>

@@ -27,9 +27,8 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-
 import { Hub } from './hub';
-import { Motor } from "../types"
+import { Motor } from '../types';
 
 const CALLBACK_TIMEOUT_MS = 1000 / 3;
 
@@ -42,39 +41,56 @@ export const DEFAULT_CONFIG = {
   DEFAULT_CLEAR_DISTANCE: 120,
   LEFT_MOTOR: 'A' as Motor,
   RIGHT_MOTOR: 'B' as Motor,
-  VALID_MOTORS: ['A' as Motor, 'B' as Motor],
+  VALID_MOTORS: ['A' as Motor, 'B' as Motor]
 };
 
 const validateConfiguration = (configuration: DeviceConfiguration) => {
-  configuration.leftMotor = configuration.leftMotor || DEFAULT_CONFIG.LEFT_MOTOR;
-  configuration.rightMotor = configuration.rightMotor || DEFAULT_CONFIG.RIGHT_MOTOR;
+  configuration.leftMotor =
+    configuration.leftMotor || DEFAULT_CONFIG.LEFT_MOTOR;
+  configuration.rightMotor =
+    configuration.rightMotor || DEFAULT_CONFIG.RIGHT_MOTOR;
 
   // @ts-ignore
-  if (!DEFAULT_CONFIG.VALID_MOTORS.includes(configuration.leftMotor)) throw Error('Define left port port correctly');
+  if (!DEFAULT_CONFIG.VALID_MOTORS.includes(configuration.leftMotor))
+    throw Error('Define left port port correctly');
 
   // @ts-ignore
-  if (!DEFAULT_CONFIG.VALID_MOTORS.includes(configuration.rightMotor)) throw Error('Define right port port correctly');
+  if (!DEFAULT_CONFIG.VALID_MOTORS.includes(configuration.rightMotor))
+    throw Error('Define right port port correctly');
 
-  if (configuration.leftMotor === configuration.rightMotor) throw Error('Left and right motor can not be same');
+  if (configuration.leftMotor === configuration.rightMotor)
+    throw Error('Left and right motor can not be same');
 
-  configuration.distanceModifier = configuration.distanceModifier || DEFAULT_CONFIG.METRIC_MODIFIER;
-  configuration.turnModifier = configuration.turnModifier || DEFAULT_CONFIG.TURN_MODIFIER;
-  configuration.driveSpeed = configuration.driveSpeed || DEFAULT_CONFIG.DRIVE_SPEED;
-  configuration.turnSpeed = configuration.turnSpeed || DEFAULT_CONFIG.TURN_SPEED;
-  configuration.defaultStopDistance = configuration.defaultStopDistance || DEFAULT_CONFIG.DEFAULT_STOP_DISTANCE;
-  configuration.defaultClearDistance = configuration.defaultClearDistance || DEFAULT_CONFIG.DEFAULT_CLEAR_DISTANCE;
+  configuration.distanceModifier =
+    configuration.distanceModifier || DEFAULT_CONFIG.METRIC_MODIFIER;
+  configuration.turnModifier =
+    configuration.turnModifier || DEFAULT_CONFIG.TURN_MODIFIER;
+  configuration.driveSpeed =
+    configuration.driveSpeed || DEFAULT_CONFIG.DRIVE_SPEED;
+  configuration.turnSpeed =
+    configuration.turnSpeed || DEFAULT_CONFIG.TURN_SPEED;
+  configuration.defaultStopDistance =
+    configuration.defaultStopDistance || DEFAULT_CONFIG.DEFAULT_STOP_DISTANCE;
+  configuration.defaultClearDistance =
+    configuration.defaultClearDistance || DEFAULT_CONFIG.DEFAULT_CLEAR_DISTANCE;
 };
 
-const waitForValueToSet = function(
+const waitForValueToSet = function (
   valueName: any,
-  compareFunc = (valueNameToCompare: any) => {this[valueNameToCompare]},
+  compareFunc = (valueNameToCompare: any) => {
+    this[valueNameToCompare];
+  },
   timeoutMs = 0
 ) {
-  if (compareFunc.bind(this)(valueName)) return Promise.resolve(this[valueName]);
+  if (compareFunc.bind(this)(valueName))
+    return Promise.resolve(this[valueName]);
 
   return new Promise((resolve, reject) => {
     setTimeout(
-      async () => resolve(await waitForValueToSet.bind(this)(valueName, compareFunc, timeoutMs)),
+      async () =>
+        resolve(
+          await waitForValueToSet.bind(this)(valueName, compareFunc, timeoutMs)
+        ),
       timeoutMs + 100
     );
   });
@@ -99,7 +115,10 @@ export class HubAsync extends Hub {
   modifier: number;
   distance: number;
 
-  constructor(characteristic: BluetoothRemoteGATTCharacteristic, configuration: DeviceConfiguration) {
+  constructor(
+    characteristic: BluetoothRemoteGATTCharacteristic,
+    configuration: DeviceConfiguration
+  ) {
     super(characteristic);
     validateConfiguration(configuration);
     this.configuration = configuration;
@@ -126,12 +145,15 @@ export class HubAsync extends Hub {
       AB: { angle: 0 },
       C: { angle: 0 },
       D: { angle: 0 },
-      LED: { angle: 0 },
+      LED: { angle: 0 }
     };
     this.useMetric = true;
     this.modifier = 1;
 
-    this.emitter.on('rotation', rotation => (this.portData[rotation.port].value = rotation.value));
+    this.emitter.on(
+      'rotation',
+      rotation => (this.portData[rotation.port].value = rotation.value)
+    );
     this.emitter.on('disconnect', () => (this.hubDisconnected = true));
     this.emitter.on('distance', distance => (this.distance = distance));
   }
@@ -164,10 +186,18 @@ export class HubAsync extends Hub {
    * @param {boolean} [wait=false] will promise wait unitll motorTime run time has elapsed
    * @returns {Promise}
    */
-  motorTimeAsync(port: string | number, seconds: number, dutyCycle: number = 100, wait: boolean = false): Promise<any> {
+  motorTimeAsync(
+    port: string | number,
+    seconds: number,
+    dutyCycle: number = 100,
+    wait: boolean = false
+  ): Promise<any> {
     return new Promise((resolve, _) => {
       this.motorTime(port, seconds, dutyCycle, () => {
-        setTimeout(resolve, wait ? CALLBACK_TIMEOUT_MS + seconds * 1000 : CALLBACK_TIMEOUT_MS);
+        setTimeout(
+          resolve,
+          wait ? CALLBACK_TIMEOUT_MS + seconds * 1000 : CALLBACK_TIMEOUT_MS
+        );
       });
     });
   }
@@ -183,10 +213,18 @@ export class HubAsync extends Hub {
    * @param {boolean} [wait=false] will promise wait unitll motorTime run time has elapsed
    * @returns {Promise}
    */
-  motorTimeMultiAsync(seconds: number, dutyCycleA: number = 100, dutyCycleB: number = 100, wait: boolean = false): Promise<any> {
+  motorTimeMultiAsync(
+    seconds: number,
+    dutyCycleA: number = 100,
+    dutyCycleB: number = 100,
+    wait: boolean = false
+  ): Promise<any> {
     return new Promise((resolve, _) => {
       this.motorTimeMulti(seconds, dutyCycleA, dutyCycleB, () => {
-        setTimeout(resolve, wait ? CALLBACK_TIMEOUT_MS + seconds * 1000 : CALLBACK_TIMEOUT_MS);
+        setTimeout(
+          resolve,
+          wait ? CALLBACK_TIMEOUT_MS + seconds * 1000 : CALLBACK_TIMEOUT_MS
+        );
       });
     });
   }
@@ -201,7 +239,12 @@ export class HubAsync extends Hub {
    * @param {boolean} [wait=false] will promise wait unitll motorAngle has turned
    * @returns {Promise}
    */
-  motorAngleAsync(port: string | number, angle: number, dutyCycle: number = 100, wait: boolean = false): Promise<any> {
+  motorAngleAsync(
+    port: string | number,
+    angle: number,
+    dutyCycle: number = 100,
+    wait: boolean = false
+  ): Promise<any> {
     return new Promise((resolve, _) => {
       this.motorAngle(port, angle, dutyCycle, async () => {
         if (wait) {
@@ -210,7 +253,9 @@ export class HubAsync extends Hub {
             beforeTurn = this.portData[port].value;
             await new Promise(res => setTimeout(res, CALLBACK_TIMEOUT_MS));
           } while (this.portData[port].value !== beforeTurn);
-          resolve((value:any)=>{console.log('value:', value)});
+          resolve((value: any) => {
+            console.log('value:', value);
+          });
         } else {
           setTimeout(resolve, CALLBACK_TIMEOUT_MS);
         }
@@ -229,7 +274,12 @@ export class HubAsync extends Hub {
    * @param {boolean} [wait=false] will promise wait unitll motorAngle has turned
    * @returns {Promise}
    */
-  motorAngleMultiAsync(angle: number, dutyCycleA: number = 100, dutyCycleB: number = 100, wait: boolean = false): Promise<any | undefined> {
+  motorAngleMultiAsync(
+    angle: number,
+    dutyCycleA: number = 100,
+    dutyCycleB: number = 100,
+    wait: boolean = false
+  ): Promise<any | undefined> {
     return new Promise((resolve, _) => {
       this.motorAngleMulti(angle, dutyCycleA, dutyCycleB, async () => {
         if (wait) {
@@ -238,7 +288,9 @@ export class HubAsync extends Hub {
             beforeTurn = this.portData['AB'].value;
             await new Promise(res => setTimeout(res, CALLBACK_TIMEOUT_MS));
           } while (this.portData['AB'].value !== beforeTurn);
-          resolve((value:any)=>{console.log('value:', value)});
+          resolve((value: any) => {
+            console.log('value:', value);
+          });
         } else {
           setTimeout(resolve, CALLBACK_TIMEOUT_MS);
         }
@@ -278,21 +330,26 @@ export class HubAsync extends Hub {
    * @param {boolean} [wait=true] will promise wait untill the drive has completed.
    * @returns {Promise}
    */
-  drive(distance: number, wait: boolean = true): Promise<any | undefined > {
+  drive(distance: number, wait: boolean = true): Promise<any | undefined> {
     const angle =
       Math.abs(distance) *
-      ((this.useMetric ? this.configuration.distanceModifier : this.configuration.distanceModifier / 4) *
+      ((this.useMetric
+        ? this.configuration.distanceModifier
+        : this.configuration.distanceModifier / 4) *
         this.modifier);
-        if (this.configuration.driveSpeed) {
-    const dutyCycleA =
-      this.configuration.driveSpeed * (distance > 0 ? 1 : -1) * (this.configuration.leftMotor === 'A' ? 1 : -1);
-    const dutyCycleB =
-      this.configuration.driveSpeed * (distance > 0 ? 1 : -1) * (this.configuration.leftMotor === 'A' ? 1 : -1);
-    return this.motorAngleMultiAsync(angle, dutyCycleA, dutyCycleB, wait);
-  }
- else {
-    return Promise.resolve(undefined)
-  }
+    if (this.configuration.driveSpeed) {
+      const dutyCycleA =
+        this.configuration.driveSpeed *
+        (distance > 0 ? 1 : -1) *
+        (this.configuration.leftMotor === 'A' ? 1 : -1);
+      const dutyCycleB =
+        this.configuration.driveSpeed *
+        (distance > 0 ? 1 : -1) *
+        (this.configuration.leftMotor === 'A' ? 1 : -1);
+      return this.motorAngleMultiAsync(angle, dutyCycleA, dutyCycleB, wait);
+    } else {
+      return Promise.resolve(undefined);
+    }
   }
 
   /**
@@ -305,10 +362,18 @@ export class HubAsync extends Hub {
   turn(degrees: number, wait: boolean = true): Promise<any> {
     const angle = Math.abs(degrees) * this.configuration.turnModifier;
     const turnMotorModifier = this.configuration.leftMotor === 'A' ? 1 : -1;
-    const leftTurn: number | undefined = this.configuration.turnSpeed! * (degrees > 0 ? 1 : -1) * turnMotorModifier;
-    const rightTurn: number | undefined = this.configuration.turnSpeed! * (degrees > 0 ? -1 : 1) * turnMotorModifier;
-    const dutyCycleA = this.configuration.leftMotor === 'A' ? leftTurn : rightTurn;
-    const dutyCycleB = this.configuration.leftMotor === 'A' ? rightTurn : leftTurn;
+    const leftTurn: number | undefined =
+      this.configuration.turnSpeed! *
+      (degrees > 0 ? 1 : -1) *
+      turnMotorModifier;
+    const rightTurn: number | undefined =
+      this.configuration.turnSpeed! *
+      (degrees > 0 ? -1 : 1) *
+      turnMotorModifier;
+    const dutyCycleA =
+      this.configuration.leftMotor === 'A' ? leftTurn : rightTurn;
+    const dutyCycleB =
+      this.configuration.leftMotor === 'A' ? rightTurn : leftTurn;
     return this.motorAngleMultiAsync(angle, dutyCycleA, dutyCycleB, wait);
   }
 
@@ -322,17 +387,28 @@ export class HubAsync extends Hub {
    */
   async driveUntil(distance: number = 0, wait: boolean = true): Promise<any> {
     const distanceCheck =
-      distance !== 0 ? (this.useMetric ? distance : distance * 2.54) : this.configuration.defaultStopDistance;
+      distance !== 0
+        ? this.useMetric
+          ? distance
+          : distance * 2.54
+        : this.configuration.defaultStopDistance;
     const direction = this.configuration.leftMotor === 'A' ? 1 : -1;
-    const compareFunc = direction === 1 ? () => distanceCheck >= this.distance : () => distanceCheck <= this.distance;
-    this.motorTimeMulti(60, this.configuration.driveSpeed! * direction, this.configuration.driveSpeed! * direction);
+    const compareFunc =
+      direction === 1
+        ? () => distanceCheck >= this.distance
+        : () => distanceCheck <= this.distance;
+    this.motorTimeMulti(
+      60,
+      this.configuration.driveSpeed! * direction,
+      this.configuration.driveSpeed! * direction
+    );
     if (wait) {
       await waitForValueToSet.bind(this)('distance', compareFunc);
       await this.motorAngleMultiAsync(0);
     } else {
       return waitForValueToSet
         .bind(this)('distance', compareFunc)
-        .then((value:any) => this.motorAngleMulti(0, 0, 0));
+        .then((value: any) => this.motorAngleMulti(0, 0, 0));
     }
   }
 
@@ -340,7 +416,6 @@ export class HubAsync extends Hub {
     if (direction > 0) return await this.driveUntil();
     else return await this.drive(-10000);
   }
-
 
   /**
    * Stop engines A and B
@@ -359,12 +434,18 @@ export class HubAsync extends Hub {
     const directionModifier = direction > 0 ? 1 : -1;
     this.turn(360 * directionModifier, false);
     if (wait) {
-      await waitForValueToSet.bind(this)('distance', () => this.distance >= this.configuration.defaultClearDistance);
+      await waitForValueToSet.bind(this)(
+        'distance',
+        () => this.distance >= this.configuration.defaultClearDistance
+      );
       await this.turn(0, false);
     } else {
       return waitForValueToSet
-        .bind(this)('distance', () => this.distance >= this.configuration.defaultClearDistance)
-        .then((value:any) => this.turn(0, false));
+        .bind(this)(
+          'distance',
+          () => this.distance >= this.configuration.defaultClearDistance
+        )
+        .then((value: any) => this.turn(0, false));
     }
   }
 

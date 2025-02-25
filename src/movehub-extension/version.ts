@@ -12,9 +12,9 @@
  * version number.
  */
 //export const MODULE_VERSION = data.version;
-export const MODULE_VERSION = "0.1.0";
+export const MODULE_VERSION = '0.1.0';
 
 /*
  * The current package name.
  */
-export const MODULE_NAME = "ipymovehub";
+export const MODULE_NAME = 'ipymovehub';

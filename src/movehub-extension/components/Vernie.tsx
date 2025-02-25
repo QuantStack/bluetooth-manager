@@ -1,14 +1,16 @@
-import React from 'react';
-import VernieSVG from '../../../style/VernieSchematic.svg'
+import VernieSVG from '../../../style/VernieSchematic.svg';
 const VernieSVGUrl = `data:image/svg+xml;base64,${btoa(VernieSVG)}`;
 
-
-const VernieComponent: React.FC = () => {
+export default function Vernie () {
   return (
-    <div>
-      <img src={VernieSVGUrl} alt="Vernie schematics" height="300px"/>
+    <div
+      style={{
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center'
+      }}
+    >
+      <img src={VernieSVGUrl} alt="Vernie schematics" height="300px" />
     </div>
   );
 };
-
-export default VernieComponent;

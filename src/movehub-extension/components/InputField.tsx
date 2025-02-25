@@ -1,17 +1,17 @@
-import React, { ReactElement, useState } from 'react';
+import { useState } from "react";
 
 interface InputFieldProps {
-  type: string; // Default to "text" if not specified
+  type: string;
   value: string;
   placeholder?: string;
   onChange?: (value: string) => void;
 }
 
-export default function InputField(props: InputFieldProps): ReactElement {
+export default function InputField(props: InputFieldProps) {
   const [inputValue, setInputValue] = useState<string>(props.value);
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const newValue = e.target.value;
+  const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const newValue = event.target.value;
     setInputValue(newValue);
     if (props.onChange) props.onChange(newValue);
   };

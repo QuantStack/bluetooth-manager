@@ -27,7 +27,6 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-
 // https://gist.github.com/mudge/5830382#gistcomment-2658721
 
 type Listener = (...args: any[]) => void;
@@ -59,7 +58,9 @@ export class EventEmitter<T extends string> {
   }
 
   public removeAllListeners(): void {
-    Object.keys(this.events).forEach((event: string) => this.events[event].splice(0, this.events[event].length));
+    Object.keys(this.events).forEach((event: string) =>
+      this.events[event].splice(0, this.events[event].length)
+    );
   }
 
   public emit(event: string, ...args: any[]): void {

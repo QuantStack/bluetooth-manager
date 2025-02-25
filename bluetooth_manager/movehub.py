@@ -109,7 +109,7 @@ DEFAULT_DEVICE_INFO = {
         "color": None,
         "connected": False,
     },
-    "tilt": {"roll": 0, "pitch": 0},
+    "tilt": {"roll": 0, "pitch": 0, "yaw": 0},
     "distance": None,
     "lane_cmd_index": [0, 0, 0],
 }
@@ -158,16 +158,21 @@ class MoveHubLaneProxy(object):
         if math.isfinite(d) and d > 255.0:
             d = 255.0
         return d
-
+    
     async def get_roll_async(self):
         """Get the roll angle of the movehub Move Hub."""
         await self._poll()
         return self.movehub._device_info["tilt"]["roll"]
-
+    
     async def get_pitch_async(self):
         """Get the pitch angle of the movehub Move Hub."""
         await self._poll()
         return self.movehub._device_info["tilt"]["pitch"]
+    
+    async def get_yaw_async(self):
+        """Get the yaw angle of the movehub Move Hub."""
+        await self._poll()
+        return self.movehub._device_info["tilt"]["yaw"]
 
     async def get_color_async(self):
         """Get the color of the Boost Move Hub."""

@@ -3,17 +3,12 @@
 
     https://jupyterlab.readthedocs.io/en/stable/developer/css.html
 */
-.jp-lego-movehub-control-panel {
+.jp-movehub-panel-main {
   overflow: auto;
-  padding: 0 2em;
 }
 
-.lego-movehub-panel-title {
-  text-align: center;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 2rem;
+.jp-movehub-panel-content {
+  padding: 0 2em;
 }
 
 .vernie-control-grid-container {
@@ -22,10 +17,17 @@
   grid-gap: 4px;
   justify-content: left;
   align-items: center;
+  margin-top: 50px;
+  gap: 16px;
 }
 
-.vernie-control-grid-item {
-  justify-content: left;
+.vernie-control-grid-item-left {
+  justify-self: left;
+  align-items: center;
+}
+
+.vernie-control-grid-item-right {
+  justify-self: center;
   align-items: center;
 }
 
@@ -33,7 +35,7 @@
   display: flex;
   align-items: center;
   justify-content: left;
-  gap: 16px;
+  gap: 10px;
   margin-top: 0;
   margin-bottom: 8px;
 }
@@ -47,82 +49,100 @@
   padding: 0;
   border-width: 0.5px;
   border-radius: 4px;
-  width: 54px;
+  width: 30px;
+  font-size: 10px;
 }
 
-.move-input-field-with-button {
+.move-input-field-with-1button {
   width: 60%;
   display: flex;
-  justify-content: right;
+  align-items: center;
+  gap: 10px;
+}
+
+.move-input-field-with-2buttons {
+  width: 60%;
+  display: flex;
   gap: 10px;
 }
 
 .move-validation-button {
   background-color: var(--jp-accept-color-normal);
+  font-size: 11px;
   color: #fff;
   border: none;
   border-radius: 4px;
   cursor: pointer;
-  width: 70px;
+  width: 60px;
   height: 24px;
   padding: 0;
 }
 
-.color-selector-main-container {
+.led-color-main-container {
   display: flex;
   align-items: center;
   justify-content: left;
-  gap: 16px;
+  gap: 10px;
   margin-bottom: 8px;
 }
 
-.color-selector-text {
+.led-color-text {
   text-align: left;
 }
 
-.color-dropdown-container {
-  align-items: center;
-  display: flex;
-  justify-content: right;
-  gap: 10px;
-  margin-top: 8px;
+.manual-control-text-container {
+  margin: 8px 0;
+  justify-content: left;
+  width: 100%;
 }
 
-@media (width< 1100px) {
+@media (width< 1200px) {
   .move-input-field-text {
+    width: 40%;
+  }
+
+  .move-input-field-with-1button {
+    width: 60%;
+  }
+
+  .move-input-field-with-2buttons {
+    width: 60%;
+  }
+
+  .led-color-text {
     width: 50%;
   }
 
-  .move-input-field-with-button {
-    width: 50%;
-  }
-
-  .color-selector-text {
-    width: 50%;
-  }
-
-  .color-dropdown-container {
+  .color-selector-container {
     width: 50%;
   }
 }
 
-@media (width> 1100px) {
+@media (width> 1200px) {
   .move-input-field-text {
-    width: 300px;
+    width: 200px;
     text-align: left;
   }
 
-  .move-input-field-with-button {
-    width: 70px;
+  .move-input-field-with-1button {
+    width: 150px;
   }
 
-  .color-selector-text {
-    width: 300px;
+  .move-input-field-with-2buttons {
+    width: 150px;
+  }
+
+  .led-color-text {
+    width: 200px;
     text-align: left;
   }
 
-  .color-dropdown-container {
-    width: 70px;
+  .color-selector-container {
+    width: 150px;
+  }
+
+  .color-selector {
+    width: 110px;
   }
 }
 
@@ -159,7 +179,8 @@
   justify-content: center;
   align-items: center;
   font-weight: bold;
-  margin-right: 12px;
+  margin: 0 8px;
+  border: solid 0.5px;
 }
 
 .custom-table {
@@ -170,8 +191,8 @@
   color: var(--jp-ui-font-color1);
   font-size: var(--jp-ui-font-size1);
   table-layout: fixed;
-  margin-top: 0;
-  margin-bottom: 50px;
+  margin-top: 16px;
+  margin-bottom: 16px;
 }
 
 .custom-table-thead {
@@ -209,14 +230,20 @@
   line-height: var(--jp-content-line-height);
 }
 
-.custom-select {
+.color-selector {
   height: 24px;
   padding: 0;
   line-height: 18px;
   border-radius: 4px;
   border-color: black;
   border-width: 0.5px;
-  width: 135px;
-  margin: 0;
+  margin-top: -12px;
   position: absolute;
+  font-size: 11px;
+}
+
+.color-selector-container {
+  display: flex;
+  justify-content: right;
+  gap: 10px;
 }

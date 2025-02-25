@@ -3,23 +3,20 @@ import {
   JupyterFrontEndPlugin
 } from '@jupyterlab/application';
 import { ITranslator } from '@jupyterlab/translation';
-import { IRunningSessionManagers } from '@jupyterlab/running';
-import { addIcon } from '@jupyterlab/ui-components';
-import { CommandToolbarButton } from '@jupyterlab/ui-components';
+import { IRunningSessions, IRunningSessionManagers } from '@jupyterlab/running';
+import { addIcon, CommandToolbarButton } from '@jupyterlab/ui-components';
+import { Dialog, showDialog } from '@jupyterlab/apputils';
+import { Widget } from '@lumino/widgets';
 import { BluetoothDeviceRunningItem } from '../bluetooth/BluetoothDeviceRunningItem';
-import { IRunningSessions } from '@jupyterlab/running';
 import {
   IBluetoothManager,
   BluetoothManager
 } from '../bluetooth/BluetoothManager';
-import { Dialog, showDialog } from '@jupyterlab/apputils';
-import { Widget } from '@lumino/widgets';
 
 
 export namespace CommandIDs {
   export const openDeviceRegistryDialog =
     'bluetooth-manager:open-dialog-for-devices-registry';
-  export const connectDevice = 'bluetooth-manager:connect-device';
   export const disconnectDevice = 'bluetooth-manager:disconnect-device';
 }
 
@@ -38,10 +35,12 @@ const BluetoothManagerPlugin: JupyterFrontEndPlugin<IBluetoothManager> = {
     const bluetoothManager = new BluetoothManager();
     bluetoothManager.deviceListChanged.connect(
       async (sender, deviceList: Array<BluetoothManager.Device>) => {
-        console.warn('The list of devices has been updated and is now: ', deviceList);
+        console.warn(
+          'The list of devices has been updated and is now: ',
+          deviceList
+        );
       }
     );
-  
     return bluetoothManager;
   }
 };
@@ -69,7 +68,7 @@ const BluetoothSidebarPlugin: JupyterFrontEndPlugin<void> = {
     function createTestFunction(device: BluetoothManager.Device) {
       return function test(node: HTMLElement): boolean {
         const testString = buildIdentifier(device.native);
-        return node.title === testString; // example additional logic using device
+        return node.title === testString; 
       };
     }
 
@@ -84,10 +83,9 @@ const BluetoothSidebarPlugin: JupyterFrontEndPlugin<void> = {
           }
         });
       },
-
-      caption: trans.__('Disconnect device.'),
-      label: trans.__('Disconnect device.')
+      caption: trans.__('Disconnect device')
     });
+
     /* Adding commands to the context menu of the relevant connected device*/
     app.contextMenu.addItem({
       command: CommandIDs.disconnectDevice,
@@ -117,6 +115,7 @@ const BluetoothSidebarPlugin: JupyterFrontEndPlugin<void> = {
         });
       }
     });
+
     managers.add({
       name: trans.__('Bluetooth Devices'),
       supportsMultipleViews: false,
@@ -163,11 +162,9 @@ export class DropDownRegistry
 {
   constructor(registry: BluetoothManager.DeviceRegistry) {
     super();
-
     this._selectList = document.createElement('select');
     this.node.appendChild(this._selectList);
     this.registry = registry;
-
     registry.itemsList.forEach(item => {
       const option = document.createElement('option');
       option.value = item.identifier;
@@ -179,6 +176,7 @@ export class DropDownRegistry
   getValue(): string {
     return this._selectList.value;
   }
+  
   private _selectList: HTMLSelectElement;
   public registry: BluetoothManager.DeviceRegistry;
 }
