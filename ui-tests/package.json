@@ -1,7 +1,7 @@
 {
-  "name": "jupyterlab-web-bluetooth-manager-ui-tests",
+  "name": "bluetooth-manager-ui-tests",
   "version": "1.0.0",
-  "description": "JupyterLab jupyterlab-web-bluetooth-manager Integration Tests",
+  "description": "JupyterLab bluetooth-manager Integration Tests",
   "private": true,
   "scripts": {
     "start": "jupyter lab --config jupyter_server_test_config.py",

@@ -1,0 +1,51 @@
+import { IMoveHubPanelProps } from './MoveHubPanel';
+import ColoredCircleWithText from './ColoredCircleWithText';
+import { useEffect, useState } from 'react';
+import { Poll } from '@lumino/polling';
+import { DeviceInfo } from '../moveHub/types';
+import { defaultDeviceInfo, MoveHub } from '../moveHub';
+import { ReactWidget } from '@jupyterlab/ui-components';
+
+export default function ConnectionStatus({ device }: IMoveHubPanelProps) {
+  const [deviceState, setDeviceState] = useState<DeviceInfo>(defaultDeviceInfo);
+
+  useEffect(() => {
+    const poll = new Poll({
+      auto: true,
+      name: 'device-status-polling',
+      factory: async () => {
+        setDeviceState({ ...device.deviceInfo });
+      },
+      frequency: {
+        interval: 200,
+        backoff: true
+      },
+      standby: 'when-hidden'
+    });
+
+    poll.start();
+
+    return () => {
+      poll.stop();
+    };
+  }, [device.deviceInfo]);
+
+  return deviceState.connected ? (
+    <ColoredCircleWithText color={'green'} text={''} />
+  ) : (
+    <ColoredCircleWithText color={'red'} text={''} />
+  );
+}
+
+export class ConnectionStatusWidget extends ReactWidget {
+  public device: MoveHub;
+
+  constructor(device: MoveHub) {
+    super();
+    this.device = device;
+  }
+
+  render() {
+    return <ConnectionStatus device={this.device} />;
+  }
+}

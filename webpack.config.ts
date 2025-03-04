@@ -5,7 +5,7 @@ const version = require('./package.json').version;
 const rules = [
   { test: /\.ts$/, loader: 'ts-loader' },
   { test: /\.js$/, loader: 'source-map-loader' },
-  { test: /\.css$/, use: ['style-loader', 'css-loader'] },
+  { test: /\.css$/, use: ['style-loader', 'css-loader'] }
 ];
 
 // Packages that shouldn't be bundled but loaded at runtime
@@ -27,11 +27,7 @@ module.exports = [
     entry: './src/extension.ts',
     output: {
       filename: 'index.js',
-      path: path.resolve(
-        __dirname,
-        'bluetooh-manager',
-        'nbextension'
-      ),
+      path: path.resolve(__dirname, 'bluetooh-manager', 'nbextension'),
       libraryTarget: 'amd',
       publicPath: ''
     },
@@ -60,10 +56,7 @@ module.exports = [
       path: path.resolve(__dirname, 'dist'),
       libraryTarget: 'amd',
       library: 'bluetooh-manager',
-      publicPath:
-        'https://unpkg.com/bluetooh-manager@' +
-        version +
-        '/dist/'
+      publicPath: 'https://unpkg.com/bluetooh-manager@' + version + '/dist/'
     },
     devtool: 'source-map',
     module: {

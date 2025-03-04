@@ -1,7 +1,7 @@
 {
   "jupyter.lab.shortcuts": [],
-  "title": "jupyterlab-web-bluetooth-manager",
-  "description": "jupyterlab-web-bluetooth-manager settings.",
+  "title": "bluetooth-manager",
+  "description": "bluetooth-manager settings.",
   "type": "object",
   "properties": {},
   "additionalProperties": false

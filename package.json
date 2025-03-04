@@ -1,5 +1,5 @@
 {
-    "name": "jupyterlab-web-bluetooth-manager",
+    "name": "bluetooth-manager",
     "version": "0.1.0",
     "description": "A JupyterLab extension to manage to connect to devices with web bluetooth.",
     "keywords": [
@@ -7,9 +7,9 @@
         "jupyterlab",
         "jupyterlab-extension"
     ],
-    "homepage": "https://github.com/HaudinFlorence/jupyterlab-web-bluetooth-manager",
+    "homepage": "https://github.com/QuantStack/bluetooth-manager",
     "bugs": {
-        "url": "https://github.com/HaudinFlorence/jupyterlab-web-bluetooth-manager/issues"
+        "url": "https://github.com/QuantStack/bluetooth-manager/issues"
     },
     "license": "BSD-3-Clause",
     "author": {
@@ -27,7 +27,7 @@
     "style": "style/index.css",
     "repository": {
         "type": "git",
-        "url": "https://github.com/HaudinFlorence/jupyterlab-web-bluetooth-manager.git"
+        "url": "https://github.com/QuantStack/bluetooth-manager.git"
     },
     "scripts": {
         "build": "jlpm build:lib && jlpm build:labextension:dev",
@@ -59,13 +59,15 @@
     "dependencies": {
         "@emotion/react": "^11.9.0",
         "@emotion/styled": "^11.9.0",
+        "@jupyter-widgets/base": "^1.1.10 || ^2 || ^3 || ^4 || ^5 || ^6",
         "@jupyterlab/application": "^4.3.1",
         "@jupyterlab/running": "^4.3.1",
         "@jupyterlab/settingregistry": "^4.3.1",
         "@jupyterlab/ui-components": "^4.3.1",
-        "@mui/material": "^6.1.9",
         "base64-js": "^1.5.1",
-        "ieee754": "^1.2.1"
+        "ieee754": "^1.2.1",
+        "lego-boost-browser": "git+https://github.com/DerThorsten/lego-boost-browser.git",
+        "react-battery-gauge": "1.0.7"
     },
     "devDependencies": {
         "@jupyterlab/builder": "^4.3.1",
@@ -87,6 +89,7 @@
         "prettier": "^3.0.0",
         "react": "^18.0.0",
         "react-dom": "^18.0.0",
+        "react-select": "5.9.0",
         "rimraf": "^5.0.1",
         "source-map-loader": "^1.0.2",
         "style-loader": "^3.3.1",
@@ -204,8 +207,5 @@
             "selector-no-vendor-prefix": null,
             "value-no-vendor-prefix": null
         }
-    },
-    "resolutions": {
-        "lego-boost-browser": "portal:/home/fhaudin/dev/robots/lego-boost-browser"
     }
 }

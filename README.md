@@ -1,8 +1,7 @@
 # bluetooth_manager
 
-[![Github Actions Status](https://github.com/HaudinFlorence/jupyterlab-web-bluetooth-manager/workflows/Build/badge.svg)](https://github.com/HaudinFlorence/jupyterlab-web-bluetooth-manager/actions/workflows/build.yml)
-[![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/HaudinFlorence/jupyterlab-web-bluetooth-manager/main?urlpath=lab)
-
+[![Github Actions Status](https://github.com/QuantStack/bluetooth-manager/workflows/Build/badge.svg)](https://github.com/QuantStack/bluetooth-manager/actions/workflows/build.yml)
+[![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/QuantStack/bluetooth-manager/main?urlpath=lab)
 
 A JupyterLab extension to manage to connect to devices with web bluetooth.
 
@@ -72,7 +71,7 @@ pip uninstall bluetooth_manager
 
 In development mode, you will also need to remove the symlink created by `jupyter labextension develop`
 command. To find its location, you can run `jupyter labextension list` to figure out where the `labextensions`
-folder is located. Then you can remove the symlink named `jupyterlab-web-bluetooth-manager` within that folder.
+folder is located. Then you can remove the symlink named `bluetooth-manager` within that folder.
 
 ### Testing the extension
 
