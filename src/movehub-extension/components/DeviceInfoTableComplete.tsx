@@ -4,7 +4,7 @@ import { DeviceInfo } from '../moveHub/types';
 import { defaultDeviceInfo, MoveHub } from '../moveHub';
 import ColoredCircleWithText from './ColoredCircleWithText';
 
-export function DeviceInfoTableInNotebook({ moveHub }: { moveHub: MoveHub }) {
+export function DeviceInfoTableComplete({ moveHub }: { moveHub: MoveHub }) {
   const [deviceState, setDeviceState] = useState<DeviceInfo>(defaultDeviceInfo);
 
   useEffect(() => {

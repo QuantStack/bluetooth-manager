@@ -34,8 +34,8 @@ import { MoveHub } from './moveHub';
 import * as ReactDOMClient from "react-dom/client";
 // @ts-ignore
 import { Root } from "react-dom/client";
-//import { DeviceInfoTableInNotebook } from './components/DeviceInfoTableInNotebook';
-import { DeviceInfoTableInNotebook } from './components/DeviceInfoTableInNotebook';
+//import { DeviceInfoTableComplete } from './components/DeviceInfoTableComplete';
+import { DeviceInfoTableComplete } from './components/DeviceInfoTableComplete';
 
 // we use globals for the movehub device since connecting to
 // them takes a long time. If the model would hold the
@@ -247,7 +247,7 @@ export class MoveHubView extends DOMWidgetView {
     this.root = ReactDOMClient.createRoot(this.el);
     const model = this.model as MoveHubModel
     const movehub = model.movehub
-    this.root.render(<DeviceInfoTableInNotebook moveHub={ movehub } />);
+    this.root.render(<DeviceInfoTableComplete moveHub={ movehub } />);
   }
 
   remove() {
