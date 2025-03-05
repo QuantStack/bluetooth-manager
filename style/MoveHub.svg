@@ -168,32 +168,34 @@
        id="image1" />
     <text
        xml:space="preserve"
-       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:32px;font-family:System-ui;-inkscape-font-specification:'System-ui, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;fill:#000000;fill-opacity:0.870588;stroke:none;stroke-width:8;stroke-dasharray:none;stroke-opacity:1"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:21.3333px;font-family:System-ui;-inkscape-font-specification:'System-ui, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;fill:#000000;fill-opacity:0.870588;stroke:none;stroke-width:8;stroke-dasharray:none;stroke-opacity:1"
        x="243.52588"
        y="325.8562"
        id="text8">Port A</text>
     <text
        xml:space="preserve"
-       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:32px;font-family:System-ui;-inkscape-font-specification:'System-ui, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;fill:#000000;fill-opacity:0.870588;stroke:none;stroke-width:8;stroke-dasharray:none;stroke-opacity:1"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:21.3333px;font-family:Sans;-inkscape-font-specification:'Sans, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;fill:#000000;fill-opacity:0.870588;stroke:none;stroke-width:8;stroke-dasharray:none;stroke-opacity:1"
        x="339.32428"
        y="130.04927"
        id="text8-3">Port C</text>
     <g
        id="g1-1"
-       transform="translate(-436.74022,-119.54141)">
+       transform="translate(-426.74022,-119.54141)">
       <text
          xml:space="preserve"
          style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:32px;font-family:System-ui;-inkscape-font-specification:'System-ui, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;fill:#000000;fill-opacity:0.870588;stroke:none;stroke-width:8;stroke-dasharray:none;stroke-opacity:1"
          x="363.85269"
          y="299.59106"
-         id="text8-5">Port B</text>
+         id="text8-5"><tspan
+           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:21.3333px;font-family:Sans;-inkscape-font-specification:'Sans, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal"
+           id="tspan1">Port B</tspan></text>
     </g>
     <g
        id="g1-1-6"
        transform="translate(-264.48101,-252.05206)">
       <text
          xml:space="preserve"
-         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:32px;font-family:System-ui;-inkscape-font-specification:'System-ui, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;fill:#000000;fill-opacity:0.870588;stroke:none;stroke-width:8;stroke-dasharray:none;stroke-opacity:1"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:21.3333px;font-family:System-ui;-inkscape-font-specification:'System-ui, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;fill:#000000;fill-opacity:0.870588;stroke:none;stroke-width:8;stroke-dasharray:none;stroke-opacity:1"
          x="363.85269"
          y="299.59106"
          id="text8-5-4">Port D</text>
