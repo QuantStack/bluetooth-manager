@@ -50,10 +50,6 @@ export default function BatteryComponent({ device }: IMoveHubPanelProps) {
       name: 'device-status-polling',
       factory: async () => {
         setDeviceState({ ...device.deviceInfo });
-        console.log(
-          'Inside polling, batteryLevel:',
-          device.deviceInfo.batteryLevel
-        );
       },
       frequency: {
         interval: 200,

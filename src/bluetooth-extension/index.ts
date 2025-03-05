@@ -20,10 +20,16 @@ export namespace CommandIDs {
   export const disconnectDevice = 'bluetooth-manager:disconnect-device';
 }
 
-export function buildIdentifier(native: BluetoothDevice): string {
+export function buildCompleteIdentifier(native: BluetoothDevice): string {
   const identifier = native.name?.replace(/\s+/g, '-') + '-' + native.id;
   return identifier;
 }
+
+export function buildShortIdentifier(native: BluetoothDevice): string {
+  const identifier = native.id;
+  return identifier;
+}
+
 
 const BluetoothManagerPlugin: JupyterFrontEndPlugin<IBluetoothManager> = {
   id: 'bluetooh-manager:bluetooth-manager-plugin',
@@ -67,7 +73,7 @@ const BluetoothSidebarPlugin: JupyterFrontEndPlugin<void> = {
 
     function createTestFunction(device: BluetoothManager.Device) {
       return function test(node: HTMLElement): boolean {
-        const testString = buildIdentifier(device.native);
+        const testString = buildCompleteIdentifier(device.native);
         return node.title === testString; 
       };
     }
@@ -77,7 +83,7 @@ const BluetoothSidebarPlugin: JupyterFrontEndPlugin<void> = {
         bluetoothManager.deviceList.filter(item => {
           const testWithDevice = createTestFunction(item);
           const node = app.contextMenuHitTest(testWithDevice);
-          const identifier = buildIdentifier(item.native);
+          const identifier = buildCompleteIdentifier(item.native);
           if (identifier === node?.title) {
             bluetoothManager.disconnectDevice(item);
           }
