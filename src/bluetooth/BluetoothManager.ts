@@ -1,7 +1,7 @@
 import { Signal } from '@lumino/signaling';
 import { Token } from '@lumino/coreutils';
 import { DeviceOptions } from './DeviceOptions';
-import { buildIdentifier } from '../bluetooth-extension';
+import { buildCompleteIdentifier } from '../bluetooth-extension';
 import { IDisposable } from '@lumino/disposable';
 
 /**
@@ -53,7 +53,7 @@ export class BluetoothManager implements IBluetoothManager {
 
   // Method to add a device to the list
   addDeviceToList(device: BluetoothManager.Device): void {
-    const identifier = buildIdentifier(device.native);
+    const identifier = buildCompleteIdentifier(device.native);
     if (this.identifierRegistry.includes(identifier) === false) {
       this._deviceList.push(device);
       this.identifierRegistry.push(identifier);

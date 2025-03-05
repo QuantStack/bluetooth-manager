@@ -4,7 +4,7 @@ import { HubControl } from './moveHub/hub-control';
 import { DeviceConfiguration, DEFAULT_CONFIG } from './moveHub/hub/hubAsync';
 import { ControlData, DeviceInfo, RawData } from './moveHub/types';
 import { moveHubCharacteristicUUID, moveHubServiceUUID } from '.';
-import { buildIdentifier } from '../bluetooth-extension';
+import { buildShortIdentifier } from '../bluetooth-extension';
 import { ObservableValue } from '@jupyterlab/observables';
 
 export const defaultConfiguration: DeviceConfiguration = {
@@ -97,7 +97,7 @@ export class MoveHub extends BluetoothManager.Device {
         'The connection state has changed and is now',
         this.deviceInfo.connected
       );
-      this.deviceInfo.identifier = buildIdentifier(this.native);
+      this.deviceInfo.identifier = buildShortIdentifier(this.native);
     });
     this.disconnected.connect(async (sender, disconnected: boolean) => {
       if (disconnected) {

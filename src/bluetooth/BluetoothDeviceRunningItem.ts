@@ -1,7 +1,7 @@
 import { IRunningSessions } from '@jupyterlab/running';
 import { BluetoothConnectIcon } from './icon';
 import { BluetoothManager } from './BluetoothManager';
-import { buildIdentifier } from '../bluetooth-extension';
+import { buildCompleteIdentifier } from '../bluetooth-extension';
 
 export class BluetoothDeviceRunningItem
   implements IRunningSessions.IRunningItem
@@ -28,7 +28,7 @@ export class BluetoothDeviceRunningItem
   }
   
   labelTitle() {
-    const title = buildIdentifier(this._device.native);
+    const title = buildCompleteIdentifier(this._device.native);
     return title;
   }
 
