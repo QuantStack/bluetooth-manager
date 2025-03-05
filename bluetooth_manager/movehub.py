@@ -411,6 +411,7 @@ class MoveHubWidget(DOMWidget):
     _view_module_version = Unicode(module_version).tag(sync=True)
     _device_info = Dict(DEFAULT_DEVICE_INFO, read_only=True).tag(sync=True)
     name = Unicode("device1").tag(sync=True)
+    identifier = Unicode("").tag(sync=True)
     n_lanes =Int(3).tag(sync=True)
 
     def __init__(self, *args, **kwargs):

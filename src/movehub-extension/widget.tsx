@@ -42,12 +42,6 @@ import { DeviceInfoTableComplete } from './components/DeviceInfoTableComplete';
 // movehub instance, we would need to re-connect any time
 // we restart the kernel.
 
-/*interface deviceCache {
-  [key: string]: any;
-}*/
-
-//const device_cache: deviceCache = {};
-
 export class MoveHubModel extends DOMWidgetModel {
   defaults() {
     return {
@@ -60,6 +54,7 @@ export class MoveHubModel extends DOMWidgetModel {
       _view_module_version: MoveHubModel.view_module_version,
       _device_info: {},
       name: 'device1',
+      identifier: '',
       n_lanes: 3
     };
   }
@@ -96,12 +91,35 @@ export class MoveHubModel extends DOMWidgetModel {
     console.log(`initialize with n_lanes=${n_lanes}`, this);
     const name: string = this.get('name');
     console.log(`initialize with name=${name}`);
-    /*if (!(name in device_cache)) {
-      device_cache[name] = await MoveHubModel.bluetoothManager.connectDevice(movehubRegistryItem);
-    }*/
-    //this.movehub = device_cache[name];
-    this.movehub =
-      await MoveHubModel.bluetoothManager.connectDevice(movehubRegistryItem);
+    const identifier: string = this.get('identifier');
+    console.log(`initialize with identifier=${identifier}`);
+    /* Check if there is already a paired device */
+    if (MoveHubModel.bluetoothManager.deviceList.length > 0) {
+      MoveHubModel.bluetoothManager.deviceList.forEach(async device => {
+        if (device instanceof (MoveHub)) {
+          if (identifier !== '') { /* An identifier is provided by the user in the notebook*/
+            if (identifier === device.deviceInfo.identifier) { /*the given identifier fits the one of a connected MoveHub*/
+              this.movehub = device
+              console.warn(`The identifier ${identifier} is known, use the corresponding Move Hub`)
+              return;
+            }
+            else
+              console.warn('The identifier is unknown, create a new MoveHub')
+              this.movehub =
+              await MoveHubModel.bluetoothManager.connectDevice(movehubRegistryItem);
+          }
+          else
+            console.warn('The identifier is not provided, create a new Move Hub');
+          this.movehub =
+            await MoveHubModel.bluetoothManager.connectDevice(movehubRegistryItem);
+        }
+      })
+    }
+    else { /* The list is empty, creates a new instance of MoveHub*/
+      this.movehub =
+        await MoveHubModel.bluetoothManager.connectDevice(movehubRegistryItem);
+        console.warn('There is no device connected, create a new Move Hub');
+    }
     this.on('msg:custom', async (command: any, buffers: any) => {
       const lane = command['lane'];
       this.lanes[lane] = this.lanes[lane].then(async () => {
@@ -245,8 +263,8 @@ export class MoveHubView extends DOMWidgetView {
   async render() {
     this.el.classList.add('jupyter-react-widget');
     this.root = ReactDOMClient.createRoot(this.el);
-    const model = this.model as MoveHubModel;
-    const movehub = model.movehub;
+    const model = this.model as MoveHubModel
+    const movehub = model.movehub
     this.root.render(<DeviceInfoTableComplete moveHub={movehub} />);
   }
 
