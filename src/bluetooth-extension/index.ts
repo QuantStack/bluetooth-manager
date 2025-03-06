@@ -89,7 +89,8 @@ const BluetoothSidebarPlugin: JupyterFrontEndPlugin<void> = {
           }
         });
       },
-      caption: trans.__('Disconnect device')
+      caption: trans.__('Disconnect device'),
+      label: trans.__('Disconnect Device')
     });
 
     /* Adding commands to the context menu of the relevant connected device*/
