@@ -3,12 +3,10 @@
 
     https://jupyterlab.readthedocs.io/en/stable/developer/css.html
 */
-.jp-movehub-panel-main {
-  overflow: auto;
-}
 
 .jp-movehub-panel-content {
   padding: 0 2em;
+  overflow: auto;
 }
 
 .vernie-control-grid-container {
