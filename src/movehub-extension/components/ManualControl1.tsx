@@ -1,22 +1,22 @@
 import { MoveHub } from '../moveHub';
-import caretUpSVG from '../../../style/caret-up.svg';
-import caretDownSVG from '../../../style/caret-down.svg';
-import caretLeftSVG from '../../../style/caret-left.svg';
-import caretRightSVG from '../../../style/caret-right.svg';
+import arrowUpSVG from '../../../style/arrow-up.svg';
+import arrowDownSVG from '../../../style/arrow-down.svg';
+import turnLeftSVG from '../../../style/turn-left.svg';
+import turnRightSVG from '../../../style/turn-right.svg';
 import emptySVG from '../../../style/empty.svg';
 import stopButtonSVG from '../../../style/stop-button.svg';
 const emptySVGUrl = `data:image/svg+xml;base64,${btoa(emptySVG)}`;
 const stopButtonSVGUrl = `data:image/svg+xml;base64,${btoa(stopButtonSVG)}`;
-const caretUpSVGUrl = `data:image/svg+xml;base64,${btoa(caretUpSVG)}`;
-const caretDownSVGUrl = `data:image/svg+xml;base64,${btoa(caretDownSVG)}`;
-const caretLeftSVGUrl = `data:image/svg+xml;base64,${btoa(caretLeftSVG)}`;
-const caretRightSVGUrl = `data:image/svg+xml;base64,${btoa(caretRightSVG)}`;
+const arrowUpSVGUrl = `data:image/svg+xml;base64,${btoa(arrowUpSVG)}`;
+const arrowDownSVGUrl = `data:image/svg+xml;base64,${btoa(arrowDownSVG)}`;
+const turnLeftSVGUrl = `data:image/svg+xml;base64,${btoa(turnLeftSVG)}`;
+const turnRightSVGUrl = `data:image/svg+xml;base64,${btoa(turnRightSVG)}`;
 
 export interface IMoveHubControlProps {
   moveHub: MoveHub;
 }
 
-export default function ManualControl({ moveHub }: IMoveHubControlProps) {
+export function ManualControl1({ moveHub }: IMoveHubControlProps) {
   const images = [
     {
       id: 1,
@@ -28,7 +28,7 @@ export default function ManualControl({ moveHub }: IMoveHubControlProps) {
     },
     {
       id: 2,
-      src: caretUpSVGUrl,
+      src: arrowUpSVGUrl,
       alt: 'Image 2',
       handleClick: async () => {
         await moveHub.hub.driveToDirection(1);
@@ -44,7 +44,7 @@ export default function ManualControl({ moveHub }: IMoveHubControlProps) {
     },
     {
       id: 4,
-      src: caretLeftSVGUrl,
+      src: turnLeftSVGUrl,
       alt: 'Image 4',
       handleClick: async () => {
         await moveHub.hub.turn(-90);
@@ -60,7 +60,7 @@ export default function ManualControl({ moveHub }: IMoveHubControlProps) {
     },
     {
       id: 6,
-      src: caretRightSVGUrl,
+      src: turnRightSVGUrl,
       alt: 'Image 6',
       handleClick: async () => {
         moveHub.hub.turn(90);
@@ -76,7 +76,7 @@ export default function ManualControl({ moveHub }: IMoveHubControlProps) {
     },
     {
       id: 8,
-      src: caretDownSVGUrl,
+      src: arrowDownSVGUrl,
       alt: 'Image 8',
       handleClick: async () => await moveHub.hub.driveToDirection(0)
     },

@@ -1,6 +1,6 @@
 import { ColorSelector } from './ColorSelector';
 import Vernie from './Vernie';
-import ManualControl from './ManualControl';
+import { ManualControl } from './ManualControl';
 import { IMoveHubPanelProps } from './MoveHubPanel';
 import { MoveForm } from './MoveForm';
 
@@ -60,29 +60,6 @@ export function VernieComponent({ device }: IMoveHubPanelProps) {
         </div>
 
         <div className="vernie-control-grid-item-left">
-          <h4
-            style={{
-              color: 'var(--jp-accept-color-normal)',
-              margin: '0',
-              padding: '0'
-            }}
-          >
-            Use the set of buttons to control Vernie's displacements
-          </h4>
-          <div className="manual-control-text-container">
-            <p>
-              Click on the up arrow (resp. down) arrow to drive Vernie in a continuous
-              inward (resp. backward) displacement
-            </p>
-          </div>
-          <div className="manual-control-text-container">
-            <p>
-              Click on the left arrow (resp.right arrow) to produce a left
-              (resp.right) quarter turn
-            </p>
-          </div>
-        </div>
-        <div className="vernie-control-grid-item-right">
           <ManualControl moveHub={device} />
         </div>
       </div>
