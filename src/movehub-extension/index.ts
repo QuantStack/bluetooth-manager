@@ -153,8 +153,8 @@ const LEGOMoveHubControlPanelPlugin: JupyterFrontEndPlugin<void> = {
           throw new Error('The device is not a Move Hub.');
         }
       },
-      caption: trans.__('Add LEGO® Move Hub control panel'),
-      label: trans.__('Add a LEGO® Move Hub Control Panel')
+      caption: trans.__('Open a LEGO® Move Hub control panel'),
+      label: trans.__('Open a LEGO® Move Hub Control Panel')
     });
 
     app.contextMenu.addItem({
