@@ -1,12 +1,9 @@
 import MoveHub from './MoveHub';
 import { IMoveHubPanelWithThemeProps } from './MoveHubPanel';
-import { HubAsync } from '../moveHub/hub/hubAsync';
 import { MoveForm } from './MoveForm';
 import { ColorSelector } from './ColorSelector';
 
-export interface IHubControlProps {
-  hub: HubAsync;
-}
+
 
 export function MoveHubComponent({ device, themeManager }: IMoveHubPanelWithThemeProps) {
   return (
@@ -26,7 +23,7 @@ export function MoveHubComponent({ device, themeManager }: IMoveHubPanelWithThem
             Integrated motors
           </h4>
           <MoveForm
-            hub={device.hub}
+            moveHub={device}
             label={'Turn motors A et B (°)'}
             actionButton1={'RotateIndirect'}
             actionButton2={'RotateDirect'}
@@ -34,9 +31,9 @@ export function MoveHubComponent({ device, themeManager }: IMoveHubPanelWithThem
             buttonText2={'Direct'}
             type={'angle'}
             port={'AB'}
-            caution=""
             dutyCycleDirect={-100}
             dutyCycleIndirect={100}
+            build={'MoveHub'}
           />
           <h4
             style={{
@@ -49,7 +46,7 @@ export function MoveHubComponent({ device, themeManager }: IMoveHubPanelWithThem
           </h4>
           <p style={{ margin: '8px 0', fontWeight:"600"}}>Motor 1 on port D</p>
           <MoveForm
-            hub={device.hub}
+            moveHub={device}
             label={'Turn external motor'}
             actionButton1="RotateIndirect"
             actionButton2="RotateDirect"
@@ -57,13 +54,13 @@ export function MoveHubComponent({ device, themeManager }: IMoveHubPanelWithThem
             buttonText2={'Direct'}
             type={'angle'}
             port={'D'}
-            caution=""
             dutyCycleDirect={-100}
             dutyCycleIndirect={100}
+            build={'MoveHub'}
           />
             <p style={{ margin: '8px 0', fontWeight:"600"}}>Motor 2 on port C </p>
             <MoveForm
-            hub={device.hub}
+            moveHub={device}
             label={'Turn external motor'}
             actionButton1="RotateIndirect"
             actionButton2="RotateDirect"
@@ -71,9 +68,9 @@ export function MoveHubComponent({ device, themeManager }: IMoveHubPanelWithThem
             buttonText2={'Direct'}
             type={'angle'}
             port={'C'}
-            caution=""
             dutyCycleDirect={-100}
             dutyCycleIndirect={100}
+            build={"MoveHub"}
           />
           <ColorSelector device={device} />
         </div>

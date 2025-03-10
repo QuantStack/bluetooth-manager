@@ -22,7 +22,7 @@ export function VernieComponent({ device, themeManager }: IMoveHubPanelWithTheme
             Integrated motors
           </h4>
           <MoveForm
-            hub={device.hub}
+            moveHub={device}
             label={'Drive (cm) or turn (°)'}
             actionButton1="Drive"
             actionButton2="Turn"
@@ -30,9 +30,9 @@ export function VernieComponent({ device, themeManager }: IMoveHubPanelWithTheme
             buttonText2={'Turn'}
             type={'distance/angle'}
             port={'AB'}
-            caution=""
             dutyCycleDirect={-100}
             dutyCycleIndirect={100}
+            build={'Vernie'}
           />
           <h4
             style={{
@@ -45,21 +45,23 @@ export function VernieComponent({ device, themeManager }: IMoveHubPanelWithTheme
           </h4>
           <p style={{ margin: '8px 0', fontWeight:"600"}}>Motor 1 on port D</p>
           <MoveForm
-            hub={device.hub}
+            moveHub={device}
             label={"Turn Vernie's head (°)"}
             actionButton1="RotateIndirect"
             actionButton2="RotateDirect"
             buttonText1={'Right'}
             buttonText2={'Left'}
+            valueMin={-50}
+            valueMax={140}
             type={'angle'}
             port={'D'}
-            caution=""
             dutyCycleDirect={-100}
             dutyCycleIndirect={100}
+            build={"Vernie"}
           />
           <p style={{ margin: '8px 0', fontWeight:"600"}}>Motor 2 on port C </p>
           <MoveForm
-            hub={device.hub}
+            moveHub={device}
             label={'Turn external motor'}
             actionButton1="RotateIndirect"
             actionButton2="RotateDirect"
@@ -67,9 +69,9 @@ export function VernieComponent({ device, themeManager }: IMoveHubPanelWithTheme
             buttonText2={'Direct'}
             type={'angle'}
             port={'C'}
-            caution=""
             dutyCycleDirect={-100}
             dutyCycleIndirect={100}
+            build={'Vernie'}
           />
           <ColorSelector device={device} />
         </div>

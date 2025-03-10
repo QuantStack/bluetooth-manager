@@ -1,44 +1,85 @@
 import { useState } from 'react';
-import { HubAsync } from '../moveHub/hub/hubAsync';
 import InputField from './InputField';
+import { MoveHub } from '../moveHub';
 
 export interface IMoveFormProps {
-  hub: HubAsync;
+  moveHub: MoveHub
   label: string;
   actionButton1: string;
   actionButton2: string;
   buttonText1: string;
   buttonText2: string;
   type: string;
+  build: string;
   unit?: string;
   port: string;
-  caution?: string;
-  dutyCycleDirect: number;
-  dutyCycleIndirect: number /*dutyCycle: motor power percentage from `-100` to `100`. If a negative value is given rotation is counterclockwise or direct*/;
+  valueMin?: number;
+  valueMax?: number;
+  dutyCycleDirect: number
+  dutyCycleIndirect: number /*dutyCycle: motor power percentage from `-100` to `100`. If a negative value is given rotation is counterclockwise or direct*/
 }
 
 export function MoveForm(props: IMoveFormProps) {
   const [inputValue, setInputValue] = useState('0');
-  const hub = props.hub;
-
+  const hub = props.moveHub.hub
+  
+  const checkInputValue = (inputValue: number, currentValue: number, sense: string, valueMin?: number, valueMax?: number): boolean => {
+    
+    if (sense === 'direct') {
+      console.log('current value:', currentValue)
+      const minReachedValue = currentValue - inputValue;
+      console.log('minReachedValue,', minReachedValue);
+      if (valueMin && minReachedValue < valueMin) {
+        console.error("Out of valid range for Vernie's build")
+        return false
+      }
+      else {
+        currentValue = minReachedValue;
+        return true
+      }
+    }
+    else if (sense === 'indirect') {
+      console.log('current value:', currentValue)
+      const maxReachedValue = currentValue + inputValue;
+      console.log('maxReachedValue,', maxReachedValue);
+      if (valueMax && maxReachedValue > valueMax) {
+        console.error("Out of valid range for Vernie's build")
+        return false;
+      }
+      else {
+        currentValue = maxReachedValue;
+        return true
+      }
+    }
+    else {
+      console.error('Sense must me provided as direct or indirect.')
+      return false
+    }
+  }
   const selectMove = (action: string) => {
+
     return () => {
       switch (action) {
         case 'RotateIndirect':
-          hub.motorAngle(
-            props.port,
-            Number(inputValue),
-            props.dutyCycleIndirect,
-            () => false
-          );
+          if (props.port === 'D' && props.build==='Vernie'&& props.valueMin && props.valueMax) {
+            const isInputIndirectOK: boolean = checkInputValue(Number(inputValue), Number(props.moveHub.deviceInfo.ports.D.value), 'indirect', props.valueMin, props.valueMax)
+            if (isInputIndirectOK)
+              hub.motorAngle(props.port, Number(inputValue), props.dutyCycleIndirect, () => false);
+          }
+          else {
+            hub.motorAngle(props.port, Number(inputValue), props.dutyCycleIndirect, () => false);
+          }
           break;
         case 'RotateDirect':
-          hub.motorAngle(
-            props.port,
-            Number(inputValue),
-            props.dutyCycleDirect,
-            () => false
-          );
+          if (props.port === 'D' && props.build ==='Vernie' && props.valueMin && props.valueMax) {
+            const isInputDirectOK = checkInputValue(Number(inputValue), Number(props.moveHub.deviceInfo.ports.D.value), 'direct', props.valueMin, props.valueMax)
+            if (isInputDirectOK) {
+              hub.motorAngle(props.port, Number(inputValue), props.dutyCycleDirect, () => false);
+            }
+          }
+          else {
+            hub.motorAngle(props.port, Number(inputValue), props.dutyCycleDirect, () => false);
+          }
           break;
         case 'Drive':
           hub.drive(Number(inputValue));
@@ -86,9 +127,6 @@ export function MoveForm(props: IMoveFormProps) {
             {props.buttonText2}
           </button>
         </div>
-      </div>
-      <div style={{ marginBottom: '10px', fontSize: '10px' }}>
-        {props.caution}
       </div>
     </div>
   );

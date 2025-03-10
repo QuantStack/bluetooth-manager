@@ -21,7 +21,7 @@ export function FrankieComponent({ device, themeManager }: IMoveHubPanelWithThem
             Integrated motors
           </h4>
           <MoveForm
-            hub={device.hub}
+            moveHub={device}
             label={"Change Frankie's position"}
             actionButton1={'WakeUp'}
             actionButton2={'SitDown'}
@@ -29,9 +29,9 @@ export function FrankieComponent({ device, themeManager }: IMoveHubPanelWithThem
             buttonText2={'Sit down'}
             type={'angle'}
             port={'AB'}
-            caution=""
             dutyCycleDirect={-100}
             dutyCycleIndirect={100}
+            build={'Frankie'}
           />
 
           <h4
@@ -45,7 +45,7 @@ export function FrankieComponent({ device, themeManager }: IMoveHubPanelWithThem
           </h4>
           <p style={{ margin: '8px 0', fontWeight:"600"}}>Motor 1 on port D</p>
           <MoveForm
-            hub={device.hub}
+            moveHub={device}
             label={"Move Frankie's tail"}
             actionButton1={'RotateIndirect'}
             actionButton2={'RotateDirect'}
@@ -53,13 +53,13 @@ export function FrankieComponent({ device, themeManager }: IMoveHubPanelWithThem
             buttonText2={'Right'}
             type={'angle'}
             port={'D'}
-            caution=""
             dutyCycleDirect={-100}
             dutyCycleIndirect={100}
+            build={'Frankie'}
           />
           <p style={{ margin: '8px 0', fontWeight:"600"}}>Motor 2 on port C</p>
           <MoveForm
-            hub={device.hub}
+            moveHub={device}
             label={'Turn external motor'}
             actionButton1="RotateIndirect"
             actionButton2="RotateDirect"
@@ -67,9 +67,9 @@ export function FrankieComponent({ device, themeManager }: IMoveHubPanelWithThem
             buttonText2={'Direct'}
             type={'angle'}
             port={'C'}
-            caution=""
             dutyCycleDirect={-100}
             dutyCycleIndirect={100}
+            build={"Frankie"}
           />
           <ColorSelector device={device} />
         </div>
