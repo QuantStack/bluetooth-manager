@@ -16,7 +16,7 @@ export interface IMoveHubControlProps {
   moveHub: MoveHub;
 }
 
-export function ManualControl1({ moveHub }: IMoveHubControlProps) {
+export function ManualControl({ moveHub }: IMoveHubControlProps) {
   const images = [
     {
       id: 1,
