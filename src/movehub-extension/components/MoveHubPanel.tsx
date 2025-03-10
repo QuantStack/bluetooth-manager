@@ -15,19 +15,15 @@ export interface IHubControlProps {
 
 export function MoveHubInfos(props: { device: MoveHub }) {
   return (
-    <>
-      <div className="lego-movehub-infos-container">
-        <DeviceInfoTable moveHub={props.device} />
-      </div>
-    </>
+    <DeviceInfoTable moveHub={props.device} />
   );
 }
 
 export function MoveHubPanel({ device }: IMoveHubPanelProps) {
   return (
     <div>
-      <MoveHubInfos device={device} />
       <LegoBuildSpecific device={device} />
+      <MoveHubInfos device={device} />
     </div>
   );
 }

@@ -11,8 +11,11 @@ export interface IHubControlProps {
 export function MoveHubComponent({ device }: IMoveHubPanelProps) {
   return (
     <>
-      <div className="vernie-control-grid-container">
-        <div className="vernie-control-grid-item-left">
+      <div className="lego-build-control-grid-container">
+        <div className="lego-build-control-grid-item-left">
+          <MoveHub />
+        </div>
+        <div className="lego-build-control-grid-item-center">
           <h4
             style={{
               color: 'var(--jp-accept-color-normal)',
@@ -58,9 +61,6 @@ export function MoveHubComponent({ device }: IMoveHubPanelProps) {
             dutyCycleIndirect={100}
           />
           <ColorSelector device={device} />
-        </div>
-        <div className="vernie-control-grid-item-right">
-          <MoveHub />
         </div>
       </div>
     </>

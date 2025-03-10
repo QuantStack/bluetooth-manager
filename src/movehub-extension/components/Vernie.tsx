@@ -10,7 +10,7 @@ export default function Vernie () {
         justifyContent: 'center'
       }}
     >
-      <img src={VernieSVGUrl} alt="Vernie schematics" height="300px" />
+      <img src={VernieSVGUrl} alt="Vernie schematics" height="250px" />
     </div>
   );
 };

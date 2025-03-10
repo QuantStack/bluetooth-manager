@@ -6,8 +6,11 @@ import Frankie from './Frankie';
 export function FrankieComponent({ device }: IMoveHubPanelProps) {
   return (
     <>
-      <div className="vernie-control-grid-container">
-        <div className="vernie-control-grid-item-right">
+      <div className="lego-build-control-grid-container">
+        <div className="lego-build-control-grid-item-left">
+          <Frankie />
+        </div>
+        <div className="lego-build-control-grid-item-center">
           <h4
             style={{
               color: 'var(--jp-accept-color-normal)',
@@ -54,9 +57,6 @@ export function FrankieComponent({ device }: IMoveHubPanelProps) {
             dutyCycleIndirect={100}
           />
           <ColorSelector device={device} />
-        </div>
-        <div className="vernie-control-grid-item-right">
-          <Frankie />
         </div>
       </div>
     </>
