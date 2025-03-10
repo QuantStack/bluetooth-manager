@@ -6,7 +6,6 @@ import { ITranslator } from '@jupyterlab/translation';
 import { MainAreaWidget } from '@jupyterlab/apputils';
 import {
   Toolbar,
-  CommandToolbarButton
 } from '@jupyterlab/ui-components';
 import {
   IDeviceRegistryItem,
@@ -16,9 +15,7 @@ import {
 import { MoveHub } from './moveHub';
 import ipymovehubPlugin from './plugin';
 import {
-  BluetoothConnectIcon,
-  BluetoothDisconnectIcon,
-  LegoBrickIcon
+  LegoBrickIcon,
 } from '../bluetooth/icon';
 import { MoveHubPanelWidget } from './components/MoveHubPanel';
 import { LegoBuildSelectorWidget } from './components/LegoBuildSelector';
@@ -79,8 +76,6 @@ const LEGOMoveHubControlPanelPlugin: JupyterFrontEndPlugin<void> = {
   ): void => {
     console.log('JupyterLab lego-movehub-control-panel plugin is activated!');
     const trans = translator.load('jupyterlab');
-    const { commands } = app;
-
     app.commands.addCommand(addLEGOMoveHubControlPanel, {
       execute: args => {
         const result = bluetoothManager.deviceList.filter(
@@ -100,22 +95,19 @@ const LEGOMoveHubControlPanelPlugin: JupyterFrontEndPlugin<void> = {
             'connection-status',
             new ConnectionStatusWidget(device)
           );
-          main.toolbar.addItem(
-            'connect-device',
-            new CommandToolbarButton({
-              commands,
-              id: connectMoveHub,
-              icon: BluetoothConnectIcon
-            })
-          );
-          main.toolbar.addItem(
-            'disconnect-device',
-            new CommandToolbarButton({
-              commands,
-              id: disconnectMoveHub,
-              icon: BluetoothDisconnectIcon
-            })
-          );
+
+          app.contextMenu.addItem({
+            command: disconnectMoveHub,
+            selector: `div.jp-connection-status-indicator`,
+            rank: 1
+          });
+       
+          app.contextMenu.addItem({
+            command: connectMoveHub,
+            selector: `div.jp-connection-status-indicator`,
+            rank: 1
+          });
+ 
           main.toolbar.addItem(
             'select-lego-model',
             new LegoBuildSelectorWidget(device)
@@ -138,7 +130,8 @@ const LEGOMoveHubControlPanelPlugin: JupyterFrontEndPlugin<void> = {
                 bluetoothManager.connectDevice(movehubRegistryItem);
               return newDevice;
             },
-            caption: trans.__('Connect MoveHub')
+            caption: trans.__('Connect MoveHub'),
+            label: trans.__('Connect MoveHub'),
           });
 
           app.commands.addCommand(disconnectMoveHub, {
@@ -146,7 +139,8 @@ const LEGOMoveHubControlPanelPlugin: JupyterFrontEndPlugin<void> = {
               bluetoothManager.disconnectDevice(device);
               return device;
             },
-            caption: trans.__('Disconnect MoveHub')
+            caption: trans.__('Disconnect MoveHub'),
+            label: trans.__('Disconnect MoveHub'),
           });
 
         } else {

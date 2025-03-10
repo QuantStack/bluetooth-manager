@@ -15,7 +15,7 @@ export default function ColoredCircleWithText(
       }}
     >
       <div
-        className="connection-circle"
+        className="colored-circle"
         style={{ backgroundColor: props.color }}
       ></div>
       <span>{props.text}</span>

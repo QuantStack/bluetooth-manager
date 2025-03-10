@@ -46,6 +46,9 @@ export class ConnectionStatusWidget extends ReactWidget {
   }
 
   render() {
-    return <ConnectionStatus device={this.device} />;
+    return (
+   <div className="jp-connection-status-indicator">
+    <ConnectionStatus device={this.device} />
+    </div>)
   }
 }
