@@ -6,25 +6,54 @@
 
 .jp-movehub-panel-content {
   padding: 0 2em;
-  overflow: auto;
+  overflow-y: scroll;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .vernie-control-grid-container {
+  display: grid;
+  grid-gap: 4px;
+  grid-template-columns: repeat(3, 1fr);
+  justify-content: left;
+  align-items: center;
+  margin-top: 20px;
+  gap: 16px;
+  width: 100%;
+}
+
+.lego-build-control-grid-container {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   grid-gap: 4px;
   justify-content: left;
   align-items: center;
-  margin-top: 50px;
+  margin-top: 20px;
   gap: 16px;
+  width: 100%;
 }
 
 .vernie-control-grid-item-left {
-  justify-self: left;
+  justify-self: center;
+  align-items: center;
+}
+
+.vernie-control-grid-item-center {
+  justify-self: center;
   align-items: center;
 }
 
 .vernie-control-grid-item-right {
+  justify-self: center;
+  align-items: center;
+}
+
+.lego-build-control-grid-item-left {
+  justify-self: center;
+  align-items: center;
+}
+
+.lego-build-control-grid-item-right {
   justify-self: center;
   align-items: center;
 }
@@ -40,6 +69,7 @@
 
 .move-input-field-text {
   text-align: left;
+  width: 150px;
 }
 
 .move-input-field {
@@ -51,15 +81,8 @@
   font-size: 10px;
 }
 
-.move-input-field-with-1button {
-  width: 60%;
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-
 .move-input-field-with-2buttons {
-  width: 60%;
+  width: 150px;
   display: flex;
   gap: 10px;
 }
@@ -84,63 +107,106 @@
   margin-bottom: 8px;
 }
 
+.led-color-selector-container {
+  width: 150px;
+}
+
 .led-color-text {
   text-align: left;
+  width: 150px;
 }
 
-.manual-control-text-container {
-  margin: 8px 0;
-  justify-content: left;
-  width: 100%;
+.led-color-selector {
+  height: 24px;
+  padding: 0;
+  line-height: 18px;
+  border-radius: 4px;
+  border-color: black;
+  border-width: 0.5px;
+  margin-top: -12px;
+  position: absolute;
+  font-size: 11px;
+  width: 150px;
 }
 
-@media (width< 1200px) {
+.color-selector-container {
+  display: flex;
+  justify-content: right;
+  gap: 10px;
+}
+
+@media (max-width: 450px) { /*smaller screens*/
+  .move-input-field-text {
+    width: 100px;
+  }
+
+  .move-input-field-with-2buttons {
+    gap: 5px;
+  }
+
+  .move-validation-button {
+    width: 50px;
+  }
+
+  .move-input-field {
+    width: 20px;
+  }
+
+  .vernie-control-grid-container {
+    grid-template-columns: repeat(1, 1fr);
+    grid-template-rows: repeat(3, auto);
+  }
+
+  .lego-build-control-grid-container {
+    grid-template-columns: repeat(1, 1fr);
+    grid-template-rows: repeat(2, auto);
+  }
+
+  .led-color-text {
+    width: 100px;
+  }
+
+  .led-color-selector {
+    width: 130px;
+  }
+}
+
+@media (min-width: 451px) and (max-width: 940px) { /*small screens*/
+  .vernie-control-grid-container {
+    grid-template-columns: repeat(1, 1fr);
+    grid-template-rows: repeat(3, auto);
+  }
+
+  .lego-build-control-grid-container {
+    grid-template-columns: repeat(1, 1fr);
+    grid-template-rows: repeat(2, auto);
+  }
+
   .move-input-field-text {
     width: 40%;
   }
 
-  .move-input-field-with-1button {
-    width: 60%;
-  }
-
   .move-input-field-with-2buttons {
     width: 60%;
   }
 
   .led-color-text {
-    width: 50%;
+    width: 40%;
   }
 
-  .color-selector-container {
-    width: 50%;
+  .led-color-selector-container {
+    width: 60%;
+  }
+
+  .led-color-selector {
+    width: 171px;
   }
 }
 
-@media (width> 1200px) {
-  .move-input-field-text {
-    width: 200px;
-    text-align: left;
-  }
-
-  .move-input-field-with-1button {
-    width: 150px;
-  }
-
-  .move-input-field-with-2buttons {
-    width: 150px;
-  }
-
-  .led-color-text {
-    width: 200px;
-    text-align: left;
-  }
-
-  .color-selector-container {
-    width: 150px;
-  }
-
-  .color-selector {
-    width: 110px;
+@media (min-width: 941px) and (max-width: 1270px) { /* intermediary screens*/
+  .vernie-control-grid-container {
+    grid-template-columns: repeat(2, 1fr);
+    grid-template-rows: repeat(2, auto);
   }
 }
 
@@ -148,13 +214,13 @@
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   grid-gap: 0;
-  width: 144px;
-  height: 144px;
+  width: 210px;
+  height: 210px;
 }
 
 .manual-control-grid-item {
-  width: 48px;
-  height: 48px;
+  width: 70px;
+  height: 70px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -187,9 +253,10 @@
   border-width: 0.5px;
   color: var(--jp-ui-font-color1);
   font-size: var(--jp-ui-font-size1);
-  table-layout: fixed;
   margin-top: 16px;
   margin-bottom: 16px;
+  width: 100%;
+  table-layout: auto;
 }
 
 .custom-table-thead {
@@ -225,22 +292,4 @@
   font-family: var(--jp-content-font-family);
   font-size: var(--jp-content-font-size1);
   line-height: var(--jp-content-line-height);
-}
-
-.color-selector {
-  height: 24px;
-  padding: 0;
-  line-height: 18px;
-  border-radius: 4px;
-  border-color: black;
-  border-width: 0.5px;
-  margin-top: -12px;
-  position: absolute;
-  font-size: 11px;
-}
-
-.color-selector-container {
-  display: flex;
-  justify-content: right;
-  gap: 10px;
 }
