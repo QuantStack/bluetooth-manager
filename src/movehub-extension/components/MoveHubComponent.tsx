@@ -15,7 +15,7 @@ export function MoveHubComponent({ device }: IMoveHubPanelProps) {
         <div className="lego-build-control-grid-item-left">
           <MoveHub />
         </div>
-        <div className="lego-build-control-grid-item-center">
+        <div className="lego-build-control-grid-item-right">
           <h4
             style={{
               color: 'var(--jp-accept-color-normal)',

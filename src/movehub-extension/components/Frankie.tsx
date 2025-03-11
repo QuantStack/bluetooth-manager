@@ -5,7 +5,7 @@ const FrankieSVGUrl = `data:image/svg+xml;base64,${btoa(FrankieSVG)}`;
 export default function Frankie () {
   return (
     <div>
-      <img src={FrankieSVGUrl} alt="Frankie schematics" height="200px" />
+      <img src={FrankieSVGUrl} alt="Frankie schematics" height="220px" />
     </div>
   );
 };

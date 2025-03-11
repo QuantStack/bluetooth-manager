@@ -11,13 +11,35 @@
   box-sizing: border-box;
 }
 
+.vernie-control-grid-container {
+  display: grid;
+  grid-gap: 4px;
+  grid-template-columns: repeat(3, 1fr);
+  justify-content: left;
+  align-items: center;
+  margin-top: 20px;
+  gap: 16px;
+  width: 100%;
+}
+
+.lego-build-control-grid-container {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  grid-gap: 4px;
+  justify-content: left;
+  align-items: center;
+  margin-top: 20px;
+  gap: 16px;
+  width: 100%;
+}
+
 .vernie-control-grid-item-left {
   justify-self: center;
   align-items: center;
 }
 
 .vernie-control-grid-item-center {
-  justify-self: left;
+  justify-self: center;
   align-items: center;
 }
 
@@ -47,6 +69,7 @@
 
 .move-input-field-text {
   text-align: left;
+  width: 150px;
 }
 
 .move-input-field {
@@ -58,15 +81,8 @@
   font-size: 10px;
 }
 
-.move-input-field-with-1button {
-  width: 60%;
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-
 .move-input-field-with-2buttons {
-  width: 60%;
+  width: 150px;
   display: flex;
   gap: 10px;
 }
@@ -91,8 +107,13 @@
   margin-bottom: 8px;
 }
 
+.led-color-selector-container {
+  width: 150px;
+}
+
 .led-color-text {
   text-align: left;
+  width: 150px;
 }
 
 .led-color-selector {
@@ -105,6 +126,7 @@
   margin-top: -12px;
   position: absolute;
   font-size: 11px;
+  width: 150px;
 }
 
 .color-selector-container {
@@ -113,48 +135,55 @@
   gap: 10px;
 }
 
-.lego-build-control-grid-container {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  grid-gap: 4px;
-  justify-content: left;
-  align-items: center;
-  margin-top: 20px;
-  gap: 16px;
-  width: 100%;
-}
+@media (max-width: 450px) { /*smaller screens*/
+  .move-input-field-text {
+    width: 100px;
+  }
 
-@media (max-width: 940px) { /*smaller screens*/
+  .move-input-field-with-2buttons {
+    gap: 5px;
+  }
+
+  .move-validation-button {
+    width: 50px;
+  }
+
+  .move-input-field {
+    width: 20px;
+  }
+
   .vernie-control-grid-container {
-    display: grid;
     grid-template-columns: repeat(1, 1fr);
     grid-template-rows: repeat(3, auto);
-    grid-gap: 4px;
-    justify-content: left;
-    align-items: center;
-    margin-top: 20px;
-    gap: 16px;
-    width: 100%;
   }
 
   .lego-build-control-grid-container {
-    display: grid;
     grid-template-columns: repeat(1, 1fr);
     grid-template-rows: repeat(2, auto);
-    grid-gap: 4px;
-    justify-content: left;
-    align-items: center;
-    margin-top: 20px;
-    gap: 16px;
-    width: 100%;
+  }
+
+  .led-color-text {
+    width: 100px;
+  }
+
+  .led-color-selector {
+    width: 130px;
+  }
+}
+
+@media (min-width: 451px) and (max-width: 940px) { /*small screens*/
+  .vernie-control-grid-container {
+    grid-template-columns: repeat(1, 1fr);
+    grid-template-rows: repeat(3, auto);
+  }
+
+  .lego-build-control-grid-container {
+    grid-template-columns: repeat(1, 1fr);
+    grid-template-rows: repeat(2, auto);
   }
 
   .move-input-field-text {
     width: 40%;
-  }
-
-  .move-input-field-with-1button {
-    width: 60%;
   }
 
   .move-input-field-with-2buttons {
@@ -174,82 +203,10 @@
   }
 }
 
-@media (min-width: 940px) and (max-width: 1270px) { /* intermediary screens*/
+@media (min-width: 941px) and (max-width: 1270px) { /* intermediary screens*/
   .vernie-control-grid-container {
-    display: grid;
     grid-template-columns: repeat(2, 1fr);
     grid-template-rows: repeat(2, auto);
-    grid-gap: 4px;
-    justify-content: left;
-    align-items: center;
-    margin-top: 20px;
-    gap: 16px;
-    width: 100%;
-  }
-
-  .move-input-field-text {
-    width: 150px;
-    text-align: left;
-  }
-
-  .move-input-field-with-1button {
-    width: 150px;
-  }
-
-  .move-input-field-with-2buttons {
-    width: 150px;
-  }
-
-  .led-color-text {
-    width: 150px;
-    text-align: left;
-  }
-
-  .led-color-selector-container {
-    width: 150px;
-  }
-
-  .led-color-selector {
-    width: 150px;
-  }
-}
-
-@media (min-width: 1270px) { /* larger screens */
-  .vernie-control-grid-container {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    grid-gap: 4px;
-    justify-content: left;
-    align-items: center;
-    margin-top: 20px;
-    gap: 16px;
-    width: 100%;
-  }
-
-  .move-input-field-text {
-    width: 150px;
-    text-align: left;
-  }
-
-  .move-input-field-with-1button {
-    width: 150px;
-  }
-
-  .move-input-field-with-2buttons {
-    width: 150px;
-  }
-
-  .led-color-text {
-    width: 150px;
-    text-align: left;
-  }
-
-  .led-color-selector-container {
-    width: 150px;
-  }
-
-  .led-color-selector {
-    width: 150px;
   }
 }
 
