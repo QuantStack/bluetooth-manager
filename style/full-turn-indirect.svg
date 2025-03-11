@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   width="48"
+   height="47.999981"
+   viewBox="0 0 12.7 12.699995"
+   version="1.1"
+   id="svg1"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <defs
+     id="defs1" />
+  <g
+     id="layer1"
+     transform="translate(-169.51853,-142.14993)">
+    <g
+       id="g23"
+       transform="translate(-7.5276554e-5,-27.685317)">
+      <circle
+         style="fill:#1976d2;fill-opacity:1;stroke:#1976d2;stroke-width:2.18965;stroke-dasharray:none;stroke-opacity:1"
+         id="path1-7"
+         cx="175.86861"
+         cy="176.18524"
+         r="5.2551723" />
+      <g
+         id="g5"
+         transform="matrix(-1,0,0,1,349.87603,-0.78872513)">
+        <g
+           id="g24"
+           transform="translate(-2.415409,1.9826897)">
+          <g
+             id="g22"
+             transform="translate(-0.18040348,-0.46410427)"
+             style="stroke-width:0.66145833;stroke-dasharray:none">
+            <g
+               id="g1"
+               style="stroke-width:0.66145833;stroke-dasharray:none">
+              <g
+                 id="g6">
+                <circle
+                   style="fill:none;fill-opacity:0.870588;stroke:#ffffff;stroke-width:0.662011;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
+                   id="path5-2"
+                   transform="matrix(-0.99833047,-0.05776049,0,1,0,0)"
+                   r="1.8256251"
+                   cy="165.25308"
+                   cx="-177.1326" />
+                <g
+                   id="g2"
+                   style="fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:0.661458;stroke-dasharray:none;stroke-opacity:1"
+                   transform="matrix(0,-1,-1,0,348.84697,353.10117)">
+                  <path
+                     fill="#616161"
+                     d="m 177.58118,175.89302 -3.34033,-2.12309 3.34033,-2.12309 c 0.006,1.41521 -0.0105,2.83115 0,4.24618 z"
+                     class="jp-icon3"
+                     shape-rendering="geometricPrecision"
+                     id="path6009-2"
+                     style="fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:0.661458;stroke-dasharray:none;stroke-opacity:1" />
+                </g>
+              </g>
+            </g>
+          </g>
+        </g>
+      </g>
+    </g>
+  </g>
+</svg>

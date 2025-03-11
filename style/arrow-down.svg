@@ -5,37 +5,62 @@
    version="1.1"
    id="svg6011"
    height="47.999996"
+   sodipodi:docname="arrow-down.svg"
+   inkscape:version="1.4.1-rc (832c77b156, 2025-02-28)"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns="http://www.w3.org/2000/svg"
    xmlns:svg="http://www.w3.org/2000/svg">
+  <sodipodi:namedview
+     id="namedview8183"
+     pagecolor="#ffffff"
+     bordercolor="#000000"
+     borderopacity="0.25"
+     inkscape:showpageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0"
+     inkscape:deskcolor="#d1d1d1"
+     showgrid="false"
+     inkscape:zoom="6.9532164"
+     inkscape:cx="33.150126"
+     inkscape:cy="43.864592"
+     inkscape:window-width="1648"
+     inkscape:window-height="961"
+     inkscape:window-x="0"
+     inkscape:window-y="0"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="g2" />
   <defs
      id="defs6015" />
   <circle
      style="fill:#1976d2;fill-opacity:1;stroke:#1976d2;stroke-width:9.31034;stroke-dasharray:none;stroke-opacity:1"
      id="path1"
-     cx="26.999998"
-     cy="23.999998"
-     r="22.344828" />
+     cx="-23.999998"
+     cy="-26.999998"
+     r="22.344828"
+     transform="matrix(0,-1,-1,0,0,0)" />
   <g
      id="g1"
-     transform="rotate(90,-0.04629025,-27.090785)"
+     transform="translate(-25.169494,78.137071)"
      style="fill:#f9f9f9">
     <g
        id="g2">
-      <path
-         fill="#616161"
-         d="m 50.293642,-65.309487 17.577922,11.172414 -17.577922,11.172414 c -0.03215,-7.447327 0.05541,-14.898448 0,-22.344828 z"
-         class="jp-icon3"
-         shape-rendering="geometricPrecision"
-         id="path6009"
-         style="fill:#ffffff;fill-opacity:1;stroke-width:3.65699" />
-      <path
-         id="rect1"
-         style="fill:#f9f9f9;stroke:#ffffff;stroke-width:5.59304;stroke-opacity:1"
-         d="m 47.58377,-55.052848 v 1.83155 H 37.013942 v -1.83155 z" />
       <g
-         id="g1-3-1-1"
-         transform="matrix(1.9628771,0,0,-0.70537125,-97.321181,-68.152764)"
-         style="fill:#ff2a2a;stroke:#ffffff;stroke-opacity:1" />
+         id="g3"
+         transform="matrix(0,1,1,0,106.30657,-103.40219)">
+        <path
+           fill="#616161"
+           d="m 50.250473,-63.075004 14.062338,8.937931 -14.062338,8.937931 c -0.02572,-5.957861 0.04433,-11.918758 0,-17.875862 z"
+           class="jp-icon3"
+           shape-rendering="geometricPrecision"
+           id="path6009"
+           style="fill:#ffffff;fill-opacity:1;stroke-width:2.92559"
+           sodipodi:nodetypes="cccc" />
+        <path
+           id="rect1"
+           style="fill:#f9f9f9;stroke:#ffffff;stroke-width:5.59304;stroke-opacity:1"
+           d="m 47.58377,-55.052848 v 1.83155 H 37.013942 v -1.83155 z" />
+      </g>
     </g>
   </g>
 </svg>
