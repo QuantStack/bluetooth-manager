@@ -8,7 +8,7 @@
    version="1.1"
    id="svg1"
    sodipodi:docname="full-turn-direct.svg"
-   inkscape:version="1.4.1-rc (832c77b156, 2025-02-28)"
+   inkscape:version="1.4.1-rc (d9e8dc1fe0, 2025-03-10)"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns="http://www.w3.org/2000/svg"
@@ -23,9 +23,9 @@
      inkscape:pagecheckerboard="0"
      inkscape:deskcolor="#d1d1d1"
      showgrid="false"
-     inkscape:zoom="5.7038128"
-     inkscape:cx="23.756039"
-     inkscape:cy="51.018504"
+     inkscape:zoom="11.407626"
+     inkscape:cx="22.309638"
+     inkscape:cy="7.5388168"
      inkscape:window-width="1648"
      inkscape:window-height="961"
      inkscape:window-x="0"
@@ -34,7 +34,26 @@
      inkscape:current-layer="g6"
      showguides="true" />
   <defs
-     id="defs1" />
+     id="defs1">
+    <marker
+       style="overflow:visible"
+       id="ArrowWideHeavy"
+       refX="0"
+       refY="0"
+       orient="auto-start-reverse"
+       inkscape:stockid="Wide, heavy arrow"
+       markerWidth="1"
+       markerHeight="1"
+       viewBox="0 0 1 1"
+       inkscape:isstock="true"
+       inkscape:collect="always"
+       preserveAspectRatio="xMidYMid">
+      <path
+         style="fill:context-stroke;fill-rule:evenodd;stroke:none"
+         d="m 1,0 -3,3 h -2 l 3,-3 -3,-3 h 2 z"
+         id="path3" />
+    </marker>
+  </defs>
   <g
      id="layer1"
      transform="translate(-169.51853,-142.14993)">
@@ -81,6 +100,10 @@
                      id="path6009-2"
                      style="fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:0.661458;stroke-dasharray:none;stroke-opacity:1" />
                 </g>
+                <path
+                   style="fill:#ffffff;stroke:#ffffff;stroke-width:0.3;stroke-dasharray:none;stroke-opacity:1;marker-end:url(#ArrowWideHeavy)"
+                   d="m 178.65652,174.99995 c 0,1.16596 0,1.16596 0,1.16596"
+                   id="path2" />
               </g>
             </g>
           </g>
