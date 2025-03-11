@@ -95,19 +95,8 @@ const LEGOMoveHubControlPanelPlugin: JupyterFrontEndPlugin<void> = {
             'connection-status',
             new ConnectionStatusWidget(device)
           );
+         
 
-          app.contextMenu.addItem({
-            command: disconnectMoveHub,
-            selector: `div.jp-connection-status-indicator`,
-            rank: 1
-          });
-       
-          app.contextMenu.addItem({
-            command: connectMoveHub,
-            selector: `div.jp-connection-status-indicator`,
-            rank: 1
-          });
- 
           main.toolbar.addItem(
             'select-lego-model',
             new LegoBuildSelectorWidget(device)
@@ -124,14 +113,22 @@ const LEGOMoveHubControlPanelPlugin: JupyterFrontEndPlugin<void> = {
           main.title.icon = LegoBrickIcon;
           app.shell.add(main, 'main');
 
+
           app.commands.addCommand(connectMoveHub, {
             execute: args => {
+              console.log('We are in connectMoveHub')
               const newDevice =
                 bluetoothManager.connectDevice(movehubRegistryItem);
               return newDevice;
             },
             caption: trans.__('Connect MoveHub'),
             label: trans.__('Connect MoveHub'),
+            isEnabled: () => {
+              if (device.deviceInfo.connected) {
+                return false
+              }
+              else { return (true) }
+            }
           });
 
           app.commands.addCommand(disconnectMoveHub, {
@@ -141,6 +138,24 @@ const LEGOMoveHubControlPanelPlugin: JupyterFrontEndPlugin<void> = {
             },
             caption: trans.__('Disconnect MoveHub'),
             label: trans.__('Disconnect MoveHub'),
+            isEnabled: () => {
+              if (device.deviceInfo.connected) {
+                return true
+              }
+              else { return (false) }
+            }
+          });
+
+          app.contextMenu.addItem({
+            command: disconnectMoveHub,
+            selector: `div.jp-connection-status-indicator`,
+            rank: 1
+          });
+
+          app.contextMenu.addItem({
+            command: connectMoveHub,
+            selector: `div.jp-connection-status-indicator`,
+            rank: 1
           });
 
         } else {
