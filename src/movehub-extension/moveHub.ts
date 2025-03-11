@@ -32,9 +32,8 @@ export const defaultDeviceInfo: DeviceInfo = {
   rssi: 0,
   color: '',
   error: '',
-
   connected: false,
-  ledColor: 'blue',
+  ledColor: 'green',
   batteryLevel: undefined,
   identifier: ''
 };
@@ -91,6 +90,7 @@ export class MoveHub extends BluetoothManager.Device {
   }
 
   async initDevice(): Promise<void> {
+    console.log('You are in initDevice')
     this.connected.connect(async (sender, connected: boolean) => {
       this.deviceInfo.connected = connected;
       console.warn(
@@ -100,7 +100,7 @@ export class MoveHub extends BluetoothManager.Device {
       this.deviceInfo.identifier = buildShortIdentifier(this.native);
     });
     this.disconnected.connect(async (sender, disconnected: boolean) => {
-      if (disconnected) {
+      if (disconnected=== true) {
         this.deviceInfo.connected = false;
       }
       console.warn(
@@ -108,36 +108,36 @@ export class MoveHub extends BluetoothManager.Device {
         this.deviceInfo.connected
       );
     });
+  
+      const characteristic = await this.getCharacteristic(
+        moveHubServiceUUID,
+        moveHubCharacteristicUUID
+      );
 
-    const characteristic = await this.getCharacteristic(
-      moveHubServiceUUID,
-      moveHubCharacteristicUUID
-    );
+      // Initialize hub
+      if (characteristic !== undefined) {
+        this.hub = new HubAsync(characteristic, defaultConfiguration);
+        this.hub.logDebug = this.logDebug;
 
-    // Initialize hub
-    if (characteristic !== undefined) {
-      this.hub = new HubAsync(characteristic, defaultConfiguration);
-      this.hub.logDebug = this.logDebug;
+        // Register events
+        // Ensure hub is fully configured before returning
+        this.hub.emitter.on('connect', () => {
+          this.hub.afterInitialization();
+          this.hubControl = new HubControl(
+            this.deviceInfo,
+            this.controlData,
+            defaultConfiguration
+          );
+          this.hubControl.start(this.hub);
 
-      // Register events
-      // Ensure hub is fully configured before returning
-      this.hub.emitter.on('connect', () => {
-        this.hub.afterInitialization();
-        this.hubControl = new HubControl(
-          this.deviceInfo,
-          this.controlData,
-          defaultConfiguration
-        );
-        this.hubControl.start(this.hub);
-
-        setInterval(() => {
-          this.hubControl.update();
-        }, 100);
-      });
-    } else {
-      console.warn('There is no characteristic available on this service.');
-    }
-  }
+          setInterval(() => {
+            this.hubControl.update();
+          }, 100);
+        });
+      } else {
+        console.error('There is no characteristic available on this service.');
+      }}
+      
   // Methods from Hub
   /**
    * Stop engines A and B

@@ -36,16 +36,29 @@ export const movehubRegistryItem: IDeviceRegistryItem = {
     optionalServices: [moveHubServiceUUID]
   },
   factory: async (native: BluetoothDevice) => {
-    let device = new MoveHub(native);
-    await device.initDevice();
-    const hub = device.hub;
-
-    if (!hub) {
-      throw new Error('Hub initialization failed.');
+    let device = new MoveHub(native); /* when instantiated */
+    console.log('In factory, device:', device)
+    try {
+      await device.initDevice();
+      if (device.hub && device.isConnected) {
+        console.log('DEVICE IS OK')
+        return device
+      }
+      else if (device.hub && device.isConnected === false) {
+        console.log('DEVICE IS NOT OK')
+        device.dispose()
+      }
+      else {
+        console.log('Device has no hub, dispose it')
+        device.dispose()
+      }
     }
-    return device;
+    catch (error) {
+      console.error('Hub initilization failed:', error);
+      device.dispose()
+    };
   }
-};
+}
 
 const MoveHubRegisterPlugin: JupyterFrontEndPlugin<void> = {
   id: 'bluetooth-manager:move-hub-register-plugin',
@@ -107,7 +120,7 @@ const LEGOMoveHubControlPanelPlugin: JupyterFrontEndPlugin<void> = {
           main.title.closable = true;
           main.title.icon = LegoBrickIcon;
           app.shell.add(main, 'main');
-        
+
         } else {
           throw new Error('The device is not a Move Hub.');
         }

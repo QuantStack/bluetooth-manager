@@ -113,9 +113,10 @@ const BluetoothSidebarPlugin: JupyterFrontEndPlugin<void> = {
           if (result.button.accept) {
             bluetoothManager.registry.itemsList.forEach(async item => {
               if (item.identifier === result.value) {
-                await bluetoothManager.connectDevice(item);
+                const device = await bluetoothManager.connectDevice(item);
+                console.log('In the dialog, device:', device)
               } else {
-                console.warn(`There is no corresponding item in the registry!`);
+                console.error(`There is no corresponding item in the registry!`);
               }
             });
           }

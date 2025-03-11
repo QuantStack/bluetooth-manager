@@ -32,17 +32,28 @@ export class BluetoothManager implements IBluetoothManager {
   async connectDevice(
     registryItem: IDeviceRegistryItem
   ): Promise<BluetoothManager.Device | undefined> {
-    const native = await this.requestDevice(registryItem);
-    if (native) {
-      const device = await registryItem.factory(native);
-      if (device && device.isConnected) {
-        this.addDeviceToList(device!);
-
-        device.disconnected.connect(async () => {
-          this.removeDeviceFromList(device);
-        });
-        return device;
+    try {
+      const native = await this.requestDevice(registryItem);
+      console.log('Native', native)
+      if (native) {
+        const device = await registryItem.factory(native);
+        console.log('In connectDevice, Device:', device)
+        console.log('isConnected:', device?.isConnected)
+        if (device && device.isConnected) {
+          this.addDeviceToList(device!);
+          device.disconnected.connect(async () => {
+            this.removeDeviceFromList(device);
+          });
+          return device;
+        }
+        else if (device && device.isConnected === false) {
+          console.error('The device is not connected.')
+          device.dispose()
+        }
       }
+
+    } catch (error) {
+      console.error("The full process to connect a Device failed", error);
     }
   }
 
@@ -96,13 +107,11 @@ export class BluetoothManager implements IBluetoothManager {
   async requestDevice(
     registryItem: IDeviceRegistryItem
   ): Promise<BluetoothDevice | undefined> {
-    try {
-      const native = await navigator.bluetooth.requestDevice(
-        registryItem.options
-      );
+    const native = await navigator.bluetooth.requestDevice(
+      registryItem.options
+    );
+    if (native) {
       return native;
-    } catch (error) {
-      console.error(error);
     }
   }
 
@@ -140,15 +149,20 @@ export namespace BluetoothManager {
         this.isConnected = false;
         this.disconnected.emit(true);
       });
-
-      await this.native.gatt?.connect();
-      this.isConnected = true;
-      this.connected.emit(true);
-      this.isDisposed = false;
-      const services = await this.native.gatt?.getPrimaryServices();
-      if (!services || services.length === 0) {
-        throw new Error('No services found on the device.');
-      } else return services;
+      const server = this.native.gatt;
+      if (server) {
+        await server.connect();
+        this.isConnected = true;
+        this.connected.emit(true);
+        this.isDisposed = false;
+        const services = await server.getPrimaryServices();
+        if (!services || services.length === 0) {
+          console.error('Server exists but no service found on the device.');
+        } else return services;
+      } else {
+        console.error('Server does not exist');
+        return undefined
+      }
     }
 
     async disconnect(): Promise<void> {
@@ -168,8 +182,6 @@ export namespace BluetoothManager {
             service => service.uuid === selectedServiceUUID
           );
           return selectedService;
-        } else {
-          console.error('Services could not be reached.');
         }
       } catch (error) {
         console.error('The selected service could not be found', error);
