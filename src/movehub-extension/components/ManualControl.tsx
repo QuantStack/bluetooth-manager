@@ -1,10 +1,12 @@
 import { MoveHub } from '../moveHub';
 import arrowUpSVG from '../../../style/arrow-up.svg';
 import arrowDownSVG from '../../../style/arrow-down.svg';
+import arrowUpThinnerSVG from '../../../style/arrow-up-thinner.svg';
+import arrowDownThinnerSVG from '../../../style/arrow-down-thinner.svg';
 import turnLeftSVG from '../../../style/turn-left1.svg';
 import turnRightSVG from '../../../style/turn-right1.svg';
-import turnLeftWithCircleSVG from '../../../style/turn-left-with-circle.svg';
-import turnRightWithCircleSVG from '../../../style/turn-right-with-circle.svg';
+import turnLeftWithCircleThinnerSVG from '../../../style/turn-left-with-circle-thinner.svg';
+import turnRightWithCircleThinnerSVG from '../../../style/turn-right-with-circle-thinner.svg';
 import halfTurnLeftSVG from '../../../style/half-turn-left.svg';
 import halfTurnRightSVG from '../../../style/half-turn-right.svg';
 import threeQuartersOfTurnDirectSVG from '../../../style/three-quarters-of-turn-direct.svg';
@@ -17,10 +19,12 @@ const emptySVGUrl = `data:image/svg+xml;base64,${btoa(emptySVG)}`;
 const stopButtonSVGUrl = `data:image/svg+xml;base64,${btoa(stopButtonSVG)}`;
 const arrowUpSVGUrl = `data:image/svg+xml;base64,${btoa(arrowUpSVG)}`;
 const arrowDownSVGUrl = `data:image/svg+xml;base64,${btoa(arrowDownSVG)}`;
+const arrowUpThinnerSVGUrl = `data:image/svg+xml;base64,${btoa(arrowUpThinnerSVG)}`;
+const arrowDownThinnerSVGUrl = `data:image/svg+xml;base64,${btoa(arrowDownThinnerSVG)}`;
 const turnLeftSVGUrl = `data:image/svg+xml;base64,${btoa(turnLeftSVG)}`;
 const turnRightSVGUrl = `data:image/svg+xml;base64,${btoa(turnRightSVG)}`;
-const turnLeftWithCircleSVGUrl = `data:image/svg+xml;base64,${btoa(turnLeftWithCircleSVG)}`;
-const turnRightWithCircleSVGUrl = `data:image/svg+xml;base64,${btoa(turnRightWithCircleSVG)}`;
+const turnLeftWithCircleThinnerSVGUrl = `data:image/svg+xml;base64,${btoa(turnLeftWithCircleThinnerSVG)}`;
+const turnRightWithCircleThinnerSVGUrl = `data:image/svg+xml;base64,${btoa(turnRightWithCircleThinnerSVG)}`;
 const halfTurnLeftSVGUrl = `data:image/svg+xml;base64,${btoa(halfTurnLeftSVG)}`;
 const halfTurnRightSVGUrl = `data:image/svg+xml;base64,${btoa(halfTurnRightSVG)}`;
 const fullTurnDirectSVGUrl = `data:image/svg+xml;base64,${btoa(fullTurnDirectSVG)}`;
@@ -135,7 +139,7 @@ export function ManualControlBis({ moveHub }: IMoveHubControlProps) {
     },
     {
       id: 2,
-      src: arrowUpSVGUrl,
+      src: arrowUpThinnerSVGUrl,
       alt: 'Image 2',
       handleClick: async () => {
         await moveHub.hub.driveToDirection(1);
@@ -151,7 +155,7 @@ export function ManualControlBis({ moveHub }: IMoveHubControlProps) {
     },
     {
       id: 4,
-      src: turnLeftWithCircleSVGUrl,
+      src: turnLeftWithCircleThinnerSVGUrl,
       alt: 'Image 4',
       handleClick: async () => {
         await moveHub.hub.turn(-90);
@@ -167,7 +171,7 @@ export function ManualControlBis({ moveHub }: IMoveHubControlProps) {
     },
     {
       id: 6,
-      src: turnRightWithCircleSVGUrl,
+      src: turnRightWithCircleThinnerSVGUrl,
       alt: 'Image 6',
       handleClick: async () => {
         moveHub.hub.turn(90);
@@ -183,7 +187,7 @@ export function ManualControlBis({ moveHub }: IMoveHubControlProps) {
     },
     {
       id: 8,
-      src: arrowDownSVGUrl,
+      src: arrowDownThinnerSVGUrl,
       alt: 'Image 8',
       handleClick: async () => await moveHub.hub.driveToDirection(0)
     },
