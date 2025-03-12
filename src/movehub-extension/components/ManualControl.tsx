@@ -3,6 +3,8 @@ import arrowUpSVG from '../../../style/arrow-up.svg';
 import arrowDownSVG from '../../../style/arrow-down.svg';
 import turnLeftSVG from '../../../style/turn-left1.svg';
 import turnRightSVG from '../../../style/turn-right1.svg';
+import turnLeftWithCircleSVG from '../../../style/turn-left-with-circle.svg';
+import turnRightWithCircleSVG from '../../../style/turn-right-with-circle.svg';
 import halfTurnLeftSVG from '../../../style/half-turn-left.svg';
 import halfTurnRightSVG from '../../../style/half-turn-right.svg';
 import threeQuartersOfTurnDirectSVG from '../../../style/three-quarters-of-turn-direct.svg';
@@ -17,6 +19,8 @@ const arrowUpSVGUrl = `data:image/svg+xml;base64,${btoa(arrowUpSVG)}`;
 const arrowDownSVGUrl = `data:image/svg+xml;base64,${btoa(arrowDownSVG)}`;
 const turnLeftSVGUrl = `data:image/svg+xml;base64,${btoa(turnLeftSVG)}`;
 const turnRightSVGUrl = `data:image/svg+xml;base64,${btoa(turnRightSVG)}`;
+const turnLeftWithCircleSVGUrl = `data:image/svg+xml;base64,${btoa(turnLeftWithCircleSVG)}`;
+const turnRightWithCircleSVGUrl = `data:image/svg+xml;base64,${btoa(turnRightWithCircleSVG)}`;
 const halfTurnLeftSVGUrl = `data:image/svg+xml;base64,${btoa(halfTurnLeftSVG)}`;
 const halfTurnRightSVGUrl = `data:image/svg+xml;base64,${btoa(halfTurnRightSVG)}`;
 const fullTurnDirectSVGUrl = `data:image/svg+xml;base64,${btoa(fullTurnDirectSVG)}`;
@@ -119,6 +123,97 @@ export function ManualControl({ moveHub }: IMoveHubControlProps) {
   );
 }
 
+export function ManualControlBis({ moveHub }: IMoveHubControlProps) {
+  const images = [
+    {
+      id: 1,
+      src: emptySVGUrl,
+      alt: 'Image 1',
+      handleClick: () => {
+        console.error('Inactive button, no control available.');
+      }
+    },
+    {
+      id: 2,
+      src: arrowUpSVGUrl,
+      alt: 'Image 2',
+      handleClick: async () => {
+        await moveHub.hub.driveToDirection(1);
+      }
+    },
+    {
+      id: 3,
+      src: emptySVGUrl,
+      alt: 'Image 3',
+      handleClick: () => {
+        console.error('Inactive button, no control available.');
+      }
+    },
+    {
+      id: 4,
+      src: turnLeftWithCircleSVGUrl,
+      alt: 'Image 4',
+      handleClick: async () => {
+        await moveHub.hub.turn(-90);
+      }
+    },
+    {
+      id: 5,
+      src: stopButtonSVGUrl,
+      alt: 'Image 5',
+      handleClick: async () => {
+        moveHub.stop();
+      }
+    },
+    {
+      id: 6,
+      src: turnRightWithCircleSVGUrl,
+      alt: 'Image 6',
+      handleClick: async () => {
+        moveHub.hub.turn(90);
+      }
+    },
+    {
+      id: 7,
+      src: emptySVGUrl,
+      alt: 'Image 7',
+      handleClick: () => {
+        console.error('Inactive button, no control available.');
+      }
+    },
+    {
+      id: 8,
+      src: arrowDownSVGUrl,
+      alt: 'Image 8',
+      handleClick: async () => await moveHub.hub.driveToDirection(0)
+    },
+    {
+      id: 9,
+      src: emptySVGUrl,
+      alt: 'Image 9',
+      handleClick: () => {
+        console.error('Inactive button, no control available.');
+      }
+    }
+  ];
+
+  return (
+    <div className="manual-control-grid">
+      {images.map((image, index) => (
+        <div className="manual-control-grid-item">
+          <button
+            key={index}
+            onClick={image.handleClick}
+            className="image-button"
+          >
+            <img src={image.src} alt={image.alt} />
+          </button>
+        </div>
+      ))}
+    </div>
+  );
+}
+
 
 export function ManualControl1({ moveHub }: IMoveHubControlProps) {
   const images = [
@@ -165,7 +260,7 @@ export function ManualControl1({ moveHub }: IMoveHubControlProps) {
     {
       id: 6,
       src: halfTurnLeftSVGUrl,
-      alt: 'Image 4',
+      alt: 'Image 6',
       handleClick: async () => {
         await moveHub.hub.turn(-180);
 
@@ -174,7 +269,7 @@ export function ManualControl1({ moveHub }: IMoveHubControlProps) {
     {
       id: 7,
       src: turnLeftSVGUrl,
-      alt: 'Image 4',
+      alt: 'Image 7',
       handleClick: async () => {
         await moveHub.hub.turn(-90);
       }
@@ -182,7 +277,7 @@ export function ManualControl1({ moveHub }: IMoveHubControlProps) {
     {
       id: 8,
       src: stopButtonSVGUrl,
-      alt: 'Image 9',
+      alt: 'Image 8',
       handleClick: async () => {
         moveHub.stop();
       }
