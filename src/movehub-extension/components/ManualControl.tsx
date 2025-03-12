@@ -14,9 +14,13 @@ import threeQuartersOfTurnIndirectSVG from '../../../style/three-quarters-of-tur
 import fullTurnDirectSVG from '../../../style/full-turn-direct.svg';
 import fullTurnIndirectSVG from '../../../style/full-turn-indirect.svg';
 import emptySVG from '../../../style/empty.svg';
+import emptyWhiteSVG from '../../../style/empty-white.svg';
 import stopButtonSVG from '../../../style/stop-button.svg';
+import stopButtonSquareSVG from '../../../style/stop-button-square.svg';
 const emptySVGUrl = `data:image/svg+xml;base64,${btoa(emptySVG)}`;
+const emptyWhiteSVGUrl = `data:image/svg+xml;base64,${btoa(emptyWhiteSVG)}`;
 const stopButtonSVGUrl = `data:image/svg+xml;base64,${btoa(stopButtonSVG)}`;
+const stopButtonSquareSVGUrl = `data:image/svg+xml;base64,${btoa(stopButtonSquareSVG)}`;
 const arrowUpSVGUrl = `data:image/svg+xml;base64,${btoa(arrowUpSVG)}`;
 const arrowDownSVGUrl = `data:image/svg+xml;base64,${btoa(arrowDownSVG)}`;
 const arrowUpThinnerSVGUrl = `data:image/svg+xml;base64,${btoa(arrowUpThinnerSVG)}`;
@@ -40,7 +44,7 @@ export function ManualControl({ moveHub }: IMoveHubControlProps) {
   const images = [
     {
       id: 1,
-      src: emptySVGUrl,
+      src: emptyWhiteSVGUrl,
       alt: 'Image 1',
       handleClick: () => {
         console.error('Inactive button, no control available.');
@@ -56,7 +60,7 @@ export function ManualControl({ moveHub }: IMoveHubControlProps) {
     },
     {
       id: 3,
-      src: emptySVGUrl,
+      src: emptyWhiteSVGUrl,
       alt: 'Image 3',
       handleClick: () => {
         console.error('Inactive button, no control available.');
@@ -88,7 +92,7 @@ export function ManualControl({ moveHub }: IMoveHubControlProps) {
     },
     {
       id: 7,
-      src: emptySVGUrl,
+      src: emptyWhiteSVGUrl,
       alt: 'Image 7',
       handleClick: () => {
         console.error('Inactive button, no control available.');
@@ -102,7 +106,7 @@ export function ManualControl({ moveHub }: IMoveHubControlProps) {
     },
     {
       id: 9,
-      src: emptySVGUrl,
+      src: emptyWhiteSVGUrl,
       alt: 'Image 9',
       handleClick: () => {
         console.error('Inactive button, no control available.');
@@ -163,7 +167,7 @@ export function ManualControlBis({ moveHub }: IMoveHubControlProps) {
     },
     {
       id: 5,
-      src: stopButtonSVGUrl,
+      src: stopButtonSquareSVGUrl,
       alt: 'Image 5',
       handleClick: async () => {
         moveHub.stop();
@@ -455,7 +459,7 @@ export function ManualControl2({ moveHub }: IMoveHubControlProps) {
         moveHub.hub.turn(360);
       }
     },
-    
+
   ];
 
   return (

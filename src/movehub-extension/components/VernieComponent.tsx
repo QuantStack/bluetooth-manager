@@ -1,6 +1,6 @@
 import { ColorSelector } from './ColorSelector';
 import Vernie from './Vernie';
-import { /*ManualControl, ManualControl1, ManualControl2, */ManualControlBis} from './ManualControl';
+import { ManualControl, /*ManualControl1, ManualControl2, */ManualControlBis} from './ManualControl';
 import { IMoveHubPanelProps } from './MoveHubPanel';
 import { MoveForm } from './MoveForm';
 
@@ -61,7 +61,8 @@ export function VernieComponent({ device }: IMoveHubPanelProps) {
         </div>
 
         <div className="vernie-control-grid-item-right">
-        
+          <ManualControl moveHub={device} />
+          <div style={{height:"10px"}}></div>
           <ManualControlBis moveHub={device} />
 
         </div>
