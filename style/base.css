@@ -259,11 +259,6 @@
   table-layout: auto;
 }
 
-.custom-table-thead {
-  border-bottom: var(--jp-border-width) solid var(--jp-border-color1);
-  vertical-align: bottom;
-}
-
 .custom-table-th {
   background-color: var(--jp-accept-color-normal);
   color: white;
@@ -271,6 +266,7 @@
   text-align: center;
   border-style: solid;
   border-width: 0.5px;
+  border-color: black;
   font-family: var(--jp-content-font-family);
   font-size: var(--jp-content-font-size1);
   line-height: var(--jp-content-line-height);
