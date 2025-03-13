@@ -67,7 +67,7 @@ const BluetoothSidebarPlugin: JupyterFrontEndPlugin<void> = {
     const trans = translator.load('jupyterlab');
     const { commands } = app;
     const openDeviceRegistryDialogLabel = trans.__(
-      'Add a device'
+      'Open Dialog Showing Devices Registry'
     );
     let runningItemsList: Array<IRunningSessions.IRunningItem>;
 
@@ -106,7 +106,7 @@ const BluetoothSidebarPlugin: JupyterFrontEndPlugin<void> = {
           title: 'Select device type',
           body: new DropDownRegistry(bluetoothManager.registry),
           buttons: [
-            Dialog.okButton({ label: 'Select' }),
+            Dialog.okButton({ label: 'OK' }),
             Dialog.cancelButton({ label: 'Cancel' })
           ]
         }).then(async result => {
