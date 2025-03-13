@@ -22,13 +22,10 @@ import { LegoBuildSelectorWidget } from './components/LegoBuildSelector';
 import { BatteryWidget } from './components/BatteryGauge';
 import { DeviceIdentifierWidget } from './components/DeviceIdentifier';
 import { ConnectionStatusWidget } from './components/ConnectionStatus';
-
 export * from './version';
 export * from './widget';
 export const addLEGOMoveHubControlPanel =
   'bluetooth-manager:add-lego-movehub-control-panel';
-export const connectMoveHub = 'bluetooth-manager:connect-movehub';
-export const disconnectMoveHub = 'bluetooth-manager:disconnect-movehub';
 export const moveHubServiceUUID = '00001623-1212-efde-1623-785feabcd123';
 export const moveHubCharacteristicUUID = '00001624-1212-efde-1623-785feabcd123';
 export const movehubRegistryItem: IDeviceRegistryItem = {
@@ -93,10 +90,8 @@ const LEGOMoveHubControlPanelPlugin: JupyterFrontEndPlugin<void> = {
           main.addClass('jp-movehub-panel-main');
           main.toolbar.addItem(
             'connection-status',
-            new ConnectionStatusWidget(device)
+            new ConnectionStatusWidget(device, bluetoothManager)
           );
-         
-
           main.toolbar.addItem(
             'select-lego-model',
             new LegoBuildSelectorWidget(device)
@@ -112,52 +107,7 @@ const LEGOMoveHubControlPanelPlugin: JupyterFrontEndPlugin<void> = {
           main.title.closable = true;
           main.title.icon = LegoBrickIcon;
           app.shell.add(main, 'main');
-
-
-          app.commands.addCommand(connectMoveHub, {
-            execute: args => {
-              console.log('We are in connectMoveHub')
-              const newDevice =
-                bluetoothManager.connectDevice(movehubRegistryItem);
-              return newDevice;
-            },
-            caption: trans.__('Connect MoveHub'),
-            label: trans.__('Connect MoveHub'),
-            isEnabled: () => {
-              if (device.deviceInfo.connected) {
-                return false
-              }
-              else { return (true) }
-            }
-          });
-
-          app.commands.addCommand(disconnectMoveHub, {
-            execute: args => {
-              bluetoothManager.disconnectDevice(device);
-              return device;
-            },
-            caption: trans.__('Disconnect MoveHub'),
-            label: trans.__('Disconnect MoveHub'),
-            isEnabled: () => {
-              if (device.deviceInfo.connected) {
-                return true
-              }
-              else { return (false) }
-            }
-          });
-
-          app.contextMenu.addItem({
-            command: disconnectMoveHub,
-            selector: `div.jp-connection-status-indicator`,
-            rank: 1
-          });
-
-          app.contextMenu.addItem({
-            command: connectMoveHub,
-            selector: `div.jp-connection-status-indicator`,
-            rank: 1
-          });
-
+        
         } else {
           throw new Error('The device is not a Move Hub.');
         }
