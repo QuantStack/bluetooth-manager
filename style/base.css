@@ -218,22 +218,6 @@
   height: 152px;
 }
 
-.manual-control-grid2 {
-  display: grid;
-  grid-template-columns: repeat(5, 1fr);
-  grid-gap: 0;
-  width: 210px;
-  height: 210px;
-}
-
-.manual-control-grid3 {
-  display: grid;
-  grid-template-columns: repeat(11, 1fr);
-  grid-gap: 0;
-  width: 500px;
-  height: 500px;
-}
-
 .manual-control-grid-item {
   width: 48px;
   height: 48px;
@@ -247,7 +231,7 @@
   background-color: transparent;
   border-width: 0;
   padding: 0;
-  width: 32px;
+  width: 48px;
 }
 
 .colored-circle {
