@@ -1,12 +1,12 @@
 import { MoveHub } from '../moveHub';
 import arrowUpSVG from '../../../style/arrow-up.svg';
 import arrowDownSVG from '../../../style/arrow-down.svg';
-import turnLeftSVG from '../../../style/turn-left.svg';
 import turnRightSVG from '../../../style/turn-right.svg';
+import turnLeftSVG from '../../../style/turn-left.svg';
 import emptySVG from '../../../style/empty.svg';
-import stopButtonSVG from '../../../style/stop-button.svg';
+import stopSVG from '../../../style/stop.svg';
 const emptySVGUrl = `data:image/svg+xml;base64,${btoa(emptySVG)}`;
-const stopButtonSVGUrl = `data:image/svg+xml;base64,${btoa(stopButtonSVG)}`;
+const stopSVGUrl = `data:image/svg+xml;base64,${btoa(stopSVG)}`;
 const arrowUpSVGUrl = `data:image/svg+xml;base64,${btoa(arrowUpSVG)}`;
 const arrowDownSVGUrl = `data:image/svg+xml;base64,${btoa(arrowDownSVG)}`;
 const turnLeftSVGUrl = `data:image/svg+xml;base64,${btoa(turnLeftSVG)}`;
@@ -52,7 +52,7 @@ export function ManualControl({ moveHub }: IMoveHubControlProps) {
     },
     {
       id: 5,
-      src: stopButtonSVGUrl,
+      src: stopSVGUrl,
       alt: 'Image 5',
       handleClick: async () => {
         moveHub.stop();
