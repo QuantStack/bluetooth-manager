@@ -13,19 +13,19 @@
      id="defs1">
     <marker
        style="overflow:visible"
-       id="ArrowWideRounded"
-       refX="0"
+       id="RoundedArrow"
+       refX="1.4"
        refY="0"
        orient="auto-start-reverse"
-       markerWidth="1"
-       markerHeight="1"
+       markerWidth="0.6"
+       markerHeight="0.6"
        viewBox="0 0 1 1"
        preserveAspectRatio="xMidYMid">
       <path
-         style="fill:none;stroke:context-stroke;stroke-width:1;stroke-linecap:round"
-         d="M 3,-3 0,0 3,3"
-         transform="rotate(180,0.125,0)"
-         id="path2" />
+         transform="scale(0.7)"
+         d="m -0.21114562,-4.1055728 6.42229122,3.21114561 a 1,1 90 0 1 0,1.78885438 L -0.21114562,4.1055728 A 1.236068,1.236068 31.717474 0 1 -2,3 v -6 a 1.236068,1.236068 148.28253 0 1 1.78885438,-1.1055728 z"
+         style="fill:context-stroke;fill-rule:evenodd;stroke:none"
+         id="path8" />
     </marker>
     <marker
        style="overflow:visible"
@@ -83,7 +83,7 @@
                      id="g6"
                      transform="matrix(0.8,0,0,0.8,38.272025,35.075376)">
                     <path
-                       style="opacity:1;fill:none;stroke:#ffffff;stroke-width:0.645955;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;marker-end:url(#ArrowWideRounded)"
+                       style="opacity:1;fill:none;stroke:#ffffff;stroke-width:0.645955;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;marker-end:url(#RoundedArrow);stroke-miterlimit:4"
                        id="path3-2"
                        d="m -187.72745,-176.45844 a 3.6160078,3.6159852 0 0 1 -1.08034,2.57795 3.6160078,3.6159852 0 0 1 -2.59546,1.03755"
                        transform="scale(-1)" />
@@ -99,6 +99,17 @@
                          transform="scale(-1)"
                          rx="3.6160078"
                          ry="3.6159852" />
+                    </g>
+                    <g
+                       id="g7">
+                      <path
+                         style="fill:#d40000;stroke-width:0.258382;stroke-dasharray:0.258382, 0.258382;stroke-dashoffset:0"
+                         d="m 191.59748,176.36579 h -3.74525 v 0"
+                         id="path6" />
+                      <path
+                         style="fill:#d40000;stroke:#ffffff;stroke-width:0.258382;stroke-dasharray:0.258382, 0.258382;stroke-dashoffset:0;stroke-opacity:1"
+                         d="m 191.46812,176.48108 v -3.74525 0"
+                         id="path6-2" />
                     </g>
                   </g>
                 </g>
