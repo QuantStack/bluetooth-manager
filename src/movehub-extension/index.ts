@@ -81,39 +81,32 @@ const LEGOMoveHubControlPanelPlugin: JupyterFrontEndPlugin<void> = {
           const device = result[
             result.length - 1
           ] as MoveHub; /* the last added MoveHub device*/
-          /*let isThemeLight: boolean = themeManager.theme;
-          themeManager.themeChanged.connect((sender: any, args: IChangedArgs<string, string | null, string>) => {
-            const theme = args.newValue;
-            console.log("Is the theme light?:", themeManager.isLight(theme));
-            isThemeLight = themeManager.isLight(theme);
-            console.log('Theme is:', theme);
-          });*/
-            const content = new MoveHubPanelWidget(device, themeManager);
-            content.addClass('jp-movehub-panel-content');
-            const toolbar = new Toolbar();
-            toolbar.addClass('jp-movehub-panel-toolbar');
-            const main = new MainAreaWidget({ content, toolbar });
-            main.addClass('jp-movehub-panel-main');
-            main.toolbar.addItem(
-              'connection-status',
-              new ConnectionStatusWidget(device, bluetoothManager)
-            );
-            main.toolbar.addItem(
-              'select-lego-model',
-              new LegoBuildSelectorWidget(device)
-            );
-            toolbar.addItem('spacer', Toolbar.createSpacerItem());
-            main.toolbar.addItem('battery-gauge', new BatteryWidget(device, themeManager));
-            main.toolbar.addItem(
-              'device-identifier',
-              new DeviceIdentifierWidget(device)
-            );
-            main.id = 'lego-movehub-control-panel';
-            main.title.label = 'LEGO® Move Hub';
-            main.title.closable = true;
-            main.title.icon = LegoBrickIcon;
-            app.shell.add(main, 'main');
-          
+          const content = new MoveHubPanelWidget(device, themeManager);
+          content.addClass('jp-movehub-panel-content');
+          const toolbar = new Toolbar();
+          toolbar.addClass('jp-movehub-panel-toolbar');
+          const main = new MainAreaWidget({ content, toolbar });
+          main.addClass('jp-movehub-panel-main');
+          main.toolbar.addItem(
+            'connection-status',
+            new ConnectionStatusWidget(device, bluetoothManager)
+          );
+          main.toolbar.addItem(
+            'select-lego-model',
+            new LegoBuildSelectorWidget(device)
+          );
+          toolbar.addItem('spacer', Toolbar.createSpacerItem());
+          main.toolbar.addItem('battery-gauge', new BatteryWidget(device, themeManager));
+          main.toolbar.addItem(
+            'device-identifier',
+            new DeviceIdentifierWidget(device)
+          );
+          main.id = 'lego-movehub-control-panel';
+          main.title.label = 'LEGO® Move Hub';
+          main.title.closable = true;
+          main.title.icon = LegoBrickIcon;
+          app.shell.add(main, 'main');
+
 
         } else {
           throw new Error('The device is not a Move Hub.');
@@ -121,19 +114,6 @@ const LEGOMoveHubControlPanelPlugin: JupyterFrontEndPlugin<void> = {
       },
       caption: trans.__('Open a LEGO® Move Hub control panel'),
       label: trans.__('Open a LEGO® Move Hub Control Panel')
-    });
-
-    app.contextMenu.addItem({
-      command: addLEGOMoveHubControlPanel,
-      selector:
-        'jp-tree-item.jp-RunningSessions-item.jp-bluetooth-LEGO-Move-Hub',
-      rank: 1
-    });
-
-    app.contextMenu.addItem({
-      command: addLEGOMoveHubControlPanel,
-      selector: 'jp-tree-item.jp-RunningSessions-item.jp-bluetooth-Move-Hub',
-      rank: 1
     });
   }
 };

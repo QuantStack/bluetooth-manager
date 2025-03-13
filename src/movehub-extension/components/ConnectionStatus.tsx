@@ -46,13 +46,12 @@ export default function ConnectionStatus({ device }: IMoveHubPanelProps) {
 export class ConnectionStatusWidget extends ReactWidget {
   public device: MoveHub;
   public menu: Menu;
-  public commands: CommandRegistry;
 
   constructor(device: MoveHub, bluetoothManager: BluetoothManager) {
     super();
     this.device = device;
-    this.commands = new CommandRegistry();
-    this.commands.addCommand(disconnectMoveHub, {
+    const commands = new CommandRegistry()
+    commands.addCommand(disconnectMoveHub, {
       execute: args => {
         bluetoothManager.disconnectDevice(device);
         return device;
@@ -67,7 +66,7 @@ export class ConnectionStatusWidget extends ReactWidget {
         }
       }
     });
-    this.commands.addCommand(connectMoveHub, {
+    commands.addCommand(connectMoveHub, {
       execute: args => {
         const newDevice = bluetoothManager.connectDevice(movehubRegistryItem);
         return newDevice;
@@ -82,7 +81,7 @@ export class ConnectionStatusWidget extends ReactWidget {
         }
       }
     });
-    this.menu = new Menu({ commands: this.commands });
+    this.menu = new Menu({ commands: commands });
     this.menu.addItem({
       command: disconnectMoveHub
     });
