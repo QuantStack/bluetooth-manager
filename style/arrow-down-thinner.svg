@@ -33,7 +33,7 @@
     <g
        id="g2">
       <rect
-         style="fill:#1976d2;fill-opacity:1;stroke:none;stroke-width:0.56249999;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
+         style="fill:#1976d2;fill-opacity:1;stroke:none;stroke-width:0.5625;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
          id="rect5"
          width="54"
          height="54"
@@ -41,8 +41,8 @@
          y="-65.38707"
          ry="10.983046" />
       <path
-         style="fill:none;stroke:#ffffff;stroke-width:1.90291;stroke-dasharray:none;stroke-dashoffset:0;marker-end:url(#marker5)"
-         d="m 99.991527,-49.937295 v 18.533394"
+         style="fill:none;stroke:#ffffff;stroke-width:2.8125;stroke-dasharray:none;stroke-dashoffset:0;marker-end:url(#marker5)"
+         d="m 99.419481,-53.446601 v 27.97526"
          id="path2" />
     </g>
   </g>
