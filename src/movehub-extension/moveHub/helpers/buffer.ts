@@ -2313,9 +2313,10 @@ function blitBuffer(src: any, dst: Array<any>, offset: number, length: number) {
 function isInstance(obj: any, type: any) {
   return (
     obj instanceof type ||
-    (obj !== null &&
-      obj.constructor !== null &&
-      obj.constructor.name !== null &&
+    /*eslint eqeqeq: ["off"]*/
+    (obj != null &&
+      obj.constructor != null &&
+      obj.constructor.name != null &&
       obj.constructor.name === type.name)
   );
 }
