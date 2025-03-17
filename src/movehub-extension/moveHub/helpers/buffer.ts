@@ -992,13 +992,15 @@ function hexWrite(buf: any, string: any, offset: number, length: number) {
   if (length > strLen / 2) {
     length = strLen / 2;
   }
-  for (let i = 0; i < length; i++) {
+  // eslint-disable-next-line no-var
+  for (var i = 0; i < length; i++) {
     const parsed = parseInt(string.substr(i * 2, 2), 16);
     if (numberIsNaN(parsed)) {
       return i;
     }
     buf[offset + i] = parsed;
   }
+  return i;
 }
 
 function utf8Write(buf: any, string: string, offset: number, length: number) {
@@ -2294,13 +2296,15 @@ function base64ToBytes(str: string) {
 }
 
 function blitBuffer(src: any, dst: Array<any>, offset: number, length: number) {
-  for (let i = 0; i < length; ++i) {
+  // eslint-disable-next-line no-var
+  for (var i = 0; i < length; ++i) {
     if (i + offset >= dst.length || i >= src.length) {
       break;
     }
     dst[i + offset] = src[i];
     return i;
   }
+  return i;
 }
 
 // ArrayBuffer or Uint8Array objects from other contexts (i.e. iframes) do not pass
