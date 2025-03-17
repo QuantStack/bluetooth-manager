@@ -1,4 +1,4 @@
-export interface DeviceOptions {
+export interface IDeviceOptions {
   acceptAllDevices: boolean;
   filters?: [
     {

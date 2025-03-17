@@ -30,9 +30,9 @@ import '../../style/widget.css';
 import { IBluetoothManager } from '../bluetooth/BluetoothManager';
 import { movehubRegistryItem } from '.';
 import { MoveHub } from './moveHub';
-// @ts-ignore
+// @ts-expect-error To be fixed
 import * as ReactDOMClient from 'react-dom/client';
-// @ts-ignore
+// @ts-expect-error To be fixed
 import { Root } from 'react-dom/client';
 //import { DeviceInfoTableComplete } from './components/DeviceInfoTableComplete';
 import { DeviceInfoTableComplete } from './components/DeviceInfoTableComplete';
@@ -135,34 +135,34 @@ export class MoveHubModel extends DOMWidgetModel {
             this.poll();
             break;
           case 'led':
-            this.movehub.led.apply(this.movehub, args);
+            this.movehub.led.call(this.movehub, args);
             break;
           case 'ledAsync':
-            await this.movehub.ledAsync.apply(this.movehub, args);
+            await this.movehub.ledAsync.call(this.movehub, args);
             break;
           case 'motorTime':
-            this.movehub.motorTime.apply(this.movehub, args);
+            this.movehub.motorTime.call(this.movehub, args);
             break;
           case 'motorTimeMulti':
-            this.movehub.motorTimeMulti.apply(this.movehub, args);
+            this.movehub.motorTimeMulti.call(this.movehub, args);
             break;
           case 'motorTimeAsync':
-            await this.movehub.motorTimeAsync.apply(this.movehub, args);
+            await this.movehub.motorTimeAsync.call(this.movehub, args);
             break;
           case 'motorTimeMultiAsync':
-            await this.movehub.motorTimeMultiAsync.apply(this.movehub, args);
+            await this.movehub.motorTimeMultiAsync.call(this.movehub, args);
             break;
           case 'motorAngle':
-            this.movehub.motorAngle.apply(this.movehub, args);
+            this.movehub.motorAngle.call(this.movehub, args);
             break;
           case 'motorAngleMulti':
-            this.movehub.motorAngleMulti.apply(this.movehub, args);
+            this.movehub.motorAngleMulti.call(this.movehub, args);
             break;
           case 'motorAngleAsync':
-            await this.movehub.motorAngleAsync.apply(this.movehub, args);
+            await this.movehub.motorAngleAsync.call(this.movehub, args);
             break;
           case 'motorAngleMultiAsync':
-            await this.movehub.motorAngleMultiAsync.apply(this.movehub, args);
+            await this.movehub.motorAngleMultiAsync.call(this.movehub, args);
             break;
           default:
             console.error(`unknown command "${cmd}"`);

@@ -29,9 +29,9 @@ SOFTWARE.
 
 import { EventEmitter } from '../helpers/eventEmitter';
 import { Buffer } from '../helpers/buffer';
-//import { RawData } from "../types";
+//import { IRawData } from "../types";
 
-interface RawData {
+interface IRawData {
   [key: string]: number;
 }
 
@@ -152,7 +152,7 @@ export class Hub {
       'characteristicvaluechanged',
       event => {
         // https://googlechrome.github.io/samples/web-bluetooth/read-characteristic-value-changed.html
-        // @ts-ignore
+        // @ts-expect-error To be fixed
         const data = Buffer.from(event.target.value.buffer);
         this.parseMessage(data);
       }
@@ -173,6 +173,7 @@ export class Hub {
           this.batteryLevel = data[5];
           this.emit('batteryLevel', data[5]);
         }
+        break;
       }
       case 0x04: {
         clearTimeout(this.portInfoTimeout);
@@ -429,8 +430,8 @@ export class Hub {
    * @param {object} raw raw data
    * @param {function} callback
    */
-  rawCommand(raw: RawData, callback?: () => void) {
-    // @ts-ignore
+  rawCommand(raw: IRawData, callback?: () => void) {
+    // @ts-expect-error To be fixed
     const buf = Buffer.from([
       0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
       0x00, 0x00, 0x00
@@ -451,7 +452,7 @@ export class Hub {
   encodeMotorPower(port: string | number, dutyCycle = 100) {
     const portNum =
       typeof port === 'string' ? this.port2num[port as Port] : port;
-    // @ts-ignore
+    // @ts-expect-error To be fixed
     const buf = Buffer.from([
       0x09,
       0x00,
@@ -498,7 +499,7 @@ export class Hub {
     const portNum =
       typeof port === 'string' ? this.port2num[port as Port] : port;
     this.write(
-      // @ts-ignore
+      // @ts-expect-error To be fixed
       Buffer.from([
         0x0a,
         0x00,
@@ -529,7 +530,7 @@ export class Hub {
     const portNum =
       typeof port === 'string' ? this.port2num[port as Port] : port;
     this.write(
-      // @ts-ignore
+      // @ts-expect-error To be fixed
       Buffer.from([
         0x0a,
         0x00,
@@ -550,16 +551,14 @@ export class Hub {
    Enable hub battery 0x06, 0x00 0x01 0x06 0x02 0x01*/
   enableBatteryUpdates() {
     console.log('enableBatteryUpdates is called');
-    // @ts-ignore
     this.write(
-      // @ts-ignore
+      // @ts-expect-error To be fixed
       Buffer.from([
         0x05, 0x00, 0x01, 0x06, 0x02
       ]) /* enable updates for the battery*/
     );
-    // @ts-ignore
     this.write(
-      // @ts-ignore
+      // @ts-expect-error To be fixed
       Buffer.from([
         0x06, 0x00, 0x01, 0x06, 0x02, 0x01
       ]) /* enable updates for the battery*/
@@ -569,15 +568,14 @@ export class Hub {
  Request hub battery update 0x06, 0x00 0x01 0x06 0x05 0x01*/
   requestBatteryUpdates() {
     console.log('RequestBatteryUpdates is called');
-    // @ts-ignore
     this.write(
-      // @ts-ignore
+      // @ts-expect-error To be fixed
       Buffer.from([
         0x06, 0x00, 0x01, 0x06, 0x05, 0x01
       ]) /* request update for the battery*/
     );
     this.write(
-      // @ts-ignore
+      // @ts-expect-error To be fixed
       Buffer.from([
         0x05, 0x00, 0x01, 0x06, 0x05
       ]) /* request update for the battery*/
@@ -614,7 +612,7 @@ export class Hub {
       data.split(' ').forEach(c => {
         arr.push(parseInt(c, 16));
       });
-      // @ts-ignore
+      // @ts-expect-error To be fixed
       data = Buffer.from(arr);
     }
 
@@ -660,7 +658,7 @@ export class Hub {
     dutyCycleA = 100,
     dutyCycleB = -100
   ) {
-    // @ts-ignore
+    // @ts-expect-error To be fixed
     const buf = Buffer.from([
       0x0d,
       0x00,
@@ -683,7 +681,7 @@ export class Hub {
   }
 
   encodeMotorTime(port: number, seconds: number, dutyCycle = 100) {
-    // @ts-ignore
+    // @ts-expect-error To be fixed
     const buf = Buffer.from([
       0x0c,
       0x00,
@@ -709,7 +707,7 @@ export class Hub {
     dutyCycleA = 100,
     dutyCycleB = -100
   ) {
-    // @ts-ignore
+    // @ts-expect-error To be fixed
     const buf = Buffer.from([
       0x0f,
       0x00,
@@ -734,7 +732,7 @@ export class Hub {
   }
 
   encodeMotorAngle(port: number, angle: number, dutyCycle = 100) {
-    // @ts-ignore
+    // @ts-expect-error To be fixed
     const buf = Buffer.from([
       0x0e,
       0x00,
@@ -764,7 +762,7 @@ export class Hub {
       typeof color === 'string'
         ? this.ledColors.indexOf(color as LedColor)
         : color;
-    // @ts-ignore
+    // @ts-expect-error To be fixed
     return Buffer.from([0x08, 0x00, 0x81, 0x32, 0x11, 0x51, 0x00, colorNum]);
   }
 
@@ -776,7 +774,7 @@ export class Hub {
       typeof color === 'string'
         ? this.ledColors.indexOf(color as LedColor)
         : color;
-    // @ts-ignore
+    // @ts-expect-error To be fixed
     return Buffer.from([0x08, 0x00, 0x81, 0x32, 0x11, 0x51, 0x00, colorNum]);
   }
 }

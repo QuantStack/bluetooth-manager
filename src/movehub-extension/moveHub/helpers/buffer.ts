@@ -76,14 +76,14 @@ function typedArraySupport() {
   // Can typed array instances can be augmented?
   try {
     const arr = new Uint8Array(1);
-    // @ts-ignore
+    // @ts-expect-error To be fixed
     arr.__proto__ = {
       __proto__: Uint8Array.prototype,
       foo: function () {
         return 42;
       }
     };
-    // @ts-ignore
+    // @ts-expect-error To be fixed
     return arr.foo() === 42;
   } catch (e) {
     return false;
@@ -118,7 +118,7 @@ function createBuffer(length: number) {
   }
   // Return an augmented `Uint8Array` instance
   const buf = new Uint8Array(length);
-  // @ts-ignore
+  // @ts-expect-error To be fixed
   buf.__proto__ = Buffer.prototype;
   return buf;
 }
@@ -149,7 +149,7 @@ function Buffer(arg: any, encodingOrOffset: string, length: number): any {
 // Fix subarray() in ES2016. See: https://github.com/feross/buffer/pull/97
 if (
   typeof Symbol !== 'undefined' &&
-  Symbol.species != null /*&&
+  Symbol.species !== null /*&&
   Buffer[Symbol.species] === Buffer*/
 ) {
   Object.defineProperty(Buffer, Symbol.species, {
@@ -171,7 +171,7 @@ function from(value: any, encodingOrOffset: string, length: number): any {
     return fromArrayLike(value);
   }
 
-  if (value == null) {
+  if (value === null) {
     throw TypeError(
       'The first argument must be one of type string, Buffer, ArrayBuffer, Array, ' +
         'or Array-like Object. Received type ' +
@@ -193,7 +193,7 @@ function from(value: any, encodingOrOffset: string, length: number): any {
   }
 
   const valueOf = value.valueOf && value.valueOf();
-  if (valueOf != null && valueOf !== value) {
+  if (valueOf !== null && valueOf !== value) {
     return Buffer.from(valueOf, encodingOrOffset, length);
   }
 
@@ -204,7 +204,7 @@ function from(value: any, encodingOrOffset: string, length: number): any {
 
   if (
     typeof Symbol !== 'undefined' &&
-    Symbol.toPrimitive != null &&
+    Symbol.toPrimitive !== null &&
     typeof value[Symbol.toPrimitive] === 'function'
   ) {
     return Buffer.from(
@@ -258,7 +258,7 @@ function alloc(size: number, fill: number | undefined, encoding: any) {
     // prevents accidentally sending in a number that would
     // be interpretted as a start offset.
     return typeof encoding === 'string'
-      ? // @ts-ignore
+      ? // @ts-expect-error To be fixed
         createBuffer(size).fill(fill, encoding)
       : createBuffer(size).fill(fill);
   }
@@ -307,7 +307,7 @@ function fromString(string: string, encoding: string) {
   const length = byteLength(string, encoding) | 0;
   let buf = createBuffer(length);
 
-  // @ts-ignore
+  // @ts-expect-error To be fixed
   const actual = buf.write(string, encoding);
 
   if (actual !== length) {
@@ -392,16 +392,16 @@ function checked(length: number) {
 }
 
 function SlowBuffer(length: number) {
-  if (+length != length) {
+  if (+length !== length) {
     // eslint-disable-line eqeqeq
     length = 0;
   }
-  // @ts-ignore
+  // @ts-expect-error To be fixed
   return Buffer.alloc(+length);
 }
 
 Buffer.isBuffer = function isBuffer(b: any) {
-  return b != null && b._isBuffer === true && b !== Buffer.prototype; // so Buffer.isBuffer(Buffer.prototype) will be false
+  return b !== null && b._isBuffer === true && b !== Buffer.prototype; // so Buffer.isBuffer(Buffer.prototype) will be false
 };
 
 Buffer.compare = function compare(a: any, b: any) {
@@ -466,7 +466,7 @@ Buffer.concat = function concat(list: Array<any>, length: number) {
   }
 
   if (list.length === 0) {
-    // @ts-ignore
+    // @ts-expect-error To be fixed
     return Buffer.alloc(0);
   }
 
@@ -483,7 +483,7 @@ Buffer.concat = function concat(list: Array<any>, length: number) {
   for (i = 0; i < list.length; ++i) {
     let buf = list[i];
     if (isInstance(buf, Uint8Array)) {
-      // @ts-ignore
+      // @ts-expect-error To be fixed
       buf = Buffer.from(buf);
     }
     if (!Buffer.isBuffer(buf)) {
@@ -495,7 +495,8 @@ Buffer.concat = function concat(list: Array<any>, length: number) {
   return buffer;
 };
 
-function byteLength(string: any, encoding: any) {
+/*eslint prefer-rest-params: "error"*/
+function byteLength(string: any, encoding: any, ...args: any[]) {
   if (Buffer.isBuffer(string)) {
     return string.length;
   }
@@ -511,7 +512,7 @@ function byteLength(string: any, encoding: any) {
   }
 
   const len = string.length;
-  const mustMatch = arguments.length > 2 && arguments[2] === true;
+  const mustMatch = args.length > 0 && args[0] === true;
   if (!mustMatch && len === 0) {
     return 0;
   }
@@ -526,7 +527,7 @@ function byteLength(string: any, encoding: any) {
         return len;
       case 'utf8':
       case 'utf-8':
-        // @ts-ignore
+        // @ts-expect-error To be fixed
         return utf8ToBytes(string).length;
       case 'ucs2':
       case 'ucs-2':
@@ -539,7 +540,7 @@ function byteLength(string: any, encoding: any) {
         return base64ToBytes(string).length;
       default:
         if (loweredCase) {
-          // @ts-ignore
+          // @ts-expect-error To be fixed
           return mustMatch ? -1 : utf8ToBytes(string).length; // assume utf8
         }
         encoding = ('' + encoding).toLowerCase();
@@ -587,7 +588,7 @@ function slowToString(encoding: any, start: number, end: number) {
   if (!encoding) {
     encoding = 'utf8';
   }
-
+  // eslint-disable-next-line no-constant-condition
   while (true) {
     switch (encoding) {
       case 'hex':
@@ -674,15 +675,15 @@ Buffer.prototype.swap64 = function swap64() {
   return this;
 };
 
-Buffer.prototype.toString = function toString() {
+Buffer.prototype.toString = function toString(...args: any[]) {
   const length = this.length;
   if (length === 0) {
     return '';
   }
-  if (arguments.length === 0) {
+  if (args.length === 0) {
     return utf8Slice(this, 0, length);
   }
-  return slowToString.apply(this, arguments);
+  return slowToString.call(args);
 };
 
 Buffer.prototype.toLocaleString = Buffer.prototype.toString;
@@ -848,7 +849,7 @@ function bidirectionalIndexOf(
 
   // Normalize val
   if (typeof val === 'string') {
-    // @ts-ignore
+    // @ts-expect-error To be fixed
     val = Buffer.from(val, encoding);
   }
 
@@ -991,14 +992,13 @@ function hexWrite(buf: any, string: any, offset: number, length: number) {
   if (length > strLen / 2) {
     length = strLen / 2;
   }
-  for (var i = 0; i < length; ++i) {
+  for (let i = 0; i < length; i++) {
     const parsed = parseInt(string.substr(i * 2, 2), 16);
     if (numberIsNaN(parsed)) {
       return i;
     }
     buf[offset + i] = parsed;
   }
-  return i;
 }
 
 function utf8Write(buf: any, string: string, offset: number, length: number) {
@@ -1127,10 +1127,10 @@ Buffer.prototype.toJSON = function toJSON() {
 
 function base64Slice(buf: any, start: number, end: number) {
   if (start === 0 && end === buf.length) {
-    // @ts-ignore
+    // @ts-expect-error To be fixed
     return base64.fromByteArray(buf);
   } else {
-    // @ts-ignore
+    // @ts-expect-error To be fixed
     return base64.fromByteArray(buf.slice(start, end));
   }
 }
@@ -1147,7 +1147,7 @@ function utf8Slice(buf: any, start: number, end: number) {
       firstByte > 0xef ? 4 : firstByte > 0xdf ? 3 : firstByte > 0xbf ? 2 : 1;
 
     if (i + bytesPerSequence <= end) {
-      var secondByte, thirdByte, fourthByte, tempCodePoint;
+      let secondByte, thirdByte, fourthByte, tempCodePoint;
 
       switch (bytesPerSequence) {
         case 1:
@@ -1228,14 +1228,14 @@ const MAX_ARGUMENTS_LENGTH = 0x1000;
 function decodeCodePointsArray(codePoints: any) {
   const len = codePoints.length;
   if (len <= MAX_ARGUMENTS_LENGTH) {
-    return String.fromCharCode.apply(String, codePoints); // avoid extra slice()
+    return String.fromCharCode.call(String, codePoints); // avoid extra slice()
   }
 
   // Decode in chunks to avoid "call stack size exceeded".
   let res = '';
   let i = 0;
   while (i < len) {
-    res += String.fromCharCode.apply(
+    res += String.fromCharCode.call(
       String,
       codePoints.slice(i, (i += MAX_ARGUMENTS_LENGTH))
     );
@@ -1564,7 +1564,7 @@ Buffer.prototype.readFloatLE = function readFloatLE(
   if (!noAssert) {
     checkOffset(offset, 4, this.length);
   }
-  // @ts-ignore
+  // @ts-expect-error To be fixed
   return ieee754.read(this, offset, true, 23, 4);
 };
 
@@ -1576,7 +1576,7 @@ Buffer.prototype.readFloatBE = function readFloatBE(
   if (!noAssert) {
     checkOffset(offset, 4, this.length);
   }
-  // @ts-ignore
+  // @ts-expect-error To be fixed
   return ieee754.read(this, offset, false, 23, 4);
 };
 
@@ -1588,7 +1588,7 @@ Buffer.prototype.readDoubleLE = function readDoubleLE(
   if (!noAssert) {
     checkOffset(offset, 8, this.length);
   }
-  // @ts-ignore
+  // @ts-expect-error To be fixed
   return ieee754.read(this, offset, true, 52, 8);
 };
 
@@ -1600,7 +1600,7 @@ Buffer.prototype.readDoubleBE = function readDoubleBE(
   if (!noAssert) {
     checkOffset(offset, 8, this.length);
   }
-  // @ts-ignore
+  // @ts-expect-error To be fixed
   return ieee754.read(this, offset, false, 52, 8);
 };
 
@@ -1924,7 +1924,7 @@ function writeFloat(
       -3.4028234663852886e38
     );
   }
-  // @ts-ignore
+  // @ts-expect-error To be fixed
   ieee754.write(buf, value, offset, littleEndian, 23, 4);
   return offset + 4;
 }
@@ -1964,7 +1964,7 @@ function writeDouble(
       -1.7976931348623157e308
     );
   }
-  // @ts-ignore
+  // @ts-expect-error To be fixed
   ieee754.write(buf, value, offset, littleEndian, 52, 8);
   return offset + 8;
 }
@@ -2123,7 +2123,7 @@ Buffer.prototype.fill = function fill(
   } else {
     const bytes = Buffer.isBuffer(val)
       ? val
-      : // @ts-ignore
+      : // @ts-expect-error To be fixed
         Buffer.from(val, encoding);
     const len = bytes.length;
     if (len === 0) {
@@ -2289,18 +2289,18 @@ function utf16leToBytes(str: any, units: any) {
 }
 
 function base64ToBytes(str: string) {
-  // @ts-ignore
+  // @ts-expect-error To be fixed
   return base64.toByteArray(base64clean(str));
 }
 
 function blitBuffer(src: any, dst: Array<any>, offset: number, length: number) {
-  for (var i = 0; i < length; ++i) {
+  for (let i = 0; i < length; ++i) {
     if (i + offset >= dst.length || i >= src.length) {
       break;
     }
     dst[i + offset] = src[i];
+    return i;
   }
-  return i;
 }
 
 // ArrayBuffer or Uint8Array objects from other contexts (i.e. iframes) do not pass
@@ -2309,9 +2309,9 @@ function blitBuffer(src: any, dst: Array<any>, offset: number, length: number) {
 function isInstance(obj: any, type: any) {
   return (
     obj instanceof type ||
-    (obj != null &&
-      obj.constructor != null &&
-      obj.constructor.name != null &&
+    (obj !== null &&
+      obj.constructor !== null &&
+      obj.constructor.name !== null &&
       obj.constructor.name === type.name)
   );
 }

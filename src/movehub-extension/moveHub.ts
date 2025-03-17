@@ -1,13 +1,13 @@
 import { HubAsync } from './moveHub/hub/hubAsync';
 import { BluetoothManager } from '../bluetooth/BluetoothManager';
 import { HubControl } from './moveHub/hub-control';
-import { DeviceConfiguration, DEFAULT_CONFIG } from './moveHub/hub/hubAsync';
+import { IDeviceConfiguration, DEFAULT_CONFIG } from './moveHub/hub/hubAsync';
 import { ControlData, DeviceInfo, RawData } from './moveHub/types';
 import { moveHubCharacteristicUUID, moveHubServiceUUID } from '.';
 import { buildShortIdentifier } from '../bluetooth-extension';
 import { ObservableValue } from '@jupyterlab/observables';
 
-export const defaultConfiguration: DeviceConfiguration = {
+export const defaultConfiguration: IDeviceConfiguration = {
   distanceModifier: DEFAULT_CONFIG.METRIC_MODIFIER,
   turnModifier: DEFAULT_CONFIG.TURN_MODIFIER,
   defaultClearDistance: DEFAULT_CONFIG.DEFAULT_CLEAR_DISTANCE,
@@ -40,12 +40,12 @@ export const defaultDeviceInfo: DeviceInfo = {
 };
 
 export class MoveHub extends BluetoothManager.Device {
-  public configuration: DeviceConfiguration;
+  public configuration: IDeviceConfiguration;
   public hub: HubAsync;
   public hubControl: HubControl;
   public controlData: ControlData;
   public deviceInfo: DeviceInfo;
-  public defaultConfiguration: DeviceConfiguration;
+  public defaultConfiguration: IDeviceConfiguration;
   public legoBuild: ObservableValue;
 
   /**
@@ -161,9 +161,9 @@ export class MoveHub extends BluetoothManager.Device {
   /**
    * Update Boost motor and control configuration
    * @method MoveHub#updateConfiguration
-   * @param {DeviceConfiguration} configuration MoveHub motor and control configuration
+   * @param {IDeviceConfiguration} configuration MoveHub motor and control configuration
    */
-  updateConfiguration(configuration: DeviceConfiguration): void {
+  updateConfiguration(configuration: IDeviceConfiguration): void {
     if (!this.hub) {
       return;
     }
