@@ -1,6 +1,6 @@
 import { Signal } from '@lumino/signaling';
 import { Token } from '@lumino/coreutils';
-import { DeviceOptions } from './DeviceOptions';
+import { IDeviceOptions } from './DeviceOptions';
 import { buildCompleteIdentifier } from '../bluetooth-extension';
 import { IDisposable } from '@lumino/disposable';
 
@@ -261,7 +261,7 @@ export interface IDeviceRegistryItem {
   factory: (
     native: BluetoothDevice
   ) => Promise<BluetoothManager.Device | undefined>;
-  options: DeviceOptions;
+  options: IDeviceOptions;
 }
 
 export interface IDeviceRegistry {

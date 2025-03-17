@@ -27,7 +27,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-import { DeviceConfiguration, HubAsync } from './hub/hubAsync';
+import { IDeviceConfiguration, HubAsync } from './hub/hubAsync';
 import { ControlData, DeviceInfo, State } from './types';
 
 type States = {
@@ -40,13 +40,13 @@ class HubControl {
   prevDevice: DeviceInfo;
   control: ControlData;
   prevControl: ControlData;
-  configuration: DeviceConfiguration;
+  configuration: IDeviceConfiguration;
   states: States;
 
   constructor(
     deviceInfo: DeviceInfo,
     controlData: ControlData,
-    configuration: DeviceConfiguration
+    configuration: IDeviceConfiguration
   ) {
     this.hub = null;
     this.deviceInfo = deviceInfo;
@@ -55,7 +55,7 @@ class HubControl {
     this.prevControl = { ...this.control };
   }
 
-  updateConfiguration(configuration: DeviceConfiguration): void {
+  updateConfiguration(configuration: IDeviceConfiguration): void {
     this.configuration = configuration;
   }
 

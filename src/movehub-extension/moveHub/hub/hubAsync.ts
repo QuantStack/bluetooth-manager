@@ -44,18 +44,16 @@ export const DEFAULT_CONFIG = {
   VALID_MOTORS: ['A' as Motor, 'B' as Motor]
 };
 
-const validateConfiguration = (configuration: DeviceConfiguration) => {
+const validateConfiguration = (configuration: IDeviceConfiguration) => {
   configuration.leftMotor =
     configuration.leftMotor || DEFAULT_CONFIG.LEFT_MOTOR;
   configuration.rightMotor =
     configuration.rightMotor || DEFAULT_CONFIG.RIGHT_MOTOR;
 
-  // @ts-ignore
   if (!DEFAULT_CONFIG.VALID_MOTORS.includes(configuration.leftMotor)) {
     throw Error('Define left port port correctly');
   }
 
-  // @ts-ignore
   if (!DEFAULT_CONFIG.VALID_MOTORS.includes(configuration.rightMotor)) {
     throw Error('Define right port port correctly');
   }
@@ -100,7 +98,7 @@ const waitForValueToSet = function (
   });
 };
 
-export interface DeviceConfiguration {
+export interface IDeviceConfiguration {
   distanceModifier?: any;
   turnModifier?: any;
   defaultClearDistance?: any;
@@ -113,7 +111,7 @@ export interface DeviceConfiguration {
 
 export class HubAsync extends Hub {
   hubDisconnected: boolean | null;
-  configuration: DeviceConfiguration;
+  configuration: IDeviceConfiguration;
   portData: any;
   useMetric: boolean;
   modifier: number;
@@ -121,7 +119,7 @@ export class HubAsync extends Hub {
 
   constructor(
     characteristic: BluetoothRemoteGATTCharacteristic,
-    configuration: DeviceConfiguration
+    configuration: IDeviceConfiguration
   ) {
     super(characteristic);
     validateConfiguration(configuration);
@@ -456,7 +454,7 @@ export class HubAsync extends Hub {
     }
   }
 
-  updateConfiguration(configuration: DeviceConfiguration): void {
+  updateConfiguration(configuration: IDeviceConfiguration): void {
     validateConfiguration(configuration);
     this.configuration = configuration;
   }
