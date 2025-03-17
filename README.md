@@ -1,7 +1,5 @@
 # bluetooth_manager
 
-# [![Github Actions Status](https://github.com/QuantStack/bluetooth-manager/workflows/Build/badge.svg)](https://github.com/QuantStack/# bluetooth-manager/actions/workflows/build.yml)
-
 A JupyterLab extension to manage to connect to devices with web bluetooth.
 
 ## Requirements
