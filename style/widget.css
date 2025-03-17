@@ -2,10 +2,9 @@
   display: grid;
   grid-template-columns: 200px 200px 200px 200px;
   grid-gap: 10px;
-  background-color: #fff;
   color: #444;
   background-color: white;
-  padding: 0px 2px;
+  padding: 0 2px;
 }
 
 .box {
@@ -17,8 +16,8 @@
 }
 
 .error-box {
-  background-color: #ffffff;
-  color: #000000;
+  background-color: #fff;
+  color: #000;
   border-radius: 5px;
   padding: 20px;
   font-size: 100%;

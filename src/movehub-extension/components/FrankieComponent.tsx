@@ -22,7 +22,7 @@ export function FrankieComponent({ device }: IMoveHubPanelProps) {
           </h4>
           <MoveForm
             hub={device.hub}
-            label={`Change Frankie's position`}
+            label={"Change Frankie's position"}
             actionButton1={'WakeUp'}
             actionButton2={'SitDown'}
             buttonText1={'Wake up'}
@@ -45,7 +45,7 @@ export function FrankieComponent({ device }: IMoveHubPanelProps) {
           </h4>
           <MoveForm
             hub={device.hub}
-            label={`Move Frankie's tail`}
+            label={"Move Frankie's tail"}
             actionButton1={'RotateIndirect'}
             actionButton2={'RotateDirect'}
             buttonText1={'Left'}

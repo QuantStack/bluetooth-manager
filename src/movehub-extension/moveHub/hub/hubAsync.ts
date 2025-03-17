@@ -51,15 +51,18 @@ const validateConfiguration = (configuration: DeviceConfiguration) => {
     configuration.rightMotor || DEFAULT_CONFIG.RIGHT_MOTOR;
 
   // @ts-ignore
-  if (!DEFAULT_CONFIG.VALID_MOTORS.includes(configuration.leftMotor))
+  if (!DEFAULT_CONFIG.VALID_MOTORS.includes(configuration.leftMotor)) {
     throw Error('Define left port port correctly');
+  }
 
   // @ts-ignore
-  if (!DEFAULT_CONFIG.VALID_MOTORS.includes(configuration.rightMotor))
+  if (!DEFAULT_CONFIG.VALID_MOTORS.includes(configuration.rightMotor)) {
     throw Error('Define right port port correctly');
+  }
 
-  if (configuration.leftMotor === configuration.rightMotor)
+  if (configuration.leftMotor === configuration.rightMotor) {
     throw Error('Left and right motor can not be same');
+  }
 
   configuration.distanceModifier =
     configuration.distanceModifier || DEFAULT_CONFIG.METRIC_MODIFIER;
@@ -82,8 +85,9 @@ const waitForValueToSet = function (
   },
   timeoutMs = 0
 ) {
-  if (compareFunc.bind(this)(valueName))
+  if (compareFunc.bind(this)(valueName)) {
     return Promise.resolve(this[valueName]);
+  }
 
   return new Promise((resolve, reject) => {
     setTimeout(
@@ -413,8 +417,11 @@ export class HubAsync extends Hub {
   }
 
   async driveToDirection(direction: number): Promise<any> {
-    if (direction > 0) return await this.driveUntil();
-    else return await this.drive(-10000);
+    if (direction > 0) {
+      return await this.driveUntil();
+    } else {
+      return await this.drive(-10000);
+    }
   }
 
   /**

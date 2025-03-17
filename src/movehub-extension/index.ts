@@ -4,9 +4,7 @@ import {
 } from '@jupyterlab/application';
 import { ITranslator } from '@jupyterlab/translation';
 import { MainAreaWidget } from '@jupyterlab/apputils';
-import {
-  Toolbar,
-} from '@jupyterlab/ui-components';
+import { Toolbar } from '@jupyterlab/ui-components';
 import {
   IDeviceRegistryItem,
   IBluetoothManager,
@@ -14,9 +12,7 @@ import {
 } from '../bluetooth/BluetoothManager';
 import { MoveHub } from './moveHub';
 import ipymovehubPlugin from './plugin';
-import {
-  LegoBrickIcon,
-} from '../bluetooth/icon';
+import { LegoBrickIcon } from '../bluetooth/icon';
 import { MoveHubPanelWidget } from './components/MoveHubPanel';
 import { LegoBuildSelectorWidget } from './components/LegoBuildSelector';
 import { BatteryWidget } from './components/BatteryGauge';
@@ -36,7 +32,7 @@ export const movehubRegistryItem: IDeviceRegistryItem = {
     optionalServices: [moveHubServiceUUID]
   },
   factory: async (native: BluetoothDevice) => {
-    let device = new MoveHub(native);
+    const device = new MoveHub(native);
     await device.initDevice();
     const hub = device.hub;
 
@@ -54,7 +50,7 @@ const MoveHubRegisterPlugin: JupyterFrontEndPlugin<void> = {
   autoStart: true,
   activate: (
     app: JupyterFrontEnd,
-    bluetoothManager: BluetoothManager,
+    bluetoothManager: BluetoothManager
   ): void => {
     console.log('JupyterLab move-hub-register plugin is activated!');
     bluetoothManager.register(movehubRegistryItem);
@@ -107,7 +103,6 @@ const LEGOMoveHubControlPanelPlugin: JupyterFrontEndPlugin<void> = {
           main.title.closable = true;
           main.title.icon = LegoBrickIcon;
           app.shell.add(main, 'main');
-        
         } else {
           throw new Error('The device is not a Move Hub.');
         }
@@ -118,13 +113,14 @@ const LEGOMoveHubControlPanelPlugin: JupyterFrontEndPlugin<void> = {
 
     app.contextMenu.addItem({
       command: addLEGOMoveHubControlPanel,
-      selector: `jp-tree-item.jp-RunningSessions-item.jp-bluetooth-LEGO-Move-Hub`,
+      selector:
+        'jp-tree-item.jp-RunningSessions-item.jp-bluetooth-LEGO-Move-Hub',
       rank: 1
     });
 
     app.contextMenu.addItem({
       command: addLEGOMoveHubControlPanel,
-      selector: `jp-tree-item.jp-RunningSessions-item.jp-bluetooth-Move-Hub`,
+      selector: 'jp-tree-item.jp-RunningSessions-item.jp-bluetooth-Move-Hub',
       rank: 1
     });
   }

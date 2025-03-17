@@ -45,8 +45,8 @@ export default function ConnectionStatus({ device }: IMoveHubPanelProps) {
 
 export class ConnectionStatusWidget extends ReactWidget {
   public device: MoveHub;
-  public menu: Menu
-  public commands: CommandRegistry
+  public menu: Menu;
+  public commands: CommandRegistry;
 
   constructor(device: MoveHub, bluetoothManager: BluetoothManager) {
     super();
@@ -57,28 +57,29 @@ export class ConnectionStatusWidget extends ReactWidget {
         bluetoothManager.disconnectDevice(device);
         return device;
       },
-      caption: ('Disconnect MoveHub'),
-      label: ('Disconnect MoveHub'),
+      caption: 'Disconnect MoveHub',
+      label: 'Disconnect MoveHub',
       isEnabled: () => {
         if (device.deviceInfo.connected) {
-          return true
+          return true;
+        } else {
+          return false;
         }
-        else { return (false) }
       }
     });
     this.commands.addCommand(connectMoveHub, {
       execute: args => {
-        const newDevice =
-          bluetoothManager.connectDevice(movehubRegistryItem);
+        const newDevice = bluetoothManager.connectDevice(movehubRegistryItem);
         return newDevice;
       },
-      caption: ('Connect MoveHub'),
-      label: ('Connect MoveHub'),
+      caption: 'Connect MoveHub',
+      label: 'Connect MoveHub',
       isEnabled: () => {
         if (device.deviceInfo.connected) {
-          return false
+          return false;
+        } else {
+          return true;
         }
-        else { return (true) }
       }
     });
     this.menu = new Menu({ commands: this.commands });
@@ -88,11 +89,11 @@ export class ConnectionStatusWidget extends ReactWidget {
     this.menu.addItem({
       command: connectMoveHub
     });
-    this.menu.addClass('jp-connection-status-menu')
+    this.menu.addClass('jp-connection-status-menu');
   }
 
   openMenu(event: React.MouseEvent<HTMLDivElement>) {
-    console.log('You have clicked')
+    console.log('You have clicked');
     if (this.menu && typeof this.menu.isVisible !== 'undefined') {
       this.menu.open(event.clientX, event.clientY);
     } else {
@@ -103,8 +104,8 @@ export class ConnectionStatusWidget extends ReactWidget {
   render() {
     return (
       <div
-        title='Open Connection Status Menu'
-        onClick={(event) => this.openMenu(event)}
+        title="Open Connection Status Menu"
+        onClick={event => this.openMenu(event)}
         className="jp-connection-status-button"
       >
         <ConnectionStatus device={this.device} />

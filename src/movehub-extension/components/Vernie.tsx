@@ -1,7 +1,7 @@
 import VernieSVG from '../../../style/VernieSchematic.svg';
 const VernieSVGUrl = `data:image/svg+xml;base64,${btoa(VernieSVG)}`;
 
-export default function Vernie () {
+export default function Vernie() {
   return (
     <div
       style={{
@@ -13,4 +13,4 @@ export default function Vernie () {
       <img src={VernieSVGUrl} alt="Vernie schematics" height="250px" />
     </div>
   );
-};
+}

@@ -629,7 +629,9 @@ export class Hub {
   }
 
   writeFromCue() {
-    if (this.writeCue.length === 0 || this.isWriting) return;
+    if (this.writeCue.length === 0 || this.isWriting) {
+      return;
+    }
 
     const el: any = this.writeCue.shift();
     this.logDebug('Writing to device', el);
@@ -638,7 +640,9 @@ export class Hub {
       .writeValue(el.data)
       .then(() => {
         this.isWriting = false;
-        if (typeof el.callback === 'function') el.callback();
+        if (typeof el.callback === 'function') {
+          el.callback();
+        }
       })
       .catch(err => {
         this.isWriting = false;

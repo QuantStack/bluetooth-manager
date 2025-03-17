@@ -148,7 +148,9 @@ export namespace BluetoothManager {
       const services = await this.native.gatt?.getPrimaryServices();
       if (!services || services.length === 0) {
         throw new Error('No services found on the device.');
-      } else return services;
+      } else {
+        return services;
+      }
     }
 
     async disconnect(): Promise<void> {
