@@ -24,7 +24,7 @@ export function LegoBuildSpecific({ device }: IMoveHubPanelProps) {
     const newLegoBuild = device.legoBuild.get();
     setLegoBuild(newLegoBuild);
   });
-  
+
   return (
     <div>
       <div>{renderSelectedComponent()}</div>

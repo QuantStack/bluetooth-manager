@@ -61,7 +61,11 @@ export function ColorSelector({ device }: IMoveHubPanelProps) {
       <div className="led-color-main-container">
         <div className="led-color-text" style={{ display: 'flex' }}>
           <p style={{ margin: '8px 0px' }}>Current color</p>
-          {(selectedColor !== 'lightblue') ? <ColoredCircleWithText color={selectedColor} text={''} /> : <ColoredCircleWithText color={selectedColor} text={''} />}
+          {selectedColor !== 'lightblue' ? (
+            <ColoredCircleWithText color={selectedColor} text={''} />
+          ) : (
+            <ColoredCircleWithText color={selectedColor} text={''} />
+          )}
         </div>
         <div className="led-color-selector-container">
           <select
@@ -75,7 +79,7 @@ export function ColorSelector({ device }: IMoveHubPanelProps) {
             </option>
             {colors.map(color => (
               <option key={color} value={color}>
-                {(color !== 'lightblue') ? color : 'light blue'}
+                {color !== 'lightblue' ? color : 'light blue'}
               </option>
             ))}
           </select>

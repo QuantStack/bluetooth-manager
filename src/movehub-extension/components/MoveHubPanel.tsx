@@ -4,7 +4,6 @@ import { HubAsync } from '../moveHub/hub/hubAsync';
 import { DeviceInfoTable } from './DeviceInfoTable';
 import { LegoBuildSpecific } from './LegoBuildSpecific';
 
-
 export interface IMoveHubPanelProps {
   device: MoveHub;
 }
@@ -14,9 +13,7 @@ export interface IHubControlProps {
 }
 
 export function MoveHubInfos(props: { device: MoveHub }) {
-  return (
-    <DeviceInfoTable moveHub={props.device} />
-  );
+  return <DeviceInfoTable moveHub={props.device} />;
 }
 
 export function MoveHubPanel({ device }: IMoveHubPanelProps) {

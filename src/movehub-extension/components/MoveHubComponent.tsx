@@ -27,7 +27,7 @@ export function MoveHubComponent({ device }: IMoveHubPanelProps) {
           </h4>
           <MoveForm
             hub={device.hub}
-            label={`Turn motors A et B (°)`}
+            label={'Turn motors A et B (°)'}
             actionButton1={'RotateIndirect'}
             actionButton2={'RotateDirect'}
             buttonText1={'Indirect'}
@@ -49,7 +49,7 @@ export function MoveHubComponent({ device }: IMoveHubPanelProps) {
           </h4>
           <MoveForm
             hub={device.hub}
-            label={`Turn external motor`}
+            label={'Turn external motor'}
             actionButton1="RotateIndirect"
             actionButton2="RotateDirect"
             buttonText1={'Indirect'}

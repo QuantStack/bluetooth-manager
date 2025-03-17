@@ -82,11 +82,15 @@ export class MoveHub extends BluetoothManager.Device {
   logDebug(message?: any, ...optionalParams: any[]): void {
     if (message) {
       //console.warn(message);
-    } else return;
+    } else {
+      return;
+    }
   }
 
   private preCheck(): boolean {
-    if (!this.hub || this.hub.connected === false) return false;
+    if (!this.hub || this.hub.connected === false) {
+      return false;
+    }
     return true;
   }
 
@@ -145,8 +149,9 @@ export class MoveHub extends BluetoothManager.Device {
    * @returns {Promise}
    */
   public async stop(): Promise<any> {
-    if (!this.preCheck()) return;
-    else {
+    if (!this.preCheck()) {
+      return;
+    } else {
       this.controlData.speed = 0;
       this.controlData.turnAngle = 0;
       // control datas values might have always been 0, execute force stop
@@ -159,7 +164,9 @@ export class MoveHub extends BluetoothManager.Device {
    * @param {DeviceConfiguration} configuration MoveHub motor and control configuration
    */
   updateConfiguration(configuration: DeviceConfiguration): void {
-    if (!this.hub) return;
+    if (!this.hub) {
+      return;
+    }
     this.hub.updateConfiguration(configuration);
     this.hubControl.updateConfiguration(configuration);
   }
@@ -173,7 +180,9 @@ export class MoveHub extends BluetoothManager.Device {
    * `white`
    */
   led(color: boolean | number | string): void {
-    if (!this.preCheck()) return;
+    if (!this.preCheck()) {
+      return;
+    }
     this.hub.led(color);
   }
 
@@ -187,7 +196,9 @@ export class MoveHub extends BluetoothManager.Device {
    * @returns {Promise}
    */
   async ledAsync(color: boolean | number | string): Promise<any> {
-    if (!this.preCheck()) return;
+    if (!this.preCheck()) {
+      return;
+    }
     return await this.hub.ledAsync(color);
   }
 
@@ -199,7 +210,9 @@ export class MoveHub extends BluetoothManager.Device {
    * is counterclockwise.
    */
   motorTime(port: string | number, seconds: number, dutyCycle = 100): void {
-    if (!this.preCheck()) return;
+    if (!this.preCheck()) {
+      return;
+    }
     this.hub.motorTime(port, seconds, dutyCycle);
   }
 
@@ -219,7 +232,9 @@ export class MoveHub extends BluetoothManager.Device {
     dutyCycle: number = 100,
     wait: boolean = true
   ): Promise<void> {
-    if (!this.preCheck()) return;
+    if (!this.preCheck()) {
+      return;
+    }
     await this.hub.motorTimeAsync(port, seconds, dutyCycle, wait);
   }
 
@@ -237,7 +252,9 @@ export class MoveHub extends BluetoothManager.Device {
     dutyCycleA: number = 100,
     dutyCycleB: number = 100
   ): void {
-    if (!this.preCheck()) return;
+    if (!this.preCheck()) {
+      return;
+    }
     this.hub.motorTimeMulti(seconds, dutyCycleA, dutyCycleB);
   }
 
@@ -258,7 +275,9 @@ export class MoveHub extends BluetoothManager.Device {
     dutyCycleB: number = 100,
     wait: boolean = true
   ): Promise<void> {
-    if (!this.preCheck()) return;
+    if (!this.preCheck()) {
+      return;
+    }
     await this.hub.motorTimeMultiAsync(seconds, dutyCycleA, dutyCycleB, wait);
   }
 
@@ -274,7 +293,9 @@ export class MoveHub extends BluetoothManager.Device {
     angle: number,
     dutyCycle: number = 100
   ): void {
-    if (!this.preCheck()) return;
+    if (!this.preCheck()) {
+      return;
+    }
     this.hub.motorAngle(port, angle, dutyCycle);
   }
 
@@ -294,7 +315,9 @@ export class MoveHub extends BluetoothManager.Device {
     dutyCycle: number = 100,
     wait: boolean = true
   ): Promise<void> {
-    if (!this.preCheck()) return;
+    if (!this.preCheck()) {
+      return;
+    }
     await this.hub.motorAngleAsync(port, angle, dutyCycle, wait);
   }
 
@@ -312,7 +335,9 @@ export class MoveHub extends BluetoothManager.Device {
     dutyCycleA: number = 100,
     dutyCycleB: number = 100
   ): void {
-    if (!this.preCheck()) return;
+    if (!this.preCheck()) {
+      return;
+    }
     this.hub.motorAngleMulti(angle, dutyCycleA, dutyCycleB);
   }
 
@@ -333,7 +358,9 @@ export class MoveHub extends BluetoothManager.Device {
     dutyCycleB: number = 100,
     wait: boolean = true
   ): Promise<void> {
-    if (!this.preCheck()) return;
+    if (!this.preCheck()) {
+      return;
+    }
     await this.hub.motorAngleMultiAsync(angle, dutyCycleA, dutyCycleB, wait);
   }
 
@@ -345,7 +372,9 @@ export class MoveHub extends BluetoothManager.Device {
    * @returns {Promise}
    */
   async drive(distance: number, wait: boolean = true): Promise<any> {
-    if (!this.preCheck()) return;
+    if (!this.preCheck()) {
+      return;
+    }
     return await this.hub.drive(distance, wait);
   }
 
@@ -357,7 +386,9 @@ export class MoveHub extends BluetoothManager.Device {
    * @returns {Promise}
    */
   async turn(degrees: number, wait: boolean = true): Promise<void> {
-    if (!this.preCheck()) return;
+    if (!this.preCheck()) {
+      return;
+    }
     return await this.hub.turn(degrees, wait);
   }
 
@@ -370,7 +401,9 @@ export class MoveHub extends BluetoothManager.Device {
    * @returns {Promise}
    */
   async driveUntil(distance: number = 0, wait: boolean = true): Promise<any> {
-    if (!this.preCheck()) return;
+    if (!this.preCheck()) {
+      return;
+    }
     return await this.hub.driveUntil(distance, wait);
   }
 
@@ -382,7 +415,9 @@ export class MoveHub extends BluetoothManager.Device {
    * @returns {Promise}
    */
   async turnUntil(direction: number = 1, wait: boolean = true): Promise<any> {
-    if (!this.preCheck()) return;
+    if (!this.preCheck()) {
+      return;
+    }
     return await this.hub.turnUntil(direction, wait);
   }
 
@@ -391,7 +426,9 @@ export class MoveHub extends BluetoothManager.Device {
    * @param {object} raw raw data
    */
   rawCommand(raw: RawData): void {
-    if (!this.preCheck()) return;
+    if (!this.preCheck()) {
+      return;
+    }
     return this.hub.rawCommand(raw);
   }
 }

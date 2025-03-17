@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState } from 'react';
 
 interface InputFieldProps {
   type: string;
@@ -13,7 +13,9 @@ export default function InputField(props: InputFieldProps) {
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const newValue = event.target.value;
     setInputValue(newValue);
-    if (props.onChange) props.onChange(newValue);
+    if (props.onChange) {
+      props.onChange(newValue);
+    }
   };
 
   return (

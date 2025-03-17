@@ -8,7 +8,6 @@ export function VernieComponent({ device }: IMoveHubPanelProps) {
   return (
     <>
       <div className="vernie-control-grid-container">
-
         <div className="vernie-control-grid-item-left">
           <Vernie />
         </div>
@@ -24,7 +23,7 @@ export function VernieComponent({ device }: IMoveHubPanelProps) {
           </h4>
           <MoveForm
             hub={device.hub}
-            label={`Drive (cm) or turn (°)`}
+            label={'Drive (cm) or turn (°)'}
             actionButton1="Drive"
             actionButton2="Turn"
             buttonText1={'Drive'}
@@ -46,7 +45,7 @@ export function VernieComponent({ device }: IMoveHubPanelProps) {
           </h4>
           <MoveForm
             hub={device.hub}
-            label={`Turn Vernie's head (°)`}
+            label={"Turn Vernie's head (°)"}
             actionButton1="RotateIndirect"
             actionButton2="RotateDirect"
             buttonText1={'Right'}
@@ -63,7 +62,6 @@ export function VernieComponent({ device }: IMoveHubPanelProps) {
         <div className="vernie-control-grid-item-right">
           <ManualControl moveHub={device} />
         </div>
-
       </div>
     </>
   );

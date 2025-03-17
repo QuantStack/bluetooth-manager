@@ -44,10 +44,37 @@ export function DeviceInfoTableComplete({ moveHub }: { moveHub: MoveHub }) {
             <td className="custom-table-td" style={{ fontWeight: '600' }}>
               {'Status'}
             </td>
-            <td className="custom-table-td">{(deviceState.connected) ? <ColoredCircleWithText color={'green'} text={'connected'} /> : <ColoredCircleWithText color={'red'} text={'disconnected'} />}</td>
-            <td className="custom-table-td">{(deviceState.connected) ? <div>{deviceState.identifier}</div> : <div></div>}</td>
-            <td className="custom-table-td">{(deviceState.connected && deviceState.ledColor) ? <ColoredCircleWithText color={deviceState.ledColor} text={deviceState.ledColor} /> : <div></div>}</td>
-            <td className="custom-table-td">{(deviceState.connected && deviceState.batteryLevel) ? <div>{deviceState.batteryLevel + '%'}</div> : <div></div>} </td>
+            <td className="custom-table-td">
+              {deviceState.connected ? (
+                <ColoredCircleWithText color={'green'} text={'connected'} />
+              ) : (
+                <ColoredCircleWithText color={'red'} text={'disconnected'} />
+              )}
+            </td>
+            <td className="custom-table-td">
+              {deviceState.connected ? (
+                <div>{deviceState.identifier}</div>
+              ) : (
+                <div></div>
+              )}
+            </td>
+            <td className="custom-table-td">
+              {deviceState.connected && deviceState.ledColor ? (
+                <ColoredCircleWithText
+                  color={deviceState.ledColor}
+                  text={deviceState.ledColor}
+                />
+              ) : (
+                <div></div>
+              )}
+            </td>
+            <td className="custom-table-td">
+              {deviceState.connected && deviceState.batteryLevel ? (
+                <div>{deviceState.batteryLevel + '%'}</div>
+              ) : (
+                <div></div>
+              )}{' '}
+            </td>
           </tr>
         </tbody>
       </table>
@@ -67,16 +94,45 @@ export function DeviceInfoTableComplete({ moveHub }: { moveHub: MoveHub }) {
             <td className="custom-table-td" style={{ fontWeight: '600' }}>
               {'Sensors'}
             </td>
-            <td className="custom-table-td">{(deviceState.connected) ? `${deviceState.tilt.roll} °` : <div></div>}</td>
-            <td className="custom-table-td">{(deviceState.connected) ? `${deviceState.tilt.pitch} °` : <div></div>}</td>
-            <td className="custom-table-td">{(deviceState.connected) ? `${deviceState.tilt.yaw} °` : <div></div>} </td>
             <td className="custom-table-td">
-              {(deviceState.connected) ?
-                (deviceState.distance === Infinity ? 'Infinity' : `${deviceState.distance} mm`)
-                : <div></div>
-              }
+              {deviceState.connected ? (
+                `${deviceState.tilt.roll} °`
+              ) : (
+                <div></div>
+              )}
             </td>
-            <td className="custom-table-td">{(deviceState.connected) ? <div>{deviceState.color}</div> : <div></div>}</td>
+            <td className="custom-table-td">
+              {deviceState.connected ? (
+                `${deviceState.tilt.pitch} °`
+              ) : (
+                <div></div>
+              )}
+            </td>
+            <td className="custom-table-td">
+              {deviceState.connected ? (
+                `${deviceState.tilt.yaw} °`
+              ) : (
+                <div></div>
+              )}{' '}
+            </td>
+            <td className="custom-table-td">
+              {deviceState.connected ? (
+                deviceState.distance === Infinity ? (
+                  'Infinity'
+                ) : (
+                  `${deviceState.distance} mm`
+                )
+              ) : (
+                <div></div>
+              )}
+            </td>
+            <td className="custom-table-td">
+              {deviceState.connected ? (
+                <div>{deviceState.color}</div>
+              ) : (
+                <div></div>
+              )}
+            </td>
           </tr>
         </tbody>
       </table>
@@ -97,22 +153,82 @@ export function DeviceInfoTableComplete({ moveHub }: { moveHub: MoveHub }) {
               {' '}
               Angle{' '}
             </td>
-            <td className="custom-table-td">{(deviceState.connected) ? `${deviceState.ports.A.value} ° ` : <div></div>}</td>
-            <td className="custom-table-td">{(deviceState.connected) ? `${deviceState.ports.B.value} ° ` : <div></div>}</td>
-            <td className="custom-table-td">{(deviceState.connected) ? `${deviceState.ports.AB.value} ° ` : <div></div>}</td>
-            <td className="custom-table-td">{(deviceState.connected) ? `${deviceState.ports.C.value} ° ` : <div></div>}</td>
-            <td className="custom-table-td">{(deviceState.connected) ? `${deviceState.ports.D.value} ° ` : <div></div>}</td>
+            <td className="custom-table-td">
+              {deviceState.connected ? (
+                `${deviceState.ports.A.value} ° `
+              ) : (
+                <div></div>
+              )}
+            </td>
+            <td className="custom-table-td">
+              {deviceState.connected ? (
+                `${deviceState.ports.B.value} ° `
+              ) : (
+                <div></div>
+              )}
+            </td>
+            <td className="custom-table-td">
+              {deviceState.connected ? (
+                `${deviceState.ports.AB.value} ° `
+              ) : (
+                <div></div>
+              )}
+            </td>
+            <td className="custom-table-td">
+              {deviceState.connected ? (
+                `${deviceState.ports.C.value} ° `
+              ) : (
+                <div></div>
+              )}
+            </td>
+            <td className="custom-table-td">
+              {deviceState.connected ? (
+                `${deviceState.ports.D.value} ° `
+              ) : (
+                <div></div>
+              )}
+            </td>
           </tr>
           <tr className="custom-table-tr">
             <td className="custom-table-td" style={{ fontWeight: '600' }}>
               {' '}
               Action{' '}
             </td>
-            <td className="custom-table-td">{(deviceState.connected) ? `${deviceState.ports.A.action}` : <div></div>}</td>
-            <td className="custom-table-td">{(deviceState.connected) ? `${deviceState.ports.B.action}` : <div></div>}</td>
-            <td className="custom-table-td">{(deviceState.connected) ? `${deviceState.ports.AB.action}` : <div></div>}</td>
-            <td className="custom-table-td">{(deviceState.connected) ? `${deviceState.ports.C.action}` : <div></div>}</td>
-            <td className="custom-table-td">{(deviceState.connected) ? `${deviceState.ports.D.action}` : <div></div>}</td>
+            <td className="custom-table-td">
+              {deviceState.connected ? (
+                `${deviceState.ports.A.action}`
+              ) : (
+                <div></div>
+              )}
+            </td>
+            <td className="custom-table-td">
+              {deviceState.connected ? (
+                `${deviceState.ports.B.action}`
+              ) : (
+                <div></div>
+              )}
+            </td>
+            <td className="custom-table-td">
+              {deviceState.connected ? (
+                `${deviceState.ports.AB.action}`
+              ) : (
+                <div></div>
+              )}
+            </td>
+            <td className="custom-table-td">
+              {deviceState.connected ? (
+                `${deviceState.ports.C.action}`
+              ) : (
+                <div></div>
+              )}
+            </td>
+            <td className="custom-table-td">
+              {deviceState.connected ? (
+                `${deviceState.ports.D.action}`
+              ) : (
+                <div></div>
+              )}
+            </td>
           </tr>
         </tbody>
       </table>

@@ -31,9 +31,9 @@ import { IBluetoothManager } from '../bluetooth/BluetoothManager';
 import { movehubRegistryItem } from '.';
 import { MoveHub } from './moveHub';
 // @ts-ignore
-import * as ReactDOMClient from "react-dom/client";
+import * as ReactDOMClient from 'react-dom/client';
 // @ts-ignore
-import { Root } from "react-dom/client";
+import { Root } from 'react-dom/client';
 //import { DeviceInfoTableComplete } from './components/DeviceInfoTableComplete';
 import { DeviceInfoTableComplete } from './components/DeviceInfoTableComplete';
 
@@ -243,11 +243,11 @@ export class MoveHubView extends DOMWidgetView {
   private root: Root | null = null;
 
   async render() {
-    this.el.classList.add("jupyter-react-widget");
+    this.el.classList.add('jupyter-react-widget');
     this.root = ReactDOMClient.createRoot(this.el);
-    const model = this.model as MoveHubModel
-    const movehub = model.movehub
-    this.root.render(<DeviceInfoTableComplete moveHub={ movehub } />);
+    const model = this.model as MoveHubModel;
+    const movehub = model.movehub;
+    this.root.render(<DeviceInfoTableComplete moveHub={movehub} />);
   }
 
   remove() {

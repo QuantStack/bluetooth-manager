@@ -13,22 +13,32 @@ export interface IMoveFormProps {
   unit?: string;
   port: string;
   caution?: string;
-  dutyCycleDirect: number
-  dutyCycleIndirect: number /*dutyCycle: motor power percentage from `-100` to `100`. If a negative value is given rotation is counterclockwise or direct*/
+  dutyCycleDirect: number;
+  dutyCycleIndirect: number /*dutyCycle: motor power percentage from `-100` to `100`. If a negative value is given rotation is counterclockwise or direct*/;
 }
 
 export function MoveForm(props: IMoveFormProps) {
   const [inputValue, setInputValue] = useState('0');
   const hub = props.hub;
 
-  const selectMove= (action: string) => {
+  const selectMove = (action: string) => {
     return () => {
       switch (action) {
         case 'RotateIndirect':
-          hub.motorAngle(props.port, Number(inputValue), props.dutyCycleIndirect, () => false);
+          hub.motorAngle(
+            props.port,
+            Number(inputValue),
+            props.dutyCycleIndirect,
+            () => false
+          );
           break;
         case 'RotateDirect':
-          hub.motorAngle(props.port, Number(inputValue), props.dutyCycleDirect, () => false); 
+          hub.motorAngle(
+            props.port,
+            Number(inputValue),
+            props.dutyCycleDirect,
+            () => false
+          );
           break;
         case 'Drive':
           hub.drive(Number(inputValue));
@@ -47,7 +57,7 @@ export function MoveForm(props: IMoveFormProps) {
           break;
       }
     };
-  }
+  };
 
   return (
     <div>

@@ -13,7 +13,6 @@ import {
   BluetoothManager
 } from '../bluetooth/BluetoothManager';
 
-
 export namespace CommandIDs {
   export const openDeviceRegistryDialog =
     'bluetooth-manager:open-dialog-for-devices-registry';
@@ -29,7 +28,6 @@ export function buildShortIdentifier(native: BluetoothDevice): string {
   const identifier = native.id;
   return identifier;
 }
-
 
 const BluetoothManagerPlugin: JupyterFrontEndPlugin<IBluetoothManager> = {
   id: 'bluetooh-manager:bluetooth-manager-plugin',
@@ -74,7 +72,7 @@ const BluetoothSidebarPlugin: JupyterFrontEndPlugin<void> = {
     function createTestFunction(device: BluetoothManager.Device) {
       return function test(node: HTMLElement): boolean {
         const testString = buildCompleteIdentifier(device.native);
-        return node.title === testString; 
+        return node.title === testString;
       };
     }
 
@@ -96,7 +94,7 @@ const BluetoothSidebarPlugin: JupyterFrontEndPlugin<void> = {
     /* Adding commands to the context menu of the relevant connected device*/
     app.contextMenu.addItem({
       command: CommandIDs.disconnectDevice,
-      selector: `jp-tree-item.jp-RunningSessions-item.jp-bluetooth-Move-Hub`,
+      selector: 'jp-tree-item.jp-RunningSessions-item.jp-bluetooth-Move-Hub',
       rank: 0
     });
 
@@ -115,7 +113,7 @@ const BluetoothSidebarPlugin: JupyterFrontEndPlugin<void> = {
               if (item.identifier === result.value) {
                 await bluetoothManager.connectDevice(item);
               } else {
-                console.warn(`There is no corresponding item in the registry!`);
+                console.warn('There is no corresponding item in the registry!');
               }
             });
           }
@@ -183,7 +181,7 @@ export class DropDownRegistry
   getValue(): string {
     return this._selectList.value;
   }
-  
+
   private _selectList: HTMLSelectElement;
   public registry: BluetoothManager.DeviceRegistry;
 }
