@@ -173,7 +173,15 @@ export class Hub {
           this.batteryLevel = data[5];
           this.emit('batteryLevel', data[5]);
         }
-        break;
+        if (data.length === 11 && data[3] === 0x0D && data[4] === 0x06) {
+          /* hub property reference : primary MAC address 0x0D*/
+          const payload = data.slice(5, 11);
+          let PrimaryMACAddress: Array<string> = [];
+          payload.forEach((item: number) => {
+            PrimaryMACAddress.push(item.toString(16).toUpperCase())
+          })
+          console.log('MAC address:', PrimaryMACAddress)
+        }
       }
       case 0x04: {
         clearTimeout(this.portInfoTimeout);
@@ -191,6 +199,8 @@ export class Hub {
             this.emit('connect');
             this.enableBatteryUpdates();
             this.requestBatteryUpdates();
+            this.enablePrimaryMACAddressUpdates();
+            this.requestPrimaryMACAddressUpdates();
           }
         }, 1000);
 
@@ -214,8 +224,8 @@ export class Hub {
         break;
       }
       case 0x05: {
-        this.log('Malformed message');
-        this.log('<', data);
+        /*this.log('Malformed message');
+        this.log('<', data);*/
         break;
       }
       case 0x45: {
@@ -550,13 +560,7 @@ export class Hub {
   /**
    Enable hub battery 0x06, 0x00 0x01 0x06 0x02 0x01*/
   enableBatteryUpdates() {
-    console.log('enableBatteryUpdates is called');
-    this.write(
-      // @ts-expect-error To be fixed
-      Buffer.from([
-        0x05, 0x00, 0x01, 0x06, 0x02
-      ]) /* enable updates for the battery*/
-    );
+    // @ts-ignore
     this.write(
       // @ts-expect-error To be fixed
       Buffer.from([
@@ -567,20 +571,38 @@ export class Hub {
   /**
  Request hub battery update 0x06, 0x00 0x01 0x06 0x05 0x01*/
   requestBatteryUpdates() {
-    console.log('RequestBatteryUpdates is called');
+    // @ts-ignore
     this.write(
       // @ts-expect-error To be fixed
       Buffer.from([
         0x06, 0x00, 0x01, 0x06, 0x05, 0x01
       ]) /* request update for the battery*/
     );
+  }
+
+  /**
+   Enable hub battery 0x06, 0x00 0x01 0x06 0x02 0x01*/
+  enablePrimaryMACAddressUpdates() {
+    // @ts-ignore
     this.write(
       // @ts-expect-error To be fixed
       Buffer.from([
-        0x05, 0x00, 0x01, 0x06, 0x05
-      ]) /* request update for the battery*/
+        0x06, 0x00, 0x01, 0x0D, 0x02, 0x01
+      ]) /* enable updates for the primary MAC address*/
     );
   }
+  /**
+ Request hub battery update 0x06, 0x00 0x01 0x06 0x05 0x01*/
+  requestPrimaryMACAddressUpdates() {
+    // @ts-ignore
+    this.write(
+      // @ts-ignore
+      Buffer.from([
+        0x06, 0x00, 0x01, 0x0D, 0x05, 0x01
+      ]) /* request update for the primary MAC address*/
+    );
+  }
+
 
   subscribeAll() {
     Object.entries(this.ports).forEach(([port, data]) => {
