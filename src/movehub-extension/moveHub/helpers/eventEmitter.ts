@@ -68,13 +68,13 @@ export class EventEmitter<T extends string> {
       return;
     }
 
-    [...this.events[event]].forEach(listener => listener.call(this, args));
+    [...this.events[event]].forEach(listener => listener.apply(this, args));
   }
 
   public once(event: string, listener: Listener): () => void {
     const remove: () => void = this.on(event, (...args: any[]) => {
       remove();
-      listener.call(this, args);
+      listener.apply(this, args);
     });
 
     return remove;
