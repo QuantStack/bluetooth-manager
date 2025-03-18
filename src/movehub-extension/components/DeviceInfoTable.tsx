@@ -32,6 +32,7 @@ export function DeviceInfoTable({ moveHub }: { moveHub: MoveHub }) {
         <thead className="custom-table-thead">
           <tr className="custom-table-tr">
             <th className="custom-table-th"> </th>
+            <th className="custom-table-th">MAC Address</th>
             <th className="custom-table-th">Roll</th>
             <th className="custom-table-th">Pitch</th>
             <th className="custom-table-th">Yaw</th>
@@ -42,7 +43,14 @@ export function DeviceInfoTable({ moveHub }: { moveHub: MoveHub }) {
         <tbody>
           <tr className="custom-table-tr">
             <td className="custom-table-td" style={{ fontWeight: '600' }}>
-              {'Sensors'}
+              {'Information / Sensors'}
+            </td>
+            <td className="custom-table-td">
+              {deviceState.connected ? (
+                `${deviceState.primaryMACAddress}`
+              ) : (
+                <div></div>
+              )}
             </td>
             <td className="custom-table-td">
               {deviceState.connected ? (

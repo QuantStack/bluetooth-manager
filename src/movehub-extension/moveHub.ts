@@ -36,7 +36,8 @@ export const defaultDeviceInfo: DeviceInfo = {
   connected: false,
   ledColor: 'blue',
   batteryLevel: undefined,
-  identifier: ''
+  identifier: '',
+  primaryMACAddress: ''
 };
 
 export class MoveHub extends BluetoothManager.Device {
