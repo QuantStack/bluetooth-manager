@@ -3,6 +3,7 @@ import { Token } from '@lumino/coreutils';
 import { IDeviceOptions } from './DeviceOptions';
 import { buildCompleteIdentifier } from '../bluetooth-extension';
 import { IDisposable } from '@lumino/disposable';
+import { Dialog, showDialog } from '@jupyterlab/apputils';
 
 /**
  * A class used to update the list of connected device and the related signals used to rerender the connected devices section.
@@ -36,8 +37,7 @@ export class BluetoothManager implements IBluetoothManager {
     if (native) {
       const device = await registryItem.factory(native);
       if (device && device.isConnected) {
-        this.addDeviceToList(device!);
-
+        this.addDeviceToList(device);
         device.disconnected.connect(async () => {
           this.removeDeviceFromList(device);
         });
@@ -93,17 +93,40 @@ export class BluetoothManager implements IBluetoothManager {
     return this._registry;
   }
 
+  async checkWebBluetoothSupport(): Promise<boolean> {
+    const isWebBluetoothSupported: boolean = navigator.bluetooth ? true : false;
+    if (isWebBluetoothSupported === false) {
+      showDialog({
+        title: ('Error'),
+        body: (
+          'Web Bluetooth is not supported on your browser. It works on Chrome and Edge (Firefox and Explorer are not supported). \n Please also check that the Web Bluetooth flag is properly set to enabled in the Chrome flags (chrome://flags/).'
+        ),
+        buttons: [
+          Dialog.okButton({ label: ('Close') })
+        ]
+      });
+    }
+    return isWebBluetoothSupported
+  }
+
   async requestDevice(
     registryItem: IDeviceRegistryItem
   ): Promise<BluetoothDevice | undefined> {
-    try {
-      const native = await navigator.bluetooth.requestDevice(
-        registryItem.options
-      );
-      return native;
-    } catch (error) {
-      console.error(error);
+    const isWebBluetoothSupported = await this.checkWebBluetoothSupport()
+    if (isWebBluetoothSupported) {
+      try {
+        const native = await navigator.bluetooth.requestDevice(
+          registryItem.options
+        );
+        return native;
+      } catch (error) {
+        console.error(error);
+      }
     }
+    else {
+      return;
+    }
+
   }
 
   private _deviceList: Array<BluetoothManager.Device>;
