@@ -114,6 +114,7 @@ class HubControl {
     await this.hub.ledAsync('green');
     this.deviceInfo.ledColor = 'green';
     this.deviceInfo.batteryLevel = this.hub.batteryLevel;
+    this.deviceInfo.primaryMACAddress = this.hub.primaryMACAddress;
     this.hub.emitter.on('batteryLevel', (batteryLevel: any) => {
       if (this.hub?.batteryLevel) {
         this.deviceInfo.batteryLevel = this.hub.batteryLevel;

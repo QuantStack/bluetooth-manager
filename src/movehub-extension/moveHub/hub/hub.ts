@@ -82,6 +82,7 @@ export class Hub {
   rssi: number;
   reconnect: boolean;
   batteryLevel: number | undefined;
+  primaryMACAddress: string | undefined;
   writeCue: any = [];
   isWriting: boolean = false;
 
@@ -176,11 +177,27 @@ export class Hub {
         if (data.length === 11 && data[3] === 0x0D && data[4] === 0x06) {
           /* hub property reference : primary MAC address 0x0D*/
           const payload = data.slice(5, 11);
-          let PrimaryMACAddress: Array<string> = [];
-          payload.forEach((item: number) => {
-            PrimaryMACAddress.push(item.toString(16).toUpperCase())
+          let primaryMACAddress = "";
+          payload.forEach((item: number, index: number) => {
+
+            if (index !== payload.length - 1) {
+              if (item < 10) {
+                primaryMACAddress = primaryMACAddress + "0" + item.toString(16).toUpperCase() + ':';
+              }
+              else {
+                primaryMACAddress = primaryMACAddress + item.toString(16).toUpperCase() + ':';
+              }
+            }
+            else {
+              if (item < 10){
+                primaryMACAddress = primaryMACAddress + "0" + item.toString(16).toUpperCase();
+              }
+              else {
+                primaryMACAddress = primaryMACAddress + item.toString(16).toUpperCase();
+              }
+            }
           })
-          console.log('MAC address:', PrimaryMACAddress)
+          this.primaryMACAddress = primaryMACAddress;
         }
       }
       case 0x04: {

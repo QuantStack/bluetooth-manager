@@ -58,6 +58,7 @@ export type DeviceInfo = {
   ledColor: string | undefined;
   batteryLevel: number | undefined;
   identifier: string;
+  primaryMACAddress: string | undefined;
 };
 
 /** Input data to used on manual and AI control */
