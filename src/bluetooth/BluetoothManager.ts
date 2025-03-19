@@ -71,7 +71,6 @@ export class BluetoothManager implements IBluetoothManager {
 
   // Method to remove a device from the list
   removeDeviceFromList(device: BluetoothManager.Device): void {
-    console.warn('removeDeviceFromList is called!', device);
     const index = this._deviceList.indexOf(device);
     if (index > -1) {
       this._deviceList.splice(index, 1);
@@ -119,14 +118,10 @@ export class BluetoothManager implements IBluetoothManager {
   ): Promise<BluetoothDevice | undefined> {
     const isWebBluetoothSupported = await this.checkWebBluetoothSupport()
     if (isWebBluetoothSupported) {
-      try {
-        const native = await navigator.bluetooth.requestDevice(
-          registryItem.options
-        );
-        return native;
-      } catch (error) {
-        console.error(error);
-      }
+      const native = await navigator.bluetooth.requestDevice(
+        registryItem.options
+      );
+      return native;
     }
     else {
       return;
@@ -169,18 +164,69 @@ export namespace BluetoothManager {
         this.isConnected = false;
         this.disconnected.emit(true);
       });
+      const server = this.native.gatt
+      if (server) {
+        const timeout = 5000;
+        const connectWithTimeout = new Promise<void>((resolve, reject) => {
+        const timeoutId = setTimeout(() => {
+            reject(
+              new Error('Connection to GATT server timed out'));
+            server.disconnect();
+            this.dispose();
+          }, timeout);
 
-      await this.native.gatt?.connect();
-      this.isConnected = true;
-      this.connected.emit(true);
-      this.isDisposed = false;
-      const services = await this.native.gatt?.getPrimaryServices();
-      if (!services || services.length === 0) {
-        throw new Error('No services found on the device.');
-      } else {
-        return services;
+          server.connect().then(async () => {
+            clearTimeout(timeoutId);
+            resolve();
+            this.isConnected = true;
+            this.connected.emit(true);
+          })
+            .catch((error) => {
+              server.disconnect();
+              reject(error);
+            });
+        });
+        await connectWithTimeout
+        if (server.connected === true) {
+          const services = await server.getPrimaryServices();
+          if (!services || services.length === 0) {
+            throw new Error('Server exists but no service found on the device.');
+          } else { return services; }
+        }
+        else {
+          throw new Error('There is no connection to server. No attempt to get a service.')
+        }
+      }
+      else {
+        throw new Error('Server is not defined.');
       }
     }
+
+    /*async connectAndGetAllServices(): Promise<
+      Array<BluetoothRemoteGATTService> | undefined
+    > {
+      this.native.addEventListener('gattserverdisconnected', event => {
+        this.isConnected = false;
+        this.disconnected.emit(true);
+      });
+      const server = this.native.gatt
+      if (server) {
+        server.connect();
+        if (server.connected === true) {
+          const services = await server.getPrimaryServices();
+          this.isConnected = true;
+          if (!services || services.length === 0) {
+            throw new Error('Server exists but no service found on the device.');
+          } else { return services; }
+        }
+        else {
+          throw new Error('There is no connection to server. No attempt to get a service.')
+        }
+      }
+      else {
+        throw new Error('Server is not defined.');
+      }
+    }*/
 
     async disconnect(): Promise<void> {
       if (this.native) {
@@ -192,36 +238,25 @@ export namespace BluetoothManager {
     async getService(
       selectedServiceUUID: string
     ): Promise<BluetoothRemoteGATTService | undefined> {
-      try {
-        const services = await this.connectAndGetAllServices();
-        if (services) {
-          const selectedService = services.find(
-            service => service.uuid === selectedServiceUUID
-          );
-          return selectedService;
-        } else {
-          console.error('Services could not be reached.');
-        }
-      } catch (error) {
-        console.error('The selected service could not be found', error);
+      const services = await this.connectAndGetAllServices();
+      if (services) {
+        const selectedService = services.find(
+          service => service.uuid === selectedServiceUUID
+        );
+        return selectedService;
+      } else {
+        throw new Error('Services could not be reached.');
       }
     }
 
     async getAllCharacteristics(
       serviceUUID: string
     ): Promise<Array<BluetoothRemoteGATTCharacteristic> | undefined> {
-      try {
-        const service = await this.getService(serviceUUID);
-        if (service) {
-          return service.getCharacteristics();
-        } else {
-          console.error('The requested service is not available.');
-        }
-      } catch (error) {
-        console.error(
-          'There is no available characteristics on the requested service.',
-          error
-        );
+      const service = await this.getService(serviceUUID);
+      if (service) {
+        return service.getCharacteristics();
+      } else {
+        throw new Error('The requested service is not available.')
       }
     }
 
@@ -229,15 +264,12 @@ export namespace BluetoothManager {
       serviceUUID: string,
       characteristicUUID: string
     ): Promise<BluetoothRemoteGATTCharacteristic | undefined> {
-      try {
-        const service = await this.getService(serviceUUID);
-        if (service) {
-          return service.getCharacteristic(characteristicUUID);
-        } else {
-          console.error('The requested service is not available.');
-        }
-      } catch (error) {
-        console.error('The requested characteristic is not available.', error);
+      const service = await this.getService(serviceUUID);
+      if (service) {
+        return service.getCharacteristic(characteristicUUID);
+
+      } else {
+        throw new Error('The requested service is not available.');
       }
     }
 
