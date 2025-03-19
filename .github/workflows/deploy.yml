@@ -30,7 +30,7 @@ jobs:
       - name: Build the JupyterLite site
         shell: bash -l {0}
         run: |
-          jupyter lite build --output-dir dist
+          jupyter lite build --output-dir dist --contents examples/introduction.ipynb
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
