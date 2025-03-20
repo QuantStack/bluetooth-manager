@@ -23,7 +23,7 @@ jobs:
 
       - name: Install the dependencies
         run: |
-          python -m pip install --pre jupyterlite-core jupyterlab
+          python -m pip install --pre jupyterlite-core jupyterlab jupyterlite-pyodide-kernel
 
           # install a dev version of the bluetooth-manager extension
           python -m pip install .
