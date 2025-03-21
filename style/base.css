@@ -9,6 +9,7 @@
   overflow-y: scroll;
   width: 100%;
   box-sizing: border-box;
+  background-color: var(--jp-layout-color0);
 }
 
 .vernie-control-grid-container {
@@ -127,6 +128,7 @@
   position: absolute;
   font-size: 11px;
   width: 150px;
+  background-color: var(--jp-layout-color2);
 }
 
 .color-selector-container {
@@ -253,7 +255,9 @@
   border-collapse: collapse;
   border-spacing: 0;
   border-style: solid;
-  border-width: 0.5px;
+  border-width: 1.5px;
+  border-radius: 4px;
+  border-color: var(--jp-layout-color0);
   color: var(--jp-ui-font-color1);
   font-size: var(--jp-ui-font-size1);
   margin-top: 16px;
@@ -268,8 +272,9 @@
   width: 150px;
   text-align: center;
   border-style: solid;
-  border-width: 0.5px;
-  border-color: black;
+  border-width: 2px;
+  border-radius: 4px;
+  border-color: var(--jp-layout-color0);
   font-family: var(--jp-content-font-family);
   font-size: var(--jp-content-font-size1);
   line-height: var(--jp-content-line-height);
@@ -278,19 +283,23 @@
 .custom-table-tr {
   line-height: var(--jp-content-line-height);
   border-style: solid;
-  border-width: 0.5px;
+  border-width: 2px;
   border-radius: 4px;
+  border-color: var(--jp-layout-color0);
 }
 
 .custom-table-td {
   width: 150px;
   text-align: center;
   border-style: solid;
-  border-width: 0.5px;
+  border-width: 2px;
   border-radius: 4px;
+  border-color: var(--jp-layout-color0);
   font-family: var(--jp-content-font-family);
   font-size: var(--jp-content-font-size1);
   line-height: var(--jp-content-line-height);
+  background-color: var(--jp-layout-color2);
+  color: var(--jp-font-color3);
 }
 
 .jp-connection-status-button {
