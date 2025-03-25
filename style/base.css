@@ -314,3 +314,9 @@
   width: auto;
   height: auto;
 }
+
+.vernie-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}

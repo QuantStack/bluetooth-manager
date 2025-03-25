@@ -3,8 +3,9 @@ import { Poll } from '@lumino/polling';
 import BatteryGauge from 'react-battery-gauge';
 import { DeviceInfo } from '../moveHub/types';
 import { defaultDeviceInfo, MoveHub } from '../moveHub';
-import { IMoveHubPanelProps } from './MoveHubPanel';
+import { IMoveHubPanelWithThemeProps } from './MoveHubPanel';
 import { ReactWidget } from '@jupyterlab/ui-components';
+import { IThemeManager } from '@jupyterlab/apputils';
 
 const bodyStyle = {
   strokeWidth: 1,
@@ -41,7 +42,7 @@ const textStyle = {
   showPercentage: true
 };
 
-export default function BatteryComponent({ device }: IMoveHubPanelProps) {
+export default function BatteryComponent({ device, themeManager }: IMoveHubPanelWithThemeProps) {
   const [deviceState, setDeviceState] = useState<DeviceInfo>(defaultDeviceInfo);
 
   useEffect(() => {
@@ -83,13 +84,15 @@ export default function BatteryComponent({ device }: IMoveHubPanelProps) {
 
 export class BatteryWidget extends ReactWidget {
   public device: MoveHub;
+  public themeManager: IThemeManager
 
   constructor(device: MoveHub) {
     super();
     this.device = device;
+    this.themeManager = this.themeManager
   }
 
   render() {
-    return <BatteryComponent device={this.device} />;
+    return <BatteryComponent device={this.device} themeManager={this.themeManager} />;
   }
 }
