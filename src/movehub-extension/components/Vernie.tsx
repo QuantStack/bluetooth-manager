@@ -14,14 +14,14 @@ export default function Vernie({ themeManager }: IBuildProps) {
       return (
         <UseSignal signal={themeManager.themeChanged}>
           {(): JSX.Element => (
-            <img src={currentSVGUrl} alt="Vernie build represented with LeoCAD" height="220px" />
+            <img src={currentSVGUrl} alt="Vernie build represented with LeoCAD" height="300px" />
           )}
         </UseSignal>
       );
     }
     else
       return (
-        <img src={VernieLightSVGUrl} alt="Vernie build represented with LeoCAD" height="220px" />
+        <img src={VernieLightSVGUrl} alt="Vernie build represented with LeoCAD" height="300px" />
   
       );
  }

@@ -14,7 +14,7 @@ export default function MoveHub({ themeManager }: IBuildProps) {
      return (
        <UseSignal signal={themeManager.themeChanged}>
          {(): JSX.Element => (
-           <img src={currentSVGUrl} alt="Move Hub represented with LeoCAD" height="220px" />
+           <img src={currentSVGUrl} alt="Move Hub represented with LeoCAD" height="180px" />
          )}
        </UseSignal>
      );

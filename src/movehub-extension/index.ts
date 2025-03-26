@@ -103,7 +103,7 @@ const LEGOMoveHubControlPanelPlugin: JupyterFrontEndPlugin<void> = {
               new LegoBuildSelectorWidget(device)
             );
             toolbar.addItem('spacer', Toolbar.createSpacerItem());
-            main.toolbar.addItem('battery-gauge', new BatteryWidget(device));
+            main.toolbar.addItem('battery-gauge', new BatteryWidget(device, themeManager));
             main.toolbar.addItem(
               'device-identifier',
               new DeviceIdentifierWidget(device)
