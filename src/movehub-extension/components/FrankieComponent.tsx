@@ -1,14 +1,14 @@
-import { IMoveHubPanelProps } from './MoveHubPanel';
+import { IMoveHubPanelWithThemeProps } from './MoveHubPanel';
 import { MoveForm } from './MoveForm';
 import { ColorSelector } from './ColorSelector';
 import Frankie from './Frankie';
 
-export function FrankieComponent({ device }: IMoveHubPanelProps) {
+export function FrankieComponent({ device, themeManager }: IMoveHubPanelWithThemeProps) {
   return (
     <>
       <div className="lego-build-control-grid-container">
         <div className="lego-build-control-grid-item-left">
-          <Frankie />
+          <Frankie themeManager={themeManager} />
         </div>
         <div className="lego-build-control-grid-item-right">
           <h4

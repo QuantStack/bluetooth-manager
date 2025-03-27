@@ -80,6 +80,7 @@
   border-radius: 4px;
   width: 30px;
   font-size: 10px;
+  background-color: var(--jp-layout-color2);
 }
 
 .move-input-field-with-2buttons {
@@ -313,4 +314,10 @@
 .jp-connection-status-menu {
   width: auto;
   height: auto;
+}
+
+.vernie-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }

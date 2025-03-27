@@ -3,7 +3,7 @@ import {
   JupyterFrontEndPlugin
 } from '@jupyterlab/application';
 import { ITranslator } from '@jupyterlab/translation';
-import { MainAreaWidget } from '@jupyterlab/apputils';
+import { IThemeManager, MainAreaWidget } from '@jupyterlab/apputils';
 import { Toolbar } from '@jupyterlab/ui-components';
 import {
   IDeviceRegistryItem,
@@ -60,15 +60,18 @@ const MoveHubRegisterPlugin: JupyterFrontEndPlugin<void> = {
 const LEGOMoveHubControlPanelPlugin: JupyterFrontEndPlugin<void> = {
   id: 'bluetooth-manager:lego-movehub-control-panel-plugin',
   description: 'Provides the ui to display informations on the Move Hub state.',
-  requires: [ITranslator, IBluetoothManager],
+  requires: [ITranslator, IBluetoothManager, IThemeManager],
   autoStart: true,
   activate: (
     app: JupyterFrontEnd,
     translator: ITranslator,
-    bluetoothManager: BluetoothManager
+    bluetoothManager: BluetoothManager,
+    themeManager: IThemeManager
   ): void => {
     console.log('JupyterLab lego-movehub-control-panel plugin is activated!');
     const trans = translator.load('jupyterlab');
+
+
     app.commands.addCommand(addLEGOMoveHubControlPanel, {
       execute: args => {
         const result = bluetoothManager.deviceList.filter(
@@ -78,31 +81,40 @@ const LEGOMoveHubControlPanelPlugin: JupyterFrontEndPlugin<void> = {
           const device = result[
             result.length - 1
           ] as MoveHub; /* the last added MoveHub device*/
-          const content = new MoveHubPanelWidget(device);
-          content.addClass('jp-movehub-panel-content');
-          const toolbar = new Toolbar();
-          toolbar.addClass('jp-movehub-panel-toolbar');
-          const main = new MainAreaWidget({ content, toolbar });
-          main.addClass('jp-movehub-panel-main');
-          main.toolbar.addItem(
-            'connection-status',
-            new ConnectionStatusWidget(device, bluetoothManager)
-          );
-          main.toolbar.addItem(
-            'select-lego-model',
-            new LegoBuildSelectorWidget(device)
-          );
-          toolbar.addItem('spacer', Toolbar.createSpacerItem());
-          main.toolbar.addItem('battery-gauge', new BatteryWidget(device));
-          main.toolbar.addItem(
-            'device-identifier',
-            new DeviceIdentifierWidget(device)
-          );
-          main.id = 'lego-movehub-control-panel';
-          main.title.label = 'LEGO® Move Hub';
-          main.title.closable = true;
-          main.title.icon = LegoBrickIcon;
-          app.shell.add(main, 'main');
+          /*let isThemeLight: boolean = themeManager.theme;
+          themeManager.themeChanged.connect((sender: any, args: IChangedArgs<string, string | null, string>) => {
+            const theme = args.newValue;
+            console.log("Is the theme light?:", themeManager.isLight(theme));
+            isThemeLight = themeManager.isLight(theme);
+            console.log('Theme is:', theme);
+          });*/
+            const content = new MoveHubPanelWidget(device, themeManager);
+            content.addClass('jp-movehub-panel-content');
+            const toolbar = new Toolbar();
+            toolbar.addClass('jp-movehub-panel-toolbar');
+            const main = new MainAreaWidget({ content, toolbar });
+            main.addClass('jp-movehub-panel-main');
+            main.toolbar.addItem(
+              'connection-status',
+              new ConnectionStatusWidget(device, bluetoothManager)
+            );
+            main.toolbar.addItem(
+              'select-lego-model',
+              new LegoBuildSelectorWidget(device)
+            );
+            toolbar.addItem('spacer', Toolbar.createSpacerItem());
+            main.toolbar.addItem('battery-gauge', new BatteryWidget(device, themeManager));
+            main.toolbar.addItem(
+              'device-identifier',
+              new DeviceIdentifierWidget(device)
+            );
+            main.id = 'lego-movehub-control-panel';
+            main.title.label = 'LEGO® Move Hub';
+            main.title.closable = true;
+            main.title.icon = LegoBrickIcon;
+            app.shell.add(main, 'main');
+          
+
         } else {
           throw new Error('The device is not a Move Hub.');
         }

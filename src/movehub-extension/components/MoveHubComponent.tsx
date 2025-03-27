@@ -1,5 +1,5 @@
 import MoveHub from './MoveHub';
-import { IMoveHubPanelProps } from './MoveHubPanel';
+import { IMoveHubPanelWithThemeProps } from './MoveHubPanel';
 import { HubAsync } from '../moveHub/hub/hubAsync';
 import { MoveForm } from './MoveForm';
 import { ColorSelector } from './ColorSelector';
@@ -8,12 +8,12 @@ export interface IHubControlProps {
   hub: HubAsync;
 }
 
-export function MoveHubComponent({ device }: IMoveHubPanelProps) {
+export function MoveHubComponent({ device, themeManager }: IMoveHubPanelWithThemeProps) {
   return (
     <>
       <div className="lego-build-control-grid-container">
         <div className="lego-build-control-grid-item-left">
-          <MoveHub />
+          <MoveHub themeManager={themeManager} />
         </div>
         <div className="lego-build-control-grid-item-right">
           <h4

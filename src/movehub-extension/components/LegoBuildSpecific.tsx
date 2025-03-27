@@ -1,20 +1,20 @@
 import { useState } from 'react';
-import { IMoveHubPanelProps } from './MoveHubPanel';
+import { IMoveHubPanelWithThemeProps } from './MoveHubPanel';
 import { MoveHubComponent } from './MoveHubComponent';
 import { VernieComponent } from './VernieComponent';
 import { FrankieComponent } from './FrankieComponent';
 
-export function LegoBuildSpecific({ device }: IMoveHubPanelProps) {
+export function LegoBuildSpecific({ device, themeManager }: IMoveHubPanelWithThemeProps) {
   const [legoBuild, setLegoBuild] = useState<any>('Move Hub');
 
   const renderSelectedComponent = () => {
     switch (legoBuild) {
       case 'Move Hub':
-        return <MoveHubComponent device={device} />;
+        return <MoveHubComponent device={device} themeManager={themeManager} />;
       case 'Vernie':
-        return <VernieComponent device={device} />;
+        return <VernieComponent device={device} themeManager={themeManager}/>;
       case 'Frankie':
-        return <FrankieComponent device={device} />;
+        return <FrankieComponent device={device} themeManager={themeManager} />;
       default:
         return <div>Pick a build from the toolbar dropdown.</div>;
     }

@@ -3,46 +3,83 @@ import { Poll } from '@lumino/polling';
 import BatteryGauge from 'react-battery-gauge';
 import { DeviceInfo } from '../moveHub/types';
 import { defaultDeviceInfo, MoveHub } from '../moveHub';
-import { IMoveHubPanelProps } from './MoveHubPanel';
+import { IMoveHubPanelWithThemeProps } from './MoveHubPanel';
 import { ReactWidget } from '@jupyterlab/ui-components';
+import { IThemeManager } from '@jupyterlab/apputils';
+import { UseSignal } from '@jupyterlab/apputils';
 
-const bodyStyle = {
-  strokeWidth: 1,
-  cornerRadius: 6,
-  fill: 'none',
-  strokeColor: '#111',
-  width: '40px',
-  padding: '0 8px'
+const batteryCustomizationLight = {
+  batteryBody: {
+    strokeWidth: 2,
+    cornerRadius: 6,
+    fill: 'none',
+    strokeColor: '#111',
+    width: '50px',
+    padding: '0 20px'
+  },
+  batteryCap: {
+    fill: 'none',
+    strokeWidth: 2,
+    strokeColor: '#111',
+    cornerRadius: 2,
+    capToBodyRatio: 0.4
+  },
+  batteryMeter: {
+    fill: 'green',
+    lowBatteryValue: 15,
+    lowBatteryFill: 'red',
+    outerGap: 1,
+    noOfCells: 1,
+    interCellsGap: 1
+  },
+  readingText: {
+    lightContrastColor: '#111',
+    darkContrastColor: '#fff',
+    lowBatteryColor: 'red',
+    fontFamily: 'Helvetica',
+    fontSize: 20,
+    showPercentage: true          // Set to true to show battery percentage
+  },
 };
 
-const capStyle = {
-  fill: 'none',
-  strokeWidth: 1,
-  strokeColor: '#111',
-  cornerRadius: 2,
-  capToBodyRatio: 0.4
+const batteryCustomizationDark = {
+  batteryBody: {
+    strokeWidth: 2,
+    cornerRadius: 6,
+    fill: 'none',
+    strokeColor: 'white',
+    width: '50px',
+    padding: '0 20px'
+  },
+  batteryCap: {
+    fill: 'none',
+    strokeWidth: 2,
+    strokeColor: 'white',
+    cornerRadius: 2,
+    capToBodyRatio: 0.4
+  },
+  batteryMeter: {
+    fill: 'green',
+    lowBatteryValue: 15,
+    lowBatteryFill: 'red',
+    outerGap: 1,
+    noOfCells: 1,
+    interCellsGap: 1
+  },
+  readingText: {
+    lightContrastColor: '#111',
+    darkContrastColor: '#fff',
+    lowBatteryColor: 'red',
+    fontFamily: 'Helvetica',
+    fontSize: 20,
+    showPercentage: true          // Set to true to show battery percentage
+  },
 };
 
-const meterStyle = {
-  fill: 'green',
-  lowBatteryValue: 15,
-  lowBatteryFill: 'red',
-  outerGap: 1,
-  noOfCells: 10, // more than 1, will create cell battery
-  interCellsGap: 1
-};
-
-const textStyle = {
-  lightContrastColor: '#111',
-  darkContrastColor: '#fff',
-  lowBatteryColor: 'red',
-  fontFamily: 'Helvetica',
-  fontSize: 30,
-  showPercentage: true
-};
-
-export default function BatteryComponent({ device }: IMoveHubPanelProps) {
+export default function BatteryComponent({ device, themeManager }: IMoveHubPanelWithThemeProps) {
   const [deviceState, setDeviceState] = useState<DeviceInfo>(defaultDeviceInfo);
+  const theme = themeManager.theme;
+  console.log('theme:', theme);
 
   useEffect(() => {
     const poll = new Poll({
@@ -65,31 +102,49 @@ export default function BatteryComponent({ device }: IMoveHubPanelProps) {
     };
   }, [device.deviceInfo]);
 
-  return deviceState.batteryLevel !== undefined &&
-    deviceState.connected === true ? (
-    <BatteryGauge
-      value={deviceState.batteryLevel}
-      style={{
-        ...bodyStyle,
-        ...capStyle,
-        ...meterStyle,
-        ...textStyle
-      }}
-    />
-  ) : (
-    <div></div>
-  );
+  if (theme) {
+    const isThemeLight = themeManager.isLight(theme);
+    return (
+      <UseSignal signal={themeManager.themeChanged}>
+        {(): JSX.Element => (
+          deviceState.batteryLevel !== undefined &&
+            deviceState.connected === true ? (
+            <BatteryGauge
+              value={deviceState.batteryLevel}
+              width={'50px'}
+              customization={isThemeLight ? batteryCustomizationLight : batteryCustomizationDark}
+
+            />
+          ) : (
+            <div></div>
+          )
+        )}
+      </UseSignal>
+    );
+  } else {
+    return (
+      deviceState.batteryLevel !== undefined &&
+        deviceState.connected === true ? (
+        <BatteryGauge
+          value={deviceState.batteryLevel}
+          customization={batteryCustomizationLight}
+
+        />) : (<div></div>)
+    )
+  }
 }
 
 export class BatteryWidget extends ReactWidget {
   public device: MoveHub;
+  public themeManager: IThemeManager
 
-  constructor(device: MoveHub) {
+  constructor(device: MoveHub, themeManager: IThemeManager) {
     super();
     this.device = device;
+    this.themeManager = themeManager
   }
 
   render() {
-    return <BatteryComponent device={this.device} />;
+    return <BatteryComponent device={this.device} themeManager={this.themeManager} />;
   }
 }

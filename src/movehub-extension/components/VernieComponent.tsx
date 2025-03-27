@@ -1,15 +1,15 @@
 import { ColorSelector } from './ColorSelector';
 import Vernie from './Vernie';
 import { ManualControl } from './ManualControl';
-import { IMoveHubPanelProps } from './MoveHubPanel';
+import { IMoveHubPanelWithThemeProps } from './MoveHubPanel';
 import { MoveForm } from './MoveForm';
 
-export function VernieComponent({ device }: IMoveHubPanelProps) {
+export function VernieComponent({ device, themeManager }: IMoveHubPanelWithThemeProps) {
   return (
     <>
       <div className="vernie-control-grid-container">
         <div className="vernie-control-grid-item-left">
-          <Vernie />
+          <Vernie themeManager={themeManager}/>
         </div>
         <div className="vernie-control-grid-item-center">
           <h4
@@ -60,7 +60,7 @@ export function VernieComponent({ device }: IMoveHubPanelProps) {
         </div>
 
         <div className="vernie-control-grid-item-right">
-          <ManualControl moveHub={device} />
+          <ManualControl device={device} themeManager={themeManager}/>
         </div>
       </div>
     </>
