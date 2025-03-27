@@ -41,8 +41,9 @@ export function FrankieComponent({ device, themeManager }: IMoveHubPanelWithThem
               padding: '0'
             }}
           >
-            Other motor
+            Other motor(s)
           </h4>
+          <p style={{ margin: '8px 0', fontWeight:"600"}}>Motor 1 on port D</p>
           <MoveForm
             hub={device.hub}
             label={"Move Frankie's tail"}
@@ -52,6 +53,20 @@ export function FrankieComponent({ device, themeManager }: IMoveHubPanelWithThem
             buttonText2={'Right'}
             type={'angle'}
             port={'D'}
+            caution=""
+            dutyCycleDirect={-100}
+            dutyCycleIndirect={100}
+          />
+          <p style={{ margin: '8px 0', fontWeight:"600"}}>Motor 2 on port C</p>
+          <MoveForm
+            hub={device.hub}
+            label={'Turn external motor'}
+            actionButton1="RotateIndirect"
+            actionButton2="RotateDirect"
+            buttonText1={'Indirect'}
+            buttonText2={'Direct'}
+            type={'angle'}
+            port={'C'}
             caution=""
             dutyCycleDirect={-100}
             dutyCycleIndirect={100}
