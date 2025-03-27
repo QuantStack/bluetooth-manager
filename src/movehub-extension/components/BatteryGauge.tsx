@@ -18,8 +18,7 @@ const batteryCustomizationLight = {
     padding: '0 20px'
   },
   batteryCap: {
-    fill: 'green',
-    lowBatteryFill: 'red',
+    fill: 'none',
     strokeWidth: 2,
     strokeColor: '#111',
     cornerRadius: 2,
@@ -53,8 +52,7 @@ const batteryCustomizationDark = {
     padding: '0 20px'
   },
   batteryCap: {
-    fill: 'green',
-    lowBatteryFill: 'red',
+    fill: 'none',
     strokeWidth: 2,
     strokeColor: 'white',
     cornerRadius: 2,

@@ -7,10 +7,6 @@
    width="274.68527"
    height="177.5"
    viewBox="0 0 274.68527 177.5"
-   sodipodi:docname="MoveHubDark.svg"
-   inkscape:version="1.4.1-rc (d9e8dc1fe0, 2025-03-10)"
-   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
-   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns:xlink="http://www.w3.org/1999/xlink"
    xmlns="http://www.w3.org/2000/svg"
    xmlns:svg="http://www.w3.org/2000/svg">
@@ -86,12 +82,9 @@
        refX="0"
        refY="0"
        orient="auto-start-reverse"
-       inkscape:stockid="Rounded arrow"
        markerWidth="1"
        markerHeight="1"
        viewBox="0 0 1 1"
-       inkscape:isstock="true"
-       inkscape:collect="always"
        preserveAspectRatio="xMidYMid">
       <path
          transform="scale(0.7)"
@@ -105,12 +98,9 @@
        refX="0"
        refY="0"
        orient="auto-start-reverse"
-       inkscape:stockid="Rounded arrow"
        markerWidth="1"
        markerHeight="1"
        viewBox="0 0 1 1"
-       inkscape:isstock="true"
-       inkscape:collect="always"
        preserveAspectRatio="xMidYMid">
       <path
          transform="scale(0.7)"
@@ -124,12 +114,9 @@
        refX="0"
        refY="0"
        orient="auto-start-reverse"
-       inkscape:stockid="Rounded arrow"
        markerWidth="1"
        markerHeight="1"
        viewBox="0 0 1 1"
-       inkscape:isstock="true"
-       inkscape:collect="always"
        preserveAspectRatio="xMidYMid">
       <path
          transform="scale(0.7)"
@@ -143,12 +130,9 @@
        refX="0"
        refY="0"
        orient="auto-start-reverse"
-       inkscape:stockid="Rounded arrow"
        markerWidth="1"
        markerHeight="1"
        viewBox="0 0 1 1"
-       inkscape:isstock="true"
-       inkscape:collect="always"
        preserveAspectRatio="xMidYMid">
       <path
          transform="scale(0.7)"
@@ -157,28 +141,7 @@
          id="path2-1-1-7-9" />
     </marker>
   </defs>
-  <sodipodi:namedview
-     id="namedview1"
-     pagecolor="#ffffff"
-     bordercolor="#000000"
-     borderopacity="0.25"
-     inkscape:showpageshadow="2"
-     inkscape:pageopacity="0.0"
-     inkscape:pagecheckerboard="0"
-     inkscape:deskcolor="#d1d1d1"
-     showguides="false"
-     inkscape:zoom="1.9943662"
-     inkscape:cx="144.90819"
-     inkscape:cy="96.772599"
-     inkscape:window-width="1648"
-     inkscape:window-height="961"
-     inkscape:window-x="0"
-     inkscape:window-y="0"
-     inkscape:window-maximized="1"
-     inkscape:current-layer="g1" />
   <g
-     inkscape:groupmode="layer"
-     inkscape:label="Image"
      id="g1"
      transform="translate(39.185273)">
     <image
@@ -189,13 +152,14 @@
        id="image1" />
     <text
        xml:space="preserve"
-       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:10.6667px;font-family:System-ui;-inkscape-font-specification:'System-ui, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;fill:#ffffff;fill-opacity:0.870588;stroke:none;stroke-width:8;stroke-dasharray:none;stroke-opacity:1"
-       x="118.24879"
-       y="133.30667"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:10.6667px;font-family:System-ui;-inkscape-font-specification:'System-ui, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;fill:#000000;fill-opacity:0.870588;stroke:none;stroke-width:8;stroke-dasharray:none;stroke-opacity:1"
+       x="110.24879"
+       y="127.30667"
        id="text8">Port A</text>
     <g
        id="g1-1"
-       transform="translate(-404.90896,-212.56874)">
+       transform="translate(-398.90896,-212.56874)"
+       style="fill:#ffffff">
       <text
          xml:space="preserve"
          style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:10.6667px;font-family:System-ui;-inkscape-font-specification:'System-ui, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;fill:#ffffff;fill-opacity:0.870588;stroke:none;stroke-width:8;stroke-dasharray:none;stroke-opacity:1"
@@ -207,14 +171,14 @@
     </g>
     <text
        xml:space="preserve"
-       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:10.6667px;font-family:Sans;-inkscape-font-specification:'Sans, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;fill:#1a1a1a;fill-opacity:0.870588;stroke:none;stroke-width:8;stroke-dasharray:none;stroke-opacity:1"
-       x="182.17357"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:10.6667px;font-family:Sans;-inkscape-font-specification:'Sans, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;fill:#000000;fill-opacity:0.870588;stroke:none;stroke-width:8;stroke-dasharray:none;stroke-opacity:1"
+       x="176.17357"
        y="63.351784"
        id="text8-3">Port C</text>
     <text
        xml:space="preserve"
        style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:10.6667px;font-family:System-ui;-inkscape-font-specification:'System-ui, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;fill:#ffffff;fill-opacity:0.870588;stroke:none;stroke-width:8;stroke-dasharray:none;stroke-opacity:1"
-       x="51.705036"
+       x="57.705036"
        y="23.489828"
        id="text8-5-4">Port D</text>
     <path
@@ -226,11 +190,11 @@
        d="m 53.161025,31.725266 c 42.223102,0 42.223102,0 42.223102,0"
        id="path1-4-1" />
     <path
-       style="fill:#ffffff;fill-opacity:0.870588;stroke:#ffffff;stroke-width:2.5;stroke-dasharray:none;marker-end:url(#marker2-6-9-9);stroke-opacity:1"
-       d="m 147.75283,143.22809 c -42.22311,0 -42.22311,0 -42.22311,0"
+       style="fill:#fbf9f7;fill-opacity:0.870588;stroke:#ffffff;stroke-width:2.5;stroke-dasharray:none;marker-end:url(#marker2-6-9-9);stroke-opacity:1"
+       d="m 145.75283,137.22809 c -42.22311,0 -42.22311,0 -42.22311,0"
        id="path1-4-1-7" />
     <path
-       style="fill:#ffffff;fill-opacity:0.870588;stroke:#000000;stroke-width:2.5;stroke-dasharray:none;marker-end:url(#marker2-6-9-9-2);stroke-opacity:1"
+       style="fill:#ffffff;fill-opacity:0.870588;stroke:#000000;stroke-width:2.5;stroke-dasharray:none;marker-end:url(#marker2-6-9-9-2)"
        d="m 211.93363,72.216792 c -42.22311,0 -42.22311,0 -42.22311,0"
        id="path1-4-1-7-0" />
   </g>
