@@ -153,34 +153,34 @@ export class MoveHubModel extends DOMWidgetModel {
             this.poll();
             break;
           case 'led':
-            this.movehub.led.call(this.movehub, args);
+            this.movehub.led.apply(this.movehub, args);
             break;
           case 'ledAsync':
-            await this.movehub.ledAsync.call(this.movehub, args);
+            await this.movehub.ledAsync.apply(this.movehub, args);
             break;
           case 'motorTime':
-            this.movehub.motorTime.call(this.movehub, args);
+            this.movehub.motorTime.apply(this.movehub, args);
             break;
           case 'motorTimeMulti':
-            this.movehub.motorTimeMulti.call(this.movehub, args);
+            this.movehub.motorTimeMulti.apply(this.movehub, args);
             break;
           case 'motorTimeAsync':
-            await this.movehub.motorTimeAsync.call(this.movehub, args);
+            await this.movehub.motorTimeAsync.apply(this.movehub, args);
             break;
           case 'motorTimeMultiAsync':
-            await this.movehub.motorTimeMultiAsync.call(this.movehub, args);
+            await this.movehub.motorTimeMultiAsync.apply(this.movehub, args);
             break;
           case 'motorAngle':
-            this.movehub.motorAngle.call(this.movehub, args);
+            this.movehub.motorAngle.apply(this.movehub, args);
             break;
           case 'motorAngleMulti':
-            this.movehub.motorAngleMulti.call(this.movehub, args);
+            this.movehub.motorAngleMulti.apply(this.movehub, args);
             break;
           case 'motorAngleAsync':
-            await this.movehub.motorAngleAsync.call(this.movehub, args);
+            await this.movehub.motorAngleAsync.apply(this.movehub, args);
             break;
           case 'motorAngleMultiAsync':
-            await this.movehub.motorAngleMultiAsync.call(this.movehub, args);
+            await this.movehub.motorAngleMultiAsync.apply(this.movehub, args);
             break;
           default:
             console.error(`unknown command "${cmd}"`);
