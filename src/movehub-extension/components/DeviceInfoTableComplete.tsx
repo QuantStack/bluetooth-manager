@@ -34,6 +34,7 @@ export function DeviceInfoTableComplete({ moveHub }: { moveHub: MoveHub }) {
           <tr className="custom-table-tr">
             <th className="custom-table-th"></th>
             <th className="custom-table-th">Status</th>
+            <th className="custom-table-th">MAC address</th>
             <th className="custom-table-th">Identifier</th>
             <th className="custom-table-th">Led color</th>
             <th className="custom-table-th">Battery</th>
@@ -49,6 +50,13 @@ export function DeviceInfoTableComplete({ moveHub }: { moveHub: MoveHub }) {
                 <ColoredCircleWithText color={'green'} text={'connected'} />
               ) : (
                 <ColoredCircleWithText color={'red'} text={'disconnected'} />
+              )}
+            </td>
+            <td className="custom-table-td">
+              {deviceState.connected ? (
+                <div>{deviceState.primaryMACAddress}</div>
+              ) : (
+                <div></div>
               )}
             </td>
             <td className="custom-table-td">
