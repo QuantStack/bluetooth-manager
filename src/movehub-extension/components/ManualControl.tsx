@@ -15,12 +15,74 @@ const arrowDownSVGUrl = `data:image/svg+xml;base64,${btoa(arrowDownSVG)}`;
 const turnLeftSVGUrl = `data:image/svg+xml;base64,${btoa(turnLeftSVG)}`;
 const turnRightSVGUrl = `data:image/svg+xml;base64,${btoa(turnRightSVG)}`;
 import { UseSignal } from '@jupyterlab/apputils';
+import { Button } from '@jupyterlab/ui-components';
+import { Poll } from '@lumino/polling';
+const LONG_PRESS_THRESHOLD = 1000;
 
 export interface IMoveHubControlProps {
   device: MoveHub;
 }
 
 export function ManualControl({ device, themeManager }: IMoveHubPanelWithThemeProps) {
+  let pressStartTime: number = 0;
+  let pressDuration: number = 0;
+  let poll: Poll | null = null;
+
+  const handleMouseDown = () => {
+    pressStartTime = Date.now();
+
+    poll = new Poll({
+      auto: true,
+      name: 'click-duration-polling',
+      factory: async () => {
+        pressDuration = Date.now() - pressStartTime;
+      },
+      frequency: {
+        interval: 100,
+        backoff: true,
+      },
+      standby: 'when-hidden',
+    });
+
+    poll.start();
+  };
+
+  const handleMouseUp = async (action: string, direction: number) => {
+    if (poll) {
+      poll.stop();
+    }
+    if (action === "inactive") {
+      console.error('Inactive button, no control available.');
+    }
+    if (action === "stop") {
+      device.stop();
+    }
+
+    if (pressDuration < LONG_PRESS_THRESHOLD) {
+      if (action === "drive") {
+        await device.hub.drive(20 * direction);
+      }
+      else if (action === "turn") {
+        await device.hub.turn(90 * direction);
+      }
+    
+    } else {
+      if (action === "drive") {
+        await device.hub.driveToDirection(direction);
+      }
+   
+      else if (action === "turn") {
+        await device.hub.turn(3600*direction);
+      }
+    };
+  }
+
+  const handleMouseLeave = () => {
+    if (poll) {
+      poll.stop();
+    }
+  };
+
   const theme = themeManager.theme;
   if (theme) {
     const isThemeLight = themeManager.isLight(theme!);
@@ -30,71 +92,91 @@ export function ManualControl({ device, themeManager }: IMoveHubPanelWithThemePr
         id: 1,
         src: currentEmptySVGUrl,
         alt: 'Image 1',
-        handleClick: () => {
-          console.error('Inactive button, no control available.');
-        }
+        action: "inactive",
+        direction: 0,
+        handleMouseDown: handleMouseDown,
+        handleMouseUp: handleMouseUp,
+        handleMouseLeave: handleMouseLeave
       },
       {
         id: 2,
         src: arrowUpSVGUrl,
         alt: 'Image 2',
-        handleClick: async () => {
-          await device.hub.driveToDirection(1);
-        }
+        action: 'drive',
+        direction: 1,
+        handleMouseDown: handleMouseDown,
+        handleMouseUp: handleMouseUp,
+        handleMouseLeave: handleMouseLeave
       },
       {
         id: 3,
         src: currentEmptySVGUrl,
         alt: 'Image 3',
-        handleClick: () => {
-          console.error('Inactive button, no control available.');
-        }
+        action: "inactive",
+        direction: 0,
+        handleMouseDown: handleMouseDown,
+        handleMouseUp: handleMouseUp,
+        handleMouseLeave: handleMouseLeave
       },
       {
         id: 4,
         src: turnLeftSVGUrl,
+        action: "turn",
+        direction: -1,
         alt: 'Image 4',
-        handleClick: async () => {
-          await device.hub.turn(-90);
-        }
+        handleMouseDown: handleMouseDown,
+        handleMouseUp: handleMouseUp,
+        handleMouseLeave: handleMouseLeave
       },
       {
         id: 5,
         src: stopSVGUrl,
         alt: 'Image 5',
-        handleClick: async () => {
-          device.stop();
-        }
+        action: "stop",
+        direction: 0,
+        handleMouseDown: handleMouseDown,
+        handleMouseUp: handleMouseUp,
+        handleMouseLeave: handleMouseLeave
       },
       {
         id: 6,
         src: turnRightSVGUrl,
         alt: 'Image 6',
-        handleClick: async () => {
-          device.hub.turn(90);
-        }
+        action: "turn",
+        direction: 1,
+        handleMouseDown: handleMouseDown,
+        handleMouseUp: handleMouseUp,
+        handleMouseLeave: handleMouseLeave
       },
       {
         id: 7,
         src: currentEmptySVGUrl,
         alt: 'Image 7',
-        handleClick: () => {
-          console.error('Inactive button, no control available.');
-        }
+        action: "inactive",
+        direction: 0,
+        handleMouseDown: handleMouseDown,
+        handleMouseUp: handleMouseUp,
+        handleMouseLeave: handleMouseLeave
       },
       {
         id: 8,
         src: arrowDownSVGUrl,
         alt: 'Image 8',
-        handleClick: async () => await device.hub.driveToDirection(0)
+        action: "drive",
+        direction: -1,
+        handleMouseDown: handleMouseDown,
+        handleMouseUp: handleMouseUp,
+        handleMouseLeave: handleMouseLeave
       },
       {
         id: 9,
         src: currentEmptySVGUrl,
         alt: 'Image 9',
-        handleClick: () => {
-          console.error('Inactive button, no control available.');
-        }
+        action: "inactive",
+        direction: 0,
+        handleMouseDown: handleMouseDown,
+        handleMouseUp: handleMouseUp,
+        handleMouseLeave: handleMouseLeave
       }
     ];
 
@@ -103,13 +185,15 @@ export function ManualControl({ device, themeManager }: IMoveHubPanelWithThemePr
         <div className="manual-control-grid">
           {images.map((image, index) => (
             <div className="manual-control-grid-item">
-              <button
+              <Button
                 key={index}
-                onClick={image.handleClick}
+                onMouseDown={image.handleMouseDown}
+                onMouseUp={(e) => { handleMouseUp(image.action, image.direction) }}
+                onMouseLeave={image.handleMouseLeave}
                 className="image-button"
               >
                 <img src={image.src} alt={image.alt} />
-              </button>
+              </Button>
             </div>
           ))}
         </div>
@@ -124,90 +208,115 @@ export function ManualControl({ device, themeManager }: IMoveHubPanelWithThemePr
         id: 1,
         src: emptyLightSVGUrl,
         alt: 'Image 1',
-        handleClick: () => {
-          console.error('Inactive button, no control available.');
-        }
+        action: "inactive",
+        direction: 0,
+        handleMouseDown: handleMouseDown,
+        handleMouseUp: handleMouseUp,
+        handleMouseLeave: handleMouseLeave
       },
       {
         id: 2,
         src: arrowUpSVGUrl,
         alt: 'Image 2',
-        handleClick: async () => {
-          await device.hub.driveToDirection(1);
-        }
+        action: 'drive',
+        direction: 1,
+        handleMouseDown: handleMouseDown,
+        handleMouseUp: handleMouseUp,
+        handleMouseLeave: handleMouseLeave
       },
       {
         id: 3,
         src: emptyLightSVGUrl,
         alt: 'Image 3',
-        handleClick: () => {
-          console.error('Inactive button, no control available.');
-        }
+        action: "inactive",
+        direction: 0,
+        handleMouseDown: handleMouseDown,
+        handleMouseUp: handleMouseUp,
+        handleMouseLeave: handleMouseLeave
       },
       {
         id: 4,
         src: turnLeftSVGUrl,
+        action: "turn",
+        direction: -1,
         alt: 'Image 4',
-        handleClick: async () => {
-          await device.hub.turn(-90);
-        }
+        handleMouseDown: handleMouseDown,
+        handleMouseUp: handleMouseUp,
+        handleMouseLeave: handleMouseLeave
       },
       {
         id: 5,
         src: stopSVGUrl,
         alt: 'Image 5',
-        handleClick: async () => {
-          device.stop();
-        }
+        action: "stop",
+        direction: 0,
+        handleMouseDown: handleMouseDown,
+        handleMouseUp: handleMouseUp,
+        handleMouseLeave: handleMouseLeave
       },
       {
         id: 6,
         src: turnRightSVGUrl,
         alt: 'Image 6',
-        handleClick: async () => {
-          device.hub.turn(90);
-        }
+        action: "turn",
+        direction: 1,
+        handleMouseDown: handleMouseDown,
+        handleMouseUp: handleMouseUp,
+        handleMouseLeave: handleMouseLeave
       },
       {
         id: 7,
         src: emptyLightSVGUrl,
         alt: 'Image 7',
-        handleClick: () => {
-          console.error('Inactive button, no control available.');
-        }
+        action: "inactive",
+        direction: 0,
+        handleMouseDown: handleMouseDown,
+        handleMouseUp: handleMouseUp,
+        handleMouseLeave: handleMouseLeave
       },
       {
         id: 8,
         src: arrowDownSVGUrl,
         alt: 'Image 8',
-        handleClick: async () => await device.hub.driveToDirection(0)
+        action: "drive",
+        direction: -1,
+        handleMouseDown: handleMouseDown,
+        handleMouseUp: handleMouseUp,
+        handleMouseLeave: handleMouseLeave
       },
       {
         id: 9,
         src: emptyLightSVGUrl,
         alt: 'Image 9',
-        handleClick: () => {
-          console.error('Inactive button, no control available.');
-        }
+        action: "inactive",
+        direction: 0,
+        handleMouseDown: handleMouseDown,
+        handleMouseUp: handleMouseUp,
+        handleMouseLeave: handleMouseLeave
       }
     ];
 
-    return (
-      <div className="manual-control-grid">
-        {images.map((image, index) => (
-          <div className="manual-control-grid-item">
-            <button
-              key={index}
-              onClick={image.handleClick}
-              className="image-button"
-            >
-              <img src={image.src} alt={image.alt} />
-            </button>
-          </div>
-        ))}
-      </div>
-    )
+    return (<UseSignal signal={themeManager.themeChanged}>
+      {(): JSX.Element => (
+        <div className="manual-control-grid">
+          {images.map((image, index) => (
+            <div className="manual-control-grid-item">
+              <Button
+                key={index}
+                onMouseDown={image.handleMouseDown}
+                onMouseUp={(e) => { handleMouseUp(image.action, image.direction) }}
+                onMouseLeave={image.handleMouseLeave}
+
+                className="image-button"
+              >
+                <img src={image.src} alt={image.alt} />
+              </Button>
+            </div>
+          ))}
+        </div>
+      )}
+    </UseSignal>
+    );
   }
 }
-
 
