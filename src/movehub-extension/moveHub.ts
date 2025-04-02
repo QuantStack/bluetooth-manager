@@ -79,6 +79,7 @@ export class MoveHub extends BluetoothManager.Device {
       driveSpeed: DEFAULT_CONFIG.DRIVE_SPEED,
       turnSpeed: DEFAULT_CONFIG.TURN_SPEED
     };
+    this.contextCommands = ['bluetooth-manager:disconnect-device','bluetooth-manager:add-lego-movehub-control-panel']
   }
   logDebug(message?: any, ...optionalParams: any[]): void {
     if (message) {

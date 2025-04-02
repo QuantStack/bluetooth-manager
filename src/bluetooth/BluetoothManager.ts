@@ -147,6 +147,7 @@ export namespace BluetoothManager {
     public connected: Signal<this, boolean>;
     public disconnected: Signal<this, boolean>;
     public isDisposed: boolean;
+    public contextCommands:Array<string>;
 
     constructor(native: BluetoothDevice) {
       this.connected = new Signal<this, boolean>(this);
@@ -154,6 +155,7 @@ export namespace BluetoothManager {
       this.isConnected = false;
       this.isDisposed = false;
       this.native = native;
+      this.contextCommands = ['bluetooth-manager:disconnect-device', 'bluetooth-manager:add-lego-movehub-control-panel']
     }
 
     async connectAndGetAllServices(): Promise<

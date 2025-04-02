@@ -22,6 +22,8 @@ export * from './version';
 export * from './widget';
 export const addLEGOMoveHubControlPanel =
   'bluetooth-manager:add-lego-movehub-control-panel';
+export const connectMoveHub = 'bluetooth-manager:connect-movehub';
+export const disconnectMoveHub = 'bluetooth-manager:disconnect-movehub';
 export const moveHubServiceUUID = '00001623-1212-efde-1623-785feabcd123';
 export const moveHubCharacteristicUUID = '00001624-1212-efde-1623-785feabcd123';
 export const movehubRegistryItem: IDeviceRegistryItem = {
@@ -89,7 +91,7 @@ const LEGOMoveHubControlPanelPlugin: JupyterFrontEndPlugin<void> = {
           main.addClass('jp-movehub-panel-main');
           main.toolbar.addItem(
             'connection-status',
-            new ConnectionStatusWidget(device, bluetoothManager)
+            new ConnectionStatusWidget(device, bluetoothManager, app.commands)
           );
           main.toolbar.addItem(
             'select-lego-model',
@@ -114,6 +116,45 @@ const LEGOMoveHubControlPanelPlugin: JupyterFrontEndPlugin<void> = {
       },
       caption: trans.__('Open a LEGO® Move Hub control panel'),
       label: trans.__('Open a LEGO® Move Hub Control Panel')
+    });
+
+    app.commands.addCommand(disconnectMoveHub, {
+      execute: args => {
+        const selectedDevice = bluetoothManager.deviceList.find((device) => device.native.id === args.deviceID as string);
+        if (selectedDevice && selectedDevice instanceof MoveHub) {
+          bluetoothManager.disconnectDevice(selectedDevice);
+          return selectedDevice;
+        } else {
+          throw new Error('No device provided or device is invalid');
+        }
+      },
+      caption: 'Disconnect MoveHub',
+      label: 'Disconnect MoveHub',
+      isEnabled: (args) => {
+        const selectedDevice = bluetoothManager.deviceList.find((device) => device.native.id === args.deviceID as string);
+        if (selectedDevice && selectedDevice instanceof MoveHub && selectedDevice.deviceInfo.connected) {
+          return true;
+        } else {
+          return false;
+        }
+      }
+    });
+    
+    app.commands.addCommand(connectMoveHub, {
+      execute: args => {
+        const newDevice = bluetoothManager.connectDevice(movehubRegistryItem);
+        return newDevice;
+      },
+      caption: 'Connect MoveHub',
+      label: 'Connect MoveHub',
+      isEnabled: (args) => {
+        const selectedDevice = bluetoothManager.deviceList.find((device) => device.native.id === args.deviceID as string);
+        if (selectedDevice && selectedDevice instanceof MoveHub && selectedDevice.deviceInfo.connected) {
+          return false;
+        } else {
+          return true;
+        }
+      }
     });
   }
 };

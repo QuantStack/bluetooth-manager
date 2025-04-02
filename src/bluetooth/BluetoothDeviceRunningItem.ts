@@ -24,20 +24,10 @@ export class BluetoothDeviceRunningItem
   open() {
     const commands = this.commands;
     const deviceID = this._device.native.id;
-  
-    const menu = new Menu({ commands: commands });
-    menu.addItem({
-      command: disconnectDevice,
-      args: {deviceID}
-    });
-
-    const commandList = commands.listCommands();
-    commandList.map((command: string) => {
-      if (command.includes('bluetooth-manager') && !command.includes("disconnect")) {
-        menu.addItem({ command: command})
-      }
+    const menu = new Menu({ commands: commands })
+    this._device.contextCommands.map((command: string) => {
+        menu.addItem({ command: command, args: {deviceID}})
     })
-
     menu.addClass('jp-bluetooth-device-running-item-menu')
     const deviceElement = document.querySelector(`.${this.className}`);
     if (deviceElement) {
