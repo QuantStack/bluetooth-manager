@@ -3,13 +3,20 @@ import Vernie from './Vernie';
 import { ManualControl } from './ManualControl';
 import { IMoveHubPanelWithThemeProps } from './MoveHubPanel';
 import { MoveForm } from './MoveForm';
-
+import { CalibrationForm } from './CalibrationForm';
+import { useState } from 'react';
 export function VernieComponent({ device, themeManager }: IMoveHubPanelWithThemeProps) {
+  const [CalibrationFormValue, setCalibrationFormValue] = useState(0)
+
+  const updateCalibrationFormValue = (newValue: number) => {
+    setCalibrationFormValue(newValue);
+  };
+
   return (
     <>
       <div className="vernie-control-grid-container">
         <div className="vernie-control-grid-item-left">
-          <Vernie themeManager={themeManager}/>
+          <Vernie themeManager={themeManager} />
         </div>
         <div className="vernie-control-grid-item-center">
           <h4
@@ -43,7 +50,11 @@ export function VernieComponent({ device, themeManager }: IMoveHubPanelWithTheme
           >
             Other motor(s)
           </h4>
-          <p style={{ margin: '8px 0', fontWeight:"600"}}>Motor 1 on port D</p>
+          <p style={{ margin: '8px 0', fontWeight: "600" }}>Motor 1 on port D</p>
+          <CalibrationForm moveHub={device} label={"Place Vernie head full face and click to get the reference position"} buttonText1='get reference' />
+
+
+
           <MoveForm
             moveHub={device}
             label={"Turn Vernie's head (°)"}
@@ -51,7 +62,7 @@ export function VernieComponent({ device, themeManager }: IMoveHubPanelWithTheme
             actionButton2="RotateDirect"
             buttonText1={'Right'}
             buttonText2={'Left'}
-            valueMin={-50}
+            valueMin={-40}
             valueMax={140}
             type={'angle'}
             port={'D'}
@@ -59,7 +70,7 @@ export function VernieComponent({ device, themeManager }: IMoveHubPanelWithTheme
             dutyCycleIndirect={100}
             build={"Vernie"}
           />
-          <p style={{ margin: '8px 0', fontWeight:"600"}}>Motor 2 on port C </p>
+          <p style={{ margin: '8px 0', fontWeight: "600" }}>Motor 2 on port C </p>
           <MoveForm
             moveHub={device}
             label={'Turn external motor'}
@@ -77,7 +88,7 @@ export function VernieComponent({ device, themeManager }: IMoveHubPanelWithTheme
         </div>
 
         <div className="vernie-control-grid-item-right">
-          <ManualControl device={device} themeManager={themeManager}/>
+          <ManualControl device={device} themeManager={themeManager} />
         </div>
       </div>
     </>
