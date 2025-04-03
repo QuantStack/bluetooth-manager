@@ -2,21 +2,41 @@ import { IRunningSessions } from '@jupyterlab/running';
 import { BluetoothConnectIcon } from './icon';
 import { BluetoothManager } from './BluetoothManager';
 import { buildCompleteIdentifier } from '../bluetooth-extension';
+import { Menu } from '@lumino/widgets';
+import { CommandRegistry } from '@lumino/commands';
+
+export const disconnectDevice = 'bluetooth-manager:disconnect-device';
 
 export class BluetoothDeviceRunningItem
-  implements IRunningSessions.IRunningItem
-{
-  constructor(device: BluetoothManager.Device, manager: BluetoothManager) {
+  implements IRunningSessions.IRunningItem {
+  constructor(device: BluetoothManager.Device, bluetoothManager: BluetoothManager, commands: CommandRegistry) {
     this._device = device;
-    this.manager = manager;
-
+    this.bluetoothManager = bluetoothManager;
     if (this._device.native.name) {
       const deviceName = this._device.native.name;
       this.className = 'jp-bluetooth-' + deviceName.replace(/\s+/g, '-');
     }
+    this.commands = commands;
   }
 
   className?: string | undefined;
+
+  open() {
+    const commands = this.commands;
+    const deviceID = this._device.native.id;
+    const menu = new Menu({ commands: commands })
+    this._device.contextCommands.map((command: string) => {
+        menu.addItem({ command: command, args: {deviceID}})
+    })
+    menu.addClass('jp-bluetooth-device-running-item-menu')
+    const deviceElement = document.querySelector(`.${this.className}`);
+    if (deviceElement) {
+      const rect = deviceElement.getBoundingClientRect();
+      const x = rect.left;
+      const y = rect.bottom;
+      menu.open(x, y);
+    }
+  }
 
   icon() {
     return BluetoothConnectIcon;
@@ -33,9 +53,10 @@ export class BluetoothDeviceRunningItem
   }
 
   shutdown() {
-    this.manager.disconnectDevice(this._device);
+    this.bluetoothManager.disconnectDevice(this._device);
   }
 
   private _device: BluetoothManager.Device;
-  public manager: BluetoothManager;
+  public bluetoothManager: BluetoothManager;
+  public commands: CommandRegistry;
 }

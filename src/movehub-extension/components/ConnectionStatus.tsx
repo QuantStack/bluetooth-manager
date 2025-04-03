@@ -10,7 +10,7 @@ import { CommandRegistry } from '@lumino/commands';
 import { BluetoothManager } from '../../bluetooth/BluetoothManager';
 export const connectMoveHub = 'bluetooth-manager:connect-movehub';
 export const disconnectMoveHub = 'bluetooth-manager:disconnect-movehub';
-import { movehubRegistryItem } from '..';
+
 
 export default function ConnectionStatus({ device }: IMoveHubPanelProps) {
   const [deviceState, setDeviceState] = useState<DeviceInfo>(defaultDeviceInfo);
@@ -46,54 +46,25 @@ export default function ConnectionStatus({ device }: IMoveHubPanelProps) {
 export class ConnectionStatusWidget extends ReactWidget {
   public device: MoveHub;
   public menu: Menu;
-  public commands: CommandRegistry;
 
-  constructor(device: MoveHub, bluetoothManager: BluetoothManager) {
+  constructor(device: MoveHub, bluetoothManager: BluetoothManager, commands: CommandRegistry) {
     super();
     this.device = device;
-    this.commands = new CommandRegistry();
-    this.commands.addCommand(disconnectMoveHub, {
-      execute: args => {
-        bluetoothManager.disconnectDevice(device);
-        return device;
-      },
-      caption: 'Disconnect MoveHub',
-      label: 'Disconnect MoveHub',
-      isEnabled: () => {
-        if (device.deviceInfo.connected) {
-          return true;
-        } else {
-          return false;
-        }
-      }
-    });
-    this.commands.addCommand(connectMoveHub, {
-      execute: args => {
-        const newDevice = bluetoothManager.connectDevice(movehubRegistryItem);
-        return newDevice;
-      },
-      caption: 'Connect MoveHub',
-      label: 'Connect MoveHub',
-      isEnabled: () => {
-        if (device.deviceInfo.connected) {
-          return false;
-        } else {
-          return true;
-        }
-      }
-    });
-    this.menu = new Menu({ commands: this.commands });
+    const deviceID = this.device.native.id;
+    
+    this.menu = new Menu({ commands: commands });
     this.menu.addItem({
-      command: disconnectMoveHub
+      command: disconnectMoveHub,
+      args: {deviceID}
     });
     this.menu.addItem({
-      command: connectMoveHub
+      command: connectMoveHub,
+      args: {deviceID}
     });
     this.menu.addClass('jp-connection-status-menu');
   }
 
   openMenu(event: React.MouseEvent<HTMLDivElement>) {
-    console.log('You have clicked');
     if (this.menu && typeof this.menu.isVisible !== 'undefined') {
       this.menu.open(event.clientX, event.clientY);
     } else {

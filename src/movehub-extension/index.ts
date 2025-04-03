@@ -22,6 +22,8 @@ export * from './version';
 export * from './widget';
 export const addLEGOMoveHubControlPanel =
   'bluetooth-manager:add-lego-movehub-control-panel';
+export const connectMoveHub = 'bluetooth-manager:connect-movehub';
+export const disconnectMoveHub = 'bluetooth-manager:disconnect-movehub';
 export const moveHubServiceUUID = '00001623-1212-efde-1623-785feabcd123';
 export const moveHubCharacteristicUUID = '00001624-1212-efde-1623-785feabcd123';
 export const movehubRegistryItem: IDeviceRegistryItem = {
@@ -81,39 +83,32 @@ const LEGOMoveHubControlPanelPlugin: JupyterFrontEndPlugin<void> = {
           const device = result[
             result.length - 1
           ] as MoveHub; /* the last added MoveHub device*/
-          /*let isThemeLight: boolean = themeManager.theme;
-          themeManager.themeChanged.connect((sender: any, args: IChangedArgs<string, string | null, string>) => {
-            const theme = args.newValue;
-            console.log("Is the theme light?:", themeManager.isLight(theme));
-            isThemeLight = themeManager.isLight(theme);
-            console.log('Theme is:', theme);
-          });*/
-            const content = new MoveHubPanelWidget(device, themeManager);
-            content.addClass('jp-movehub-panel-content');
-            const toolbar = new Toolbar();
-            toolbar.addClass('jp-movehub-panel-toolbar');
-            const main = new MainAreaWidget({ content, toolbar });
-            main.addClass('jp-movehub-panel-main');
-            main.toolbar.addItem(
-              'connection-status',
-              new ConnectionStatusWidget(device, bluetoothManager)
-            );
-            main.toolbar.addItem(
-              'select-lego-model',
-              new LegoBuildSelectorWidget(device)
-            );
-            toolbar.addItem('spacer', Toolbar.createSpacerItem());
-            main.toolbar.addItem('battery-gauge', new BatteryWidget(device, themeManager));
-            main.toolbar.addItem(
-              'device-identifier',
-              new DeviceIdentifierWidget(device)
-            );
-            main.id = 'lego-movehub-control-panel';
-            main.title.label = 'LEGO® Move Hub';
-            main.title.closable = true;
-            main.title.icon = LegoBrickIcon;
-            app.shell.add(main, 'main');
-          
+          const content = new MoveHubPanelWidget(device, themeManager);
+          content.addClass('jp-movehub-panel-content');
+          const toolbar = new Toolbar();
+          toolbar.addClass('jp-movehub-panel-toolbar');
+          const main = new MainAreaWidget({ content, toolbar });
+          main.addClass('jp-movehub-panel-main');
+          main.toolbar.addItem(
+            'connection-status',
+            new ConnectionStatusWidget(device, bluetoothManager, app.commands)
+          );
+          main.toolbar.addItem(
+            'select-lego-model',
+            new LegoBuildSelectorWidget(device)
+          );
+          toolbar.addItem('spacer', Toolbar.createSpacerItem());
+          main.toolbar.addItem('battery-gauge', new BatteryWidget(device, themeManager));
+          main.toolbar.addItem(
+            'device-identifier',
+            new DeviceIdentifierWidget(device)
+          );
+          main.id = 'lego-movehub-control-panel';
+          main.title.label = 'LEGO® Move Hub';
+          main.title.closable = true;
+          main.title.icon = LegoBrickIcon;
+          app.shell.add(main, 'main');
+
 
         } else {
           throw new Error('The device is not a Move Hub.');
@@ -123,17 +118,43 @@ const LEGOMoveHubControlPanelPlugin: JupyterFrontEndPlugin<void> = {
       label: trans.__('Open a LEGO® Move Hub Control Panel')
     });
 
-    app.contextMenu.addItem({
-      command: addLEGOMoveHubControlPanel,
-      selector:
-        'jp-tree-item.jp-RunningSessions-item.jp-bluetooth-LEGO-Move-Hub',
-      rank: 1
+    app.commands.addCommand(disconnectMoveHub, {
+      execute: args => {
+        const selectedDevice = bluetoothManager.deviceList.find((device) => device.native.id === args.deviceID as string);
+        if (selectedDevice && selectedDevice instanceof MoveHub) {
+          bluetoothManager.disconnectDevice(selectedDevice);
+          return selectedDevice;
+        } else {
+          throw new Error('No device provided or device is invalid');
+        }
+      },
+      caption: 'Disconnect MoveHub',
+      label: 'Disconnect MoveHub',
+      isEnabled: (args) => {
+        const selectedDevice = bluetoothManager.deviceList.find((device) => device.native.id === args.deviceID as string);
+        if (selectedDevice && selectedDevice instanceof MoveHub && selectedDevice.deviceInfo.connected) {
+          return true;
+        } else {
+          return false;
+        }
+      }
     });
-
-    app.contextMenu.addItem({
-      command: addLEGOMoveHubControlPanel,
-      selector: 'jp-tree-item.jp-RunningSessions-item.jp-bluetooth-Move-Hub',
-      rank: 1
+    
+    app.commands.addCommand(connectMoveHub, {
+      execute: args => {
+        const newDevice = bluetoothManager.connectDevice(movehubRegistryItem);
+        return newDevice;
+      },
+      caption: 'Connect MoveHub',
+      label: 'Connect MoveHub',
+      isEnabled: (args) => {
+        const selectedDevice = bluetoothManager.deviceList.find((device) => device.native.id === args.deviceID as string);
+        if (selectedDevice && selectedDevice instanceof MoveHub && selectedDevice.deviceInfo.connected) {
+          return false;
+        } else {
+          return true;
+        }
+      }
     });
   }
 };

@@ -69,34 +69,20 @@ const BluetoothSidebarPlugin: JupyterFrontEndPlugin<void> = {
     );
     let runningItemsList: Array<IRunningSessions.IRunningItem>;
 
-    function createTestFunction(device: BluetoothManager.Device) {
-      return function test(node: HTMLElement): boolean {
-        const testString = buildCompleteIdentifier(device.native);
-        return node.title === testString;
-      };
-    }
-
-    commands.addCommand(CommandIDs.disconnectDevice, {
-      execute: async args => {
-        bluetoothManager.deviceList.filter(item => {
-          const testWithDevice = createTestFunction(item);
-          const node = app.contextMenuHitTest(testWithDevice);
-          const identifier = buildCompleteIdentifier(item.native);
-          if (identifier === node?.title) {
-            bluetoothManager.disconnectDevice(item);
-          }
-        });
+    app.commands.addCommand(CommandIDs.disconnectDevice, {
+      execute: (args) => {
+        const selectedDevice= bluetoothManager.deviceList.find((device) => device.native.id === args.deviceID as string);
+        if (selectedDevice) {
+          bluetoothManager.disconnectDevice(selectedDevice);
+          return selectedDevice;
+        } else {
+          throw new Error('No device provided or device is invalid');
+        }
       },
       caption: trans.__('Disconnect device'),
       label: trans.__('Disconnect Device')
     });
 
-    /* Adding commands to the context menu of the relevant connected device*/
-    app.contextMenu.addItem({
-      command: CommandIDs.disconnectDevice,
-      selector: 'jp-tree-item.jp-RunningSessions-item.jp-bluetooth-Move-Hub',
-      rank: 0
-    });
 
     app.commands.addCommand(CommandIDs.openDeviceRegistryDialog, {
       execute: async () => {
@@ -121,6 +107,7 @@ const BluetoothSidebarPlugin: JupyterFrontEndPlugin<void> = {
       }
     });
 
+
     managers.add({
       name: trans.__('Bluetooth Devices'),
       supportsMultipleViews: false,
@@ -130,10 +117,12 @@ const BluetoothSidebarPlugin: JupyterFrontEndPlugin<void> = {
           runningItemsList.push(
             new BluetoothDeviceRunningItem(
               device,
-              bluetoothManager as BluetoothManager
+              bluetoothManager as BluetoothManager,
+              commands
             )
           );
-        });
+        }
+        );
         return runningItemsList;
       },
       shutdownAll: () => {
@@ -163,8 +152,7 @@ const BluetoothSidebarPlugin: JupyterFrontEndPlugin<void> = {
 
 export class DropDownRegistry
   extends Widget
-  implements Dialog.IBodyWidget<string>
-{
+  implements Dialog.IBodyWidget<string> {
   constructor(registry: BluetoothManager.DeviceRegistry) {
     super();
     this._selectList = document.createElement('select');
