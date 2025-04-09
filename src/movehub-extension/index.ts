@@ -12,6 +12,7 @@ import {
 } from '../bluetooth/BluetoothManager';
 import { MoveHub } from './moveHub';
 import ipymovehubPlugin from './plugin';
+/*import { LegoBrickIcon } from '../bluetooth/icon';*/
 import { LegoBrickIcon } from '../bluetooth/icon';
 import { MoveHubPanelWidget } from './components/MoveHubPanel';
 import { LegoBuildSelectorWidget } from './components/LegoBuildSelector';

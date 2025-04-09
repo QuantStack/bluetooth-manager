@@ -1,4 +1,3 @@
-import { useState } from 'react';
 import copySVG from '../../../style/copy.svg';
 const copySVGUrl = `data:image/svg+xml;base64,${btoa(copySVG)}`;
 
