@@ -13,7 +13,7 @@ import {
 import { MoveHub } from './moveHub';
 import ipymovehubPlugin from './plugin';
 /*import { LegoBrickIcon } from '../bluetooth/icon';*/
-import { StudsYellowIcon } from '../bluetooth/icon';
+import { LegoBrickIcon } from '../bluetooth/icon';
 import { MoveHubPanelWidget } from './components/MoveHubPanel';
 import { LegoBuildSelectorWidget } from './components/LegoBuildSelector';
 import { BatteryWidget } from './components/BatteryGauge';
@@ -107,7 +107,7 @@ const LEGOMoveHubControlPanelPlugin: JupyterFrontEndPlugin<void> = {
           main.id = 'lego-movehub-control-panel';
           main.title.label = 'LEGO® Move Hub';
           main.title.closable = true;
-          main.title.icon = StudsYellowIcon;
+          main.title.icon = LegoBrickIcon;
           app.shell.add(main, 'main');
 
 
