@@ -35,18 +35,13 @@ import * as ReactDOMClient from 'react-dom/client';
 // @ts-expect-error To be fixed
 import { Root } from 'react-dom/client';
 //import { DeviceInfoTableComplete } from './components/DeviceInfoTableComplete';
-import { DeviceInfoTableComplete } from './components/DeviceInfoTableComplete';
+import MoveHubViewComponent from './components/MoveHubView';
+
 
 // we use globals for the movehub device since connecting to
 // them takes a long time. If the model would hold the
 // movehub instance, we would need to re-connect any time
 // we restart the kernel.
-
-/*interface deviceCache {
-  [key: string]: any;
-}*/
-
-//const device_cache: deviceCache = {};
 
 export class MoveHubModel extends DOMWidgetModel {
   defaults() {
@@ -60,6 +55,7 @@ export class MoveHubModel extends DOMWidgetModel {
       _view_module_version: MoveHubModel.view_module_version,
       _device_info: {},
       name: 'device1',
+      identifier: '',
       n_lanes: 3
     };
   }
@@ -96,12 +92,10 @@ export class MoveHubModel extends DOMWidgetModel {
     console.log(`initialize with n_lanes=${n_lanes}`, this);
     const name: string = this.get('name');
     console.log(`initialize with name=${name}`);
-    /*if (!(name in device_cache)) {
-      device_cache[name] = await MoveHubModel.bluetoothManager.connectDevice(movehubRegistryItem);
-    }*/
-    //this.movehub = device_cache[name];
-    this.movehub =
-      await MoveHubModel.bluetoothManager.connectDevice(movehubRegistryItem);
+    const identifier: string = this.get('identifier');
+    console.log(`initialize with name=${identifier}`);
+
+
     this.on('msg:custom', async (command: any, buffers: any) => {
       const lane = command['lane'];
       this.lanes[lane] = this.lanes[lane].then(async () => {
@@ -135,34 +129,34 @@ export class MoveHubModel extends DOMWidgetModel {
             this.poll();
             break;
           case 'led':
-            this.movehub.led.call(this.movehub, args);
+            this.movehub.led.apply(this.movehub, args);
             break;
           case 'ledAsync':
-            await this.movehub.ledAsync.call(this.movehub, args);
+            await this.movehub.ledAsync.apply(this.movehub, args);
             break;
           case 'motorTime':
-            this.movehub.motorTime.call(this.movehub, args);
+            this.movehub.motorTime.apply(this.movehub, args);
             break;
           case 'motorTimeMulti':
-            this.movehub.motorTimeMulti.call(this.movehub, args);
+            this.movehub.motorTimeMulti.apply(this.movehub, args);
             break;
           case 'motorTimeAsync':
-            await this.movehub.motorTimeAsync.call(this.movehub, args);
+            await this.movehub.motorTimeAsync.apply(this.movehub, args);
             break;
           case 'motorTimeMultiAsync':
-            await this.movehub.motorTimeMultiAsync.call(this.movehub, args);
+            await this.movehub.motorTimeMultiAsync.apply(this.movehub, args);
             break;
           case 'motorAngle':
-            this.movehub.motorAngle.call(this.movehub, args);
+            this.movehub.motorAngle.apply(this.movehub, args);
             break;
           case 'motorAngleMulti':
-            this.movehub.motorAngleMulti.call(this.movehub, args);
+            this.movehub.motorAngleMulti.apply(this.movehub, args);
             break;
           case 'motorAngleAsync':
-            await this.movehub.motorAngleAsync.call(this.movehub, args);
+            await this.movehub.motorAngleAsync.apply(this.movehub, args);
             break;
           case 'motorAngleMultiAsync':
-            await this.movehub.motorAngleMultiAsync.call(this.movehub, args);
+            await this.movehub.motorAngleMultiAsync.apply(this.movehub, args);
             break;
           default:
             console.error(`unknown command "${cmd}"`);
@@ -176,10 +170,21 @@ export class MoveHubModel extends DOMWidgetModel {
 
   async connect() {
     const sleep = (ms: number) => new Promise(r => setTimeout(r, ms));
-    if (!this.movehub.deviceInfo.connected) {
-      console.log('not connected yet');
+    const identifier = this.get('identifier');
+  
+    /*if (!this.movehub.deviceInfo.connected) {
+      console.log('not connected yet');*/
+    if (identifier === '') {
       this.movehub =
         await MoveHubModel.bluetoothManager.connectDevice(movehubRegistryItem);
+    }
+    else {
+      const selectedDevice = MoveHubModel.bluetoothManager.deviceList.find(device => device.native.id === identifier);
+      if (selectedDevice && selectedDevice instanceof MoveHub) {
+        this.movehub = selectedDevice;
+        console.log('MoveHub is:', this.movehub);
+        //}
+      }
       for (let i = 0; i < 30; i++) {
         await sleep(100);
         if (
@@ -246,10 +251,13 @@ export class MoveHubView extends DOMWidgetView {
     this.el.classList.add('jupyter-react-widget');
     this.root = ReactDOMClient.createRoot(this.el);
     const model = this.model as MoveHubModel;
-    const movehub = model.movehub;
-    this.root.render(<DeviceInfoTableComplete moveHub={movehub} />);
-  }
+    const moveHub = model.movehub;
+    const areDevicesConnected = (MoveHubModel.bluetoothManager.deviceList.length !== 0);
+    this.root.render(
+      (<MoveHubViewComponent areMoveHubsAlreadyConnected={areDevicesConnected} bluetoothManager={MoveHubModel.bluetoothManager} moveHub={moveHub} />
 
+      ))
+  }
   remove() {
     this.root?.unmount();
   }

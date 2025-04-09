@@ -146,9 +146,10 @@ class AsyncCommandContextManager:
 
 class MoveHubLaneProxy(object):
 
-    def __init__(self, movehub, lane):
+    def __init__(self, movehub, lane, identifier):
         self.movehub = movehub
         self.lane = lane
+        self.identifier = identifier
 
     async def get_distance_async(self):
         await self._poll()
@@ -411,6 +412,7 @@ class MoveHubWidget(DOMWidget):
     _view_module_version = Unicode(module_version).tag(sync=True)
     _device_info = Dict(DEFAULT_DEVICE_INFO, read_only=True).tag(sync=True)
     name = Unicode("device1").tag(sync=True)
+    identifier = Unicode("").tag(sync=True)
     n_lanes =Int(3).tag(sync=True)
 
     def __init__(self, *args, **kwargs):
@@ -419,7 +421,7 @@ class MoveHubWidget(DOMWidget):
         self._run_lock = asyncio.Lock()
         self._lane_locks = [asyncio.Lock()  for i in range(self.n_lanes)]
 
-    def run_async_program(self, program, lane=0, output=None):
+    def run_async_program(self, program, lane=0, output=None, identifier=identifier):
 
         if lane < 0 or lane >= self.n_lanes :
             raise RuntimeError(f"lane must be >=0 and < {self.n_lanes} but is {lane}")
@@ -428,11 +430,11 @@ class MoveHubWidget(DOMWidget):
             output = Output()
             display(output)
         return asyncio.ensure_future(
-            self._run_async_program(lane=lane, program=program, output=output)
+            self._run_async_program(lane=lane, program=program, output=output, identifier=identifier)
         )
 
 
-    def run_async_programs_concurrently(self, programs, output=None):
+    def run_async_programs_concurrently(self, programs, output=None, identifier=None):
         if output is None:
             output = Output()
             display(output)
@@ -442,8 +444,10 @@ class MoveHubWidget(DOMWidget):
 
         futures = []
         for lane, program in enumerate(programs):
+            if identifier is None:
+                identifier = self.identifier
             f = asyncio.ensure_future(
-                self._run_async_program(lane=lane, program=program, output=output)
+                self._run_async_program(lane=lane, program=program, output=output, identifier=identifier)
             )
             futures.append(f)
         return futures
@@ -459,13 +463,20 @@ class MoveHubWidget(DOMWidget):
         lane_proxy = MoveHubLaneProxy(movehub=self, lane=0)
         program(lane_proxy, output)
 
-    def connect(self, output=None):
-        async def main(lane, log):
+    def connect(self, output=None, identifier=None):
+        async def main(lane, log, identifier):
             pass
+        if output is None:
+            output = Output()
+            display(output)
+            
+        if identifier is None:
+            identifier = self.identifier
 
-        self.run_async_program(main, output=output)
+        self.run_async_program(main, output=output, identifier=identifier)
+    
 
-    async def _run_async_program(self, lane, program, output):
+    async def _run_async_program(self, lane, program, output, identifier):
         def log(*args, **kwargs):
             old_stdout = sys.stdout
             sys.stdout = mystdout = StringIO()
@@ -480,10 +491,10 @@ class MoveHubWidget(DOMWidget):
         self._log = log
 
         async with self._lane_locks[lane]:
-            lane_proxy = MoveHubLaneProxy(movehub=self, lane=lane)
+            lane_proxy = MoveHubLaneProxy(movehub=self, lane=lane, identifier=identifier)
             try:
                 await lane_proxy._connect()
-                await program(lane_proxy, log)
+                await program(lane_proxy, log, identifier)
             except Exception as ex:
                 err_str = "".join(
                     traceback.TracebackException.from_exception(ex).format()

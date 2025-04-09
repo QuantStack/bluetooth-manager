@@ -5,6 +5,7 @@ import { buildCompleteIdentifier } from '../bluetooth-extension';
 import { IDisposable } from '@lumino/disposable';
 import { Dialog, showDialog } from '@jupyterlab/apputils';
 
+
 /**
  * A class used to update the list of connected device and the related signals used to rerender the connected devices section.
  */
@@ -19,7 +20,7 @@ export class BluetoothManager implements IBluetoothManager {
     >(this);
     this._registry = new BluetoothManager.DeviceRegistry();
     this._deviceList = [];
-    this.identifierRegistry = [];
+    this._identifierRegistry = [];
   }
 
   get deviceList(): Array<BluetoothManager.Device> {
@@ -28,6 +29,10 @@ export class BluetoothManager implements IBluetoothManager {
 
   get registry(): BluetoothManager.DeviceRegistry {
     return this._registry;
+  }
+
+  get identifierRegistry(): Array<string> {
+    return this._identifierRegistry;
   }
 
   async connectDevice(
@@ -88,7 +93,7 @@ export class BluetoothManager implements IBluetoothManager {
     this._registry.add(registryItem);
     this.registeredByAPlugin.emit(this._registry);
     console.warn(
-      `New item from category ${registryItem.identifier} is added to the registry.`
+      `New item from category ${registryItem.deviceType} is added to the registry.`
     );
     return this._registry;
   }
@@ -126,7 +131,6 @@ export class BluetoothManager implements IBluetoothManager {
     else {
       return;
     }
-
   }
 
   private _deviceList: Array<BluetoothManager.Device>;
@@ -136,7 +140,7 @@ export class BluetoothManager implements IBluetoothManager {
     BluetoothManager.DeviceRegistry
   >;
   private _registry: BluetoothManager.DeviceRegistry;
-  public identifierRegistry: Array<string>;
+  private _identifierRegistry: Array<string>;
 }
 
 export namespace BluetoothManager {
@@ -279,10 +283,11 @@ export interface IBluetoothManager {
   >;
   get deviceList(): Array<BluetoothManager.Device>;
   get registry(): BluetoothManager.DeviceRegistry;
+  get identifierRegistry(): Array<string>;
 }
 
 export interface IDeviceRegistryItem {
-  identifier: string;
+  deviceType: string;
   factory: (
     native: BluetoothDevice
   ) => Promise<BluetoothManager.Device | undefined>;

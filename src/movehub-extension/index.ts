@@ -27,7 +27,7 @@ export const disconnectMoveHub = 'bluetooth-manager:disconnect-movehub';
 export const moveHubServiceUUID = '00001623-1212-efde-1623-785feabcd123';
 export const moveHubCharacteristicUUID = '00001624-1212-efde-1623-785feabcd123';
 export const movehubRegistryItem: IDeviceRegistryItem = {
-  identifier: 'LEGO® Move Hub',
+  deviceType: 'LEGO® Move Hub',
   options: {
     acceptAllDevices: false,
     filters: [{ services: [moveHubServiceUUID] }],
