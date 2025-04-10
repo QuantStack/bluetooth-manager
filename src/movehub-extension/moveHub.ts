@@ -127,7 +127,6 @@ export class MoveHub extends BluetoothManager.Device {
 
     // Initialize hub
     if (characteristic !== undefined) {
-      console.log('Initialize the hub new HubAsync')
       this.hub = new HubAsync(characteristic, defaultConfiguration);
       this.hub.logDebug = this.logDebug;
 
@@ -141,7 +140,6 @@ export class MoveHub extends BluetoothManager.Device {
           defaultConfiguration
         );
         this.hubControl.start(this.hub);
-        console.log('Start hubControl')
 
         setInterval(() => {
           this.hubControl.update();
