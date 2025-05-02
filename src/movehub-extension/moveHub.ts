@@ -79,7 +79,10 @@ export class MoveHub extends BluetoothManager.Device {
       driveSpeed: DEFAULT_CONFIG.DRIVE_SPEED,
       turnSpeed: DEFAULT_CONFIG.TURN_SPEED
     };
-    this.contextCommands = ['bluetooth-manager:disconnect-device','bluetooth-manager:add-lego-movehub-control-panel']
+    this.contextCommands = [
+      'bluetooth-manager:disconnect-device',
+      'bluetooth-manager:add-lego-movehub-control-panel'
+    ];
     this.isConnected = false;
   }
   logDebug(message?: any, ...optionalParams: any[]): void {
@@ -103,10 +106,7 @@ export class MoveHub extends BluetoothManager.Device {
         this.deviceInfo.connected = connected;
         this.isConnected = connected;
       }
-      console.warn(
-        'The connection state is',
-        this.isConnected
-      );
+      console.warn('The connection state is', this.isConnected);
       this.deviceInfo.identifier = buildShortIdentifier(this.native);
     });
     this.disconnected.connect(async (sender, disconnected: boolean) => {
@@ -114,10 +114,7 @@ export class MoveHub extends BluetoothManager.Device {
         this.deviceInfo.connected = false;
         this.isConnected = false;
       }
-      console.warn(
-        'The connection state is',
-        this.isConnected
-      );
+      console.warn('The connection state is', this.isConnected);
     });
 
     const characteristic = await this.getCharacteristic(

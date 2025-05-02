@@ -4,7 +4,10 @@ import { MoveHubComponent } from './MoveHubComponent';
 import { VernieComponent } from './VernieComponent';
 import { FrankieComponent } from './FrankieComponent';
 
-export function LegoBuildSpecific({ device, themeManager }: IMoveHubPanelWithThemeProps) {
+export function LegoBuildSpecific({
+  device,
+  themeManager
+}: IMoveHubPanelWithThemeProps) {
   const [legoBuild, setLegoBuild] = useState<any>('Move Hub');
 
   const renderSelectedComponent = () => {
@@ -12,7 +15,7 @@ export function LegoBuildSpecific({ device, themeManager }: IMoveHubPanelWithThe
       case 'Move Hub':
         return <MoveHubComponent device={device} themeManager={themeManager} />;
       case 'Vernie':
-        return <VernieComponent device={device} themeManager={themeManager}/>;
+        return <VernieComponent device={device} themeManager={themeManager} />;
       case 'Frankie':
         return <FrankieComponent device={device} themeManager={themeManager} />;
       default:

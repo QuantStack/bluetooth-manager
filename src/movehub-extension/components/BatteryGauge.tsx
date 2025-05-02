@@ -38,8 +38,8 @@ const batteryCustomizationLight = {
     lowBatteryColor: 'red',
     fontFamily: 'Helvetica',
     fontSize: 20,
-    showPercentage: true          // Set to true to show battery percentage
-  },
+    showPercentage: true // Set to true to show battery percentage
+  }
 };
 
 const batteryCustomizationDark = {
@@ -72,11 +72,14 @@ const batteryCustomizationDark = {
     lowBatteryColor: 'red',
     fontFamily: 'Helvetica',
     fontSize: 20,
-    showPercentage: true          // Set to true to show battery percentage
-  },
+    showPercentage: true // Set to true to show battery percentage
+  }
 };
 
-export default function BatteryComponent({ device, themeManager }: IMoveHubPanelWithThemeProps) {
+export default function BatteryComponent({
+  device,
+  themeManager
+}: IMoveHubPanelWithThemeProps) {
   const [deviceState, setDeviceState] = useState<DeviceInfo>(defaultDeviceInfo);
   const theme = themeManager.theme;
   console.log('theme:', theme);
@@ -106,45 +109,50 @@ export default function BatteryComponent({ device, themeManager }: IMoveHubPanel
     const isThemeLight = themeManager.isLight(theme);
     return (
       <UseSignal signal={themeManager.themeChanged}>
-        {(): JSX.Element => (
+        {(): JSX.Element =>
           deviceState.batteryLevel !== undefined &&
-            deviceState.connected === true ? (
+          deviceState.connected === true ? (
             <BatteryGauge
               value={deviceState.batteryLevel}
               width={'50px'}
-              customization={isThemeLight ? batteryCustomizationLight : batteryCustomizationDark}
-
+              customization={
+                isThemeLight
+                  ? batteryCustomizationLight
+                  : batteryCustomizationDark
+              }
             />
           ) : (
             <div></div>
           )
-        )}
+        }
       </UseSignal>
     );
   } else {
-    return (
-      deviceState.batteryLevel !== undefined &&
-        deviceState.connected === true ? (
-        <BatteryGauge
-          value={deviceState.batteryLevel}
-          customization={batteryCustomizationLight}
-
-        />) : (<div></div>)
-    )
+    return deviceState.batteryLevel !== undefined &&
+      deviceState.connected === true ? (
+      <BatteryGauge
+        value={deviceState.batteryLevel}
+        customization={batteryCustomizationLight}
+      />
+    ) : (
+      <div></div>
+    );
   }
 }
 
 export class BatteryWidget extends ReactWidget {
   public device: MoveHub;
-  public themeManager: IThemeManager
+  public themeManager: IThemeManager;
 
   constructor(device: MoveHub, themeManager: IThemeManager) {
     super();
     this.device = device;
-    this.themeManager = themeManager
+    this.themeManager = themeManager;
   }
 
   render() {
-    return <BatteryComponent device={this.device} themeManager={this.themeManager} />;
+    return (
+      <BatteryComponent device={this.device} themeManager={this.themeManager} />
+    );
   }
 }

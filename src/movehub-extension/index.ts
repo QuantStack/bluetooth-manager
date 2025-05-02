@@ -74,7 +74,6 @@ const LEGOMoveHubControlPanelPlugin: JupyterFrontEndPlugin<void> = {
     console.log('JupyterLab lego-movehub-control-panel plugin is activated!');
     const trans = translator.load('jupyterlab');
 
-
     app.commands.addCommand(addLEGOMoveHubControlPanel, {
       execute: args => {
         const result = bluetoothManager.deviceList.filter(
@@ -99,7 +98,10 @@ const LEGOMoveHubControlPanelPlugin: JupyterFrontEndPlugin<void> = {
             new LegoBuildSelectorWidget(device)
           );
           toolbar.addItem('spacer', Toolbar.createSpacerItem());
-          main.toolbar.addItem('battery-gauge', new BatteryWidget(device, themeManager));
+          main.toolbar.addItem(
+            'battery-gauge',
+            new BatteryWidget(device, themeManager)
+          );
           main.toolbar.addItem(
             'device-identifier',
             new DeviceIdentifierWidget(device)
@@ -109,8 +111,6 @@ const LEGOMoveHubControlPanelPlugin: JupyterFrontEndPlugin<void> = {
           main.title.closable = true;
           main.title.icon = LegoBrickIcon;
           app.shell.add(main, 'main');
-
-
         } else {
           throw new Error('The device is not a Move Hub.');
         }
@@ -121,7 +121,9 @@ const LEGOMoveHubControlPanelPlugin: JupyterFrontEndPlugin<void> = {
 
     app.commands.addCommand(disconnectMoveHub, {
       execute: args => {
-        const selectedDevice = bluetoothManager.deviceList.find((device) => device.native.id === args.deviceID as string);
+        const selectedDevice = bluetoothManager.deviceList.find(
+          device => device.native.id === (args.deviceID as string)
+        );
         if (selectedDevice && selectedDevice instanceof MoveHub) {
           bluetoothManager.disconnectDevice(selectedDevice);
           return selectedDevice;
@@ -131,16 +133,22 @@ const LEGOMoveHubControlPanelPlugin: JupyterFrontEndPlugin<void> = {
       },
       caption: 'Disconnect MoveHub',
       label: 'Disconnect MoveHub',
-      isEnabled: (args) => {
-        const selectedDevice = bluetoothManager.deviceList.find((device) => device.native.id === args.deviceID as string);
-        if (selectedDevice && selectedDevice instanceof MoveHub && selectedDevice.deviceInfo.connected) {
+      isEnabled: args => {
+        const selectedDevice = bluetoothManager.deviceList.find(
+          device => device.native.id === (args.deviceID as string)
+        );
+        if (
+          selectedDevice &&
+          selectedDevice instanceof MoveHub &&
+          selectedDevice.deviceInfo.connected
+        ) {
           return true;
         } else {
           return false;
         }
       }
     });
-    
+
     app.commands.addCommand(connectMoveHub, {
       execute: args => {
         const newDevice = bluetoothManager.connectDevice(movehubRegistryItem);
@@ -148,9 +156,15 @@ const LEGOMoveHubControlPanelPlugin: JupyterFrontEndPlugin<void> = {
       },
       caption: 'Connect MoveHub',
       label: 'Connect MoveHub',
-      isEnabled: (args) => {
-        const selectedDevice = bluetoothManager.deviceList.find((device) => device.native.id === args.deviceID as string);
-        if (selectedDevice && selectedDevice instanceof MoveHub && selectedDevice.deviceInfo.connected) {
+      isEnabled: args => {
+        const selectedDevice = bluetoothManager.deviceList.find(
+          device => device.native.id === (args.deviceID as string)
+        );
+        if (
+          selectedDevice &&
+          selectedDevice instanceof MoveHub &&
+          selectedDevice.deviceInfo.connected
+        ) {
           return false;
         } else {
           return true;

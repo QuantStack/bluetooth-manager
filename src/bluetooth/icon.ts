@@ -19,8 +19,6 @@ export const LegoBrickIcon = new LabIcon({
   name: '@jupyterlab/bluetooh-manager:bluetooth-lego-brick',
   svgstr: LegoBrickSvgstr
 });
-;
-
 export const GreenCircle = new LabIcon({
   name: '@jupyterlab/bluetooh-manager:bluetooth-green-circle',
   svgstr: GreenCircleSvgstr
