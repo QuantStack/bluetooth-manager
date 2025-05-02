@@ -4,12 +4,15 @@ import { ManualControl } from './ManualControl';
 import { IMoveHubPanelWithThemeProps } from './MoveHubPanel';
 import { MoveForm } from './MoveForm';
 
-export function VernieComponent({ device, themeManager }: IMoveHubPanelWithThemeProps) {
+export function VernieComponent({
+  device,
+  themeManager
+}: IMoveHubPanelWithThemeProps) {
   return (
     <>
       <div className="vernie-control-grid-container">
         <div className="vernie-control-grid-item-left">
-          <Vernie themeManager={themeManager}/>
+          <Vernie themeManager={themeManager} />
         </div>
         <div className="vernie-control-grid-item-center">
           <h4
@@ -43,7 +46,9 @@ export function VernieComponent({ device, themeManager }: IMoveHubPanelWithTheme
           >
             Other motor(s)
           </h4>
-          <p style={{ margin: '8px 0', fontWeight:"600"}}>Motor 1 on port D</p>
+          <p style={{ margin: '8px 0', fontWeight: '600' }}>
+            Motor 1 on port D
+          </p>
           <MoveForm
             hub={device.hub}
             label={"Turn Vernie's head (°)"}
@@ -57,7 +62,9 @@ export function VernieComponent({ device, themeManager }: IMoveHubPanelWithTheme
             dutyCycleDirect={-100}
             dutyCycleIndirect={100}
           />
-          <p style={{ margin: '8px 0', fontWeight:"600"}}>Motor 2 on port C </p>
+          <p style={{ margin: '8px 0', fontWeight: '600' }}>
+            Motor 2 on port C{' '}
+          </p>
           <MoveForm
             hub={device.hub}
             label={'Turn external motor'}
@@ -75,7 +82,7 @@ export function VernieComponent({ device, themeManager }: IMoveHubPanelWithTheme
         </div>
 
         <div className="vernie-control-grid-item-right">
-          <ManualControl device={device} themeManager={themeManager}/>
+          <ManualControl device={device} themeManager={themeManager} />
         </div>
       </div>
     </>

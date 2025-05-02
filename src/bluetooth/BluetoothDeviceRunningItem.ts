@@ -8,8 +8,13 @@ import { CommandRegistry } from '@lumino/commands';
 export const disconnectDevice = 'bluetooth-manager:disconnect-device';
 
 export class BluetoothDeviceRunningItem
-  implements IRunningSessions.IRunningItem {
-  constructor(device: BluetoothManager.Device, bluetoothManager: BluetoothManager, commands: CommandRegistry) {
+  implements IRunningSessions.IRunningItem
+{
+  constructor(
+    device: BluetoothManager.Device,
+    bluetoothManager: BluetoothManager,
+    commands: CommandRegistry
+  ) {
     this._device = device;
     this.bluetoothManager = bluetoothManager;
     if (this._device.native.name) {
@@ -24,11 +29,11 @@ export class BluetoothDeviceRunningItem
   open() {
     const commands = this.commands;
     const deviceID = this._device.native.id;
-    const menu = new Menu({ commands: commands })
+    const menu = new Menu({ commands: commands });
     this._device.contextCommands.map((command: string) => {
-        menu.addItem({ command: command, args: {deviceID}})
-    })
-    menu.addClass('jp-bluetooth-device-running-item-menu')
+      menu.addItem({ command: command, args: { deviceID } });
+    });
+    menu.addClass('jp-bluetooth-device-running-item-menu');
     const deviceElement = document.querySelector(`.${this.className}`);
     if (deviceElement) {
       const rect = deviceElement.getBoundingClientRect();

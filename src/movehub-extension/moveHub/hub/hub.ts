@@ -174,31 +174,35 @@ export class Hub {
           this.batteryLevel = data[5];
           this.emit('batteryLevel', data[5]);
         }
-        if (data.length === 11 && data[3] === 0x0D && data[4] === 0x06) {
+        if (data.length === 11 && data[3] === 0x0d && data[4] === 0x06) {
           /* hub property reference : primary MAC address 0x0D*/
           const payload = data.slice(5, 11);
-          let primaryMACAddress = "";
+          let primaryMACAddress = '';
           payload.forEach((item: number, index: number) => {
-
             if (index !== payload.length - 1) {
               if (item < 10) {
-                primaryMACAddress = primaryMACAddress + "0" + item.toString(16).toUpperCase() + ':';
+                primaryMACAddress =
+                  primaryMACAddress +
+                  '0' +
+                  item.toString(16).toUpperCase() +
+                  ':';
+              } else {
+                primaryMACAddress =
+                  primaryMACAddress + item.toString(16).toUpperCase() + ':';
               }
-              else {
-                primaryMACAddress = primaryMACAddress + item.toString(16).toUpperCase() + ':';
+            } else {
+              if (item < 10) {
+                primaryMACAddress =
+                  primaryMACAddress + '0' + item.toString(16).toUpperCase();
+              } else {
+                primaryMACAddress =
+                  primaryMACAddress + item.toString(16).toUpperCase();
               }
             }
-            else {
-              if (item < 10){
-                primaryMACAddress = primaryMACAddress + "0" + item.toString(16).toUpperCase();
-              }
-              else {
-                primaryMACAddress = primaryMACAddress + item.toString(16).toUpperCase();
-              }
-            }
-          })
+          });
           this.primaryMACAddress = primaryMACAddress;
         }
+        break;
       }
       case 0x04: {
         clearTimeout(this.portInfoTimeout);
@@ -577,7 +581,6 @@ export class Hub {
   /**
    Enable hub battery 0x06, 0x00 0x01 0x06 0x02 0x01*/
   enableBatteryUpdates() {
-    // @ts-ignore
     this.write(
       // @ts-expect-error To be fixed
       Buffer.from([
@@ -588,7 +591,6 @@ export class Hub {
   /**
  Request hub battery update 0x06, 0x00 0x01 0x06 0x05 0x01*/
   requestBatteryUpdates() {
-    // @ts-ignore
     this.write(
       // @ts-expect-error To be fixed
       Buffer.from([
@@ -600,26 +602,23 @@ export class Hub {
   /**
    Enable hub battery 0x06, 0x00 0x01 0x06 0x02 0x01*/
   enablePrimaryMACAddressUpdates() {
-    // @ts-ignore
     this.write(
       // @ts-expect-error To be fixed
       Buffer.from([
-        0x06, 0x00, 0x01, 0x0D, 0x02, 0x01
+        0x06, 0x00, 0x01, 0x0d, 0x02, 0x01
       ]) /* enable updates for the primary MAC address*/
     );
   }
   /**
  Request hub battery update 0x06, 0x00 0x01 0x06 0x05 0x01*/
   requestPrimaryMACAddressUpdates() {
-    // @ts-ignore
     this.write(
-      // @ts-ignore
+      // @ts-expect-error To be fixed
       Buffer.from([
-        0x06, 0x00, 0x01, 0x0D, 0x05, 0x01
+        0x06, 0x00, 0x01, 0x0d, 0x05, 0x01
       ]) /* request update for the primary MAC address*/
     );
   }
-
 
   subscribeAll() {
     Object.entries(this.ports).forEach(([port, data]) => {

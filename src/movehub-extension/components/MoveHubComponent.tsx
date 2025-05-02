@@ -8,7 +8,10 @@ export interface IHubControlProps {
   hub: HubAsync;
 }
 
-export function MoveHubComponent({ device, themeManager }: IMoveHubPanelWithThemeProps) {
+export function MoveHubComponent({
+  device,
+  themeManager
+}: IMoveHubPanelWithThemeProps) {
   return (
     <>
       <div className="lego-build-control-grid-container">
@@ -45,9 +48,11 @@ export function MoveHubComponent({ device, themeManager }: IMoveHubPanelWithThem
               padding: '0'
             }}
           >
-          Other motor(s)
+            Other motor(s)
           </h4>
-          <p style={{ margin: '8px 0', fontWeight:"600"}}>Motor 1 on port D</p>
+          <p style={{ margin: '8px 0', fontWeight: '600' }}>
+            Motor 1 on port D
+          </p>
           <MoveForm
             hub={device.hub}
             label={'Turn external motor'}
@@ -61,8 +66,10 @@ export function MoveHubComponent({ device, themeManager }: IMoveHubPanelWithThem
             dutyCycleDirect={-100}
             dutyCycleIndirect={100}
           />
-            <p style={{ margin: '8px 0', fontWeight:"600"}}>Motor 2 on port C </p>
-            <MoveForm
+          <p style={{ margin: '8px 0', fontWeight: '600' }}>
+            Motor 2 on port C{' '}
+          </p>
+          <MoveForm
             hub={device.hub}
             label={'Turn external motor'}
             actionButton1="RotateIndirect"

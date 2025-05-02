@@ -64,14 +64,14 @@ const BluetoothSidebarPlugin: JupyterFrontEndPlugin<void> = {
     console.log('JupyterLab bluetooth-sidebar plugin is activated!');
     const trans = translator.load('jupyterlab');
     const { commands } = app;
-    const openDeviceRegistryDialogLabel = trans.__(
-      'Add a Device'
-    );
+    const openDeviceRegistryDialogLabel = trans.__('Add a Device');
     let runningItemsList: Array<IRunningSessions.IRunningItem>;
 
     app.commands.addCommand(CommandIDs.disconnectDevice, {
-      execute: (args) => {
-        const selectedDevice= bluetoothManager.deviceList.find((device) => device.native.id === args.deviceID as string);
+      execute: args => {
+        const selectedDevice = bluetoothManager.deviceList.find(
+          device => device.native.id === (args.deviceID as string)
+        );
         if (selectedDevice) {
           bluetoothManager.disconnectDevice(selectedDevice);
           return selectedDevice;
@@ -82,7 +82,6 @@ const BluetoothSidebarPlugin: JupyterFrontEndPlugin<void> = {
       caption: trans.__('Disconnect device'),
       label: trans.__('Disconnect Device')
     });
-
 
     app.commands.addCommand(CommandIDs.openDeviceRegistryDialog, {
       execute: async () => {
@@ -107,7 +106,6 @@ const BluetoothSidebarPlugin: JupyterFrontEndPlugin<void> = {
       }
     });
 
-
     managers.add({
       name: trans.__('Bluetooth Devices'),
       supportsMultipleViews: false,
@@ -121,8 +119,7 @@ const BluetoothSidebarPlugin: JupyterFrontEndPlugin<void> = {
               commands
             )
           );
-        }
-        );
+        });
         return runningItemsList;
       },
       shutdownAll: () => {
@@ -152,7 +149,8 @@ const BluetoothSidebarPlugin: JupyterFrontEndPlugin<void> = {
 
 export class DropDownRegistry
   extends Widget
-  implements Dialog.IBodyWidget<string> {
+  implements Dialog.IBodyWidget<string>
+{
   constructor(registry: BluetoothManager.DeviceRegistry) {
     super();
     this._selectList = document.createElement('select');

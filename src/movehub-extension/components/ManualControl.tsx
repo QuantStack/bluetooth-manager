@@ -23,7 +23,10 @@ export interface IMoveHubControlProps {
   device: MoveHub;
 }
 
-export function ManualControl({ device, themeManager }: IMoveHubPanelWithThemeProps) {
+export function ManualControl({
+  device,
+  themeManager
+}: IMoveHubPanelWithThemeProps) {
   let pressStartTime: number = 0;
   let pressDuration: number = 0;
   let poll: Poll | null = null;
@@ -39,9 +42,9 @@ export function ManualControl({ device, themeManager }: IMoveHubPanelWithThemePr
       },
       frequency: {
         interval: 100,
-        backoff: true,
+        backoff: true
       },
-      standby: 'when-hidden',
+      standby: 'when-hidden'
     });
 
     poll.start();
@@ -51,31 +54,27 @@ export function ManualControl({ device, themeManager }: IMoveHubPanelWithThemePr
     if (poll) {
       poll.stop();
     }
-    if (action === "inactive") {
+    if (action === 'inactive') {
       console.error('Inactive button, no control available.');
     }
-    if (action === "stop") {
+    if (action === 'stop') {
       device.stop();
     }
 
     if (pressDuration < LONG_PRESS_THRESHOLD) {
-      if (action === "drive") {
+      if (action === 'drive') {
         await device.hub.drive(20 * direction);
-      }
-      else if (action === "turn") {
+      } else if (action === 'turn') {
         await device.hub.turn(90 * direction);
       }
-    
     } else {
-      if (action === "drive") {
+      if (action === 'drive') {
         await device.hub.driveToDirection(direction);
+      } else if (action === 'turn') {
+        await device.hub.turn(3600 * direction);
       }
-   
-      else if (action === "turn") {
-        await device.hub.turn(3600*direction);
-      }
-    };
-  }
+    }
+  };
 
   const handleMouseLeave = () => {
     if (poll) {
@@ -86,13 +85,15 @@ export function ManualControl({ device, themeManager }: IMoveHubPanelWithThemePr
   const theme = themeManager.theme;
   if (theme) {
     const isThemeLight = themeManager.isLight(theme!);
-    const currentEmptySVGUrl = isThemeLight ? emptyLightSVGUrl : emptyDarkSVGUrl;
+    const currentEmptySVGUrl = isThemeLight
+      ? emptyLightSVGUrl
+      : emptyDarkSVGUrl;
     const images = [
       {
         id: 1,
         src: currentEmptySVGUrl,
         alt: 'Image 1',
-        action: "inactive",
+        action: 'inactive',
         direction: 0,
         handleMouseDown: handleMouseDown,
         handleMouseUp: handleMouseUp,
@@ -112,7 +113,7 @@ export function ManualControl({ device, themeManager }: IMoveHubPanelWithThemePr
         id: 3,
         src: currentEmptySVGUrl,
         alt: 'Image 3',
-        action: "inactive",
+        action: 'inactive',
         direction: 0,
         handleMouseDown: handleMouseDown,
         handleMouseUp: handleMouseUp,
@@ -121,7 +122,7 @@ export function ManualControl({ device, themeManager }: IMoveHubPanelWithThemePr
       {
         id: 4,
         src: turnLeftSVGUrl,
-        action: "turn",
+        action: 'turn',
         direction: -1,
         alt: 'Image 4',
         handleMouseDown: handleMouseDown,
@@ -132,7 +133,7 @@ export function ManualControl({ device, themeManager }: IMoveHubPanelWithThemePr
         id: 5,
         src: stopSVGUrl,
         alt: 'Image 5',
-        action: "stop",
+        action: 'stop',
         direction: 0,
         handleMouseDown: handleMouseDown,
         handleMouseUp: handleMouseUp,
@@ -142,7 +143,7 @@ export function ManualControl({ device, themeManager }: IMoveHubPanelWithThemePr
         id: 6,
         src: turnRightSVGUrl,
         alt: 'Image 6',
-        action: "turn",
+        action: 'turn',
         direction: 1,
         handleMouseDown: handleMouseDown,
         handleMouseUp: handleMouseUp,
@@ -152,7 +153,7 @@ export function ManualControl({ device, themeManager }: IMoveHubPanelWithThemePr
         id: 7,
         src: currentEmptySVGUrl,
         alt: 'Image 7',
-        action: "inactive",
+        action: 'inactive',
         direction: 0,
         handleMouseDown: handleMouseDown,
         handleMouseUp: handleMouseUp,
@@ -162,7 +163,7 @@ export function ManualControl({ device, themeManager }: IMoveHubPanelWithThemePr
         id: 8,
         src: arrowDownSVGUrl,
         alt: 'Image 8',
-        action: "drive",
+        action: 'drive',
         direction: -1,
         handleMouseDown: handleMouseDown,
         handleMouseUp: handleMouseUp,
@@ -172,7 +173,7 @@ export function ManualControl({ device, themeManager }: IMoveHubPanelWithThemePr
         id: 9,
         src: currentEmptySVGUrl,
         alt: 'Image 9',
-        action: "inactive",
+        action: 'inactive',
         direction: 0,
         handleMouseDown: handleMouseDown,
         handleMouseUp: handleMouseUp,
@@ -180,35 +181,36 @@ export function ManualControl({ device, themeManager }: IMoveHubPanelWithThemePr
       }
     ];
 
-    return (<UseSignal signal={themeManager.themeChanged}>
-      {(): JSX.Element => (
-        <div className="manual-control-grid">
-          {images.map((image, index) => (
-            <div className="manual-control-grid-item">
-              <Button
-                key={index}
-                onMouseDown={image.handleMouseDown}
-                onMouseUp={(e) => { handleMouseUp(image.action, image.direction) }}
-                onMouseLeave={image.handleMouseLeave}
-                className="image-button"
-              >
-                <img src={image.src} alt={image.alt} />
-              </Button>
-            </div>
-          ))}
-        </div>
-      )}
-    </UseSignal>
+    return (
+      <UseSignal signal={themeManager.themeChanged}>
+        {(): JSX.Element => (
+          <div className="manual-control-grid">
+            {images.map((image, index) => (
+              <div className="manual-control-grid-item">
+                <Button
+                  key={index}
+                  onMouseDown={image.handleMouseDown}
+                  onMouseUp={e => {
+                    handleMouseUp(image.action, image.direction);
+                  }}
+                  onMouseLeave={image.handleMouseLeave}
+                  className="image-button"
+                >
+                  <img src={image.src} alt={image.alt} />
+                </Button>
+              </div>
+            ))}
+          </div>
+        )}
+      </UseSignal>
     );
-
-  }
-  else {
+  } else {
     const images = [
       {
         id: 1,
         src: emptyLightSVGUrl,
         alt: 'Image 1',
-        action: "inactive",
+        action: 'inactive',
         direction: 0,
         handleMouseDown: handleMouseDown,
         handleMouseUp: handleMouseUp,
@@ -228,7 +230,7 @@ export function ManualControl({ device, themeManager }: IMoveHubPanelWithThemePr
         id: 3,
         src: emptyLightSVGUrl,
         alt: 'Image 3',
-        action: "inactive",
+        action: 'inactive',
         direction: 0,
         handleMouseDown: handleMouseDown,
         handleMouseUp: handleMouseUp,
@@ -237,7 +239,7 @@ export function ManualControl({ device, themeManager }: IMoveHubPanelWithThemePr
       {
         id: 4,
         src: turnLeftSVGUrl,
-        action: "turn",
+        action: 'turn',
         direction: -1,
         alt: 'Image 4',
         handleMouseDown: handleMouseDown,
@@ -248,7 +250,7 @@ export function ManualControl({ device, themeManager }: IMoveHubPanelWithThemePr
         id: 5,
         src: stopSVGUrl,
         alt: 'Image 5',
-        action: "stop",
+        action: 'stop',
         direction: 0,
         handleMouseDown: handleMouseDown,
         handleMouseUp: handleMouseUp,
@@ -258,7 +260,7 @@ export function ManualControl({ device, themeManager }: IMoveHubPanelWithThemePr
         id: 6,
         src: turnRightSVGUrl,
         alt: 'Image 6',
-        action: "turn",
+        action: 'turn',
         direction: 1,
         handleMouseDown: handleMouseDown,
         handleMouseUp: handleMouseUp,
@@ -268,7 +270,7 @@ export function ManualControl({ device, themeManager }: IMoveHubPanelWithThemePr
         id: 7,
         src: emptyLightSVGUrl,
         alt: 'Image 7',
-        action: "inactive",
+        action: 'inactive',
         direction: 0,
         handleMouseDown: handleMouseDown,
         handleMouseUp: handleMouseUp,
@@ -278,7 +280,7 @@ export function ManualControl({ device, themeManager }: IMoveHubPanelWithThemePr
         id: 8,
         src: arrowDownSVGUrl,
         alt: 'Image 8',
-        action: "drive",
+        action: 'drive',
         direction: -1,
         handleMouseDown: handleMouseDown,
         handleMouseUp: handleMouseUp,
@@ -288,7 +290,7 @@ export function ManualControl({ device, themeManager }: IMoveHubPanelWithThemePr
         id: 9,
         src: emptyLightSVGUrl,
         alt: 'Image 9',
-        action: "inactive",
+        action: 'inactive',
         direction: 0,
         handleMouseDown: handleMouseDown,
         handleMouseUp: handleMouseUp,
@@ -296,27 +298,28 @@ export function ManualControl({ device, themeManager }: IMoveHubPanelWithThemePr
       }
     ];
 
-    return (<UseSignal signal={themeManager.themeChanged}>
-      {(): JSX.Element => (
-        <div className="manual-control-grid">
-          {images.map((image, index) => (
-            <div className="manual-control-grid-item">
-              <Button
-                key={index}
-                onMouseDown={image.handleMouseDown}
-                onMouseUp={(e) => { handleMouseUp(image.action, image.direction) }}
-                onMouseLeave={image.handleMouseLeave}
-
-                className="image-button"
-              >
-                <img src={image.src} alt={image.alt} />
-              </Button>
-            </div>
-          ))}
-        </div>
-      )}
-    </UseSignal>
+    return (
+      <UseSignal signal={themeManager.themeChanged}>
+        {(): JSX.Element => (
+          <div className="manual-control-grid">
+            {images.map((image, index) => (
+              <div className="manual-control-grid-item">
+                <Button
+                  key={index}
+                  onMouseDown={image.handleMouseDown}
+                  onMouseUp={e => {
+                    handleMouseUp(image.action, image.direction);
+                  }}
+                  onMouseLeave={image.handleMouseLeave}
+                  className="image-button"
+                >
+                  <img src={image.src} alt={image.alt} />
+                </Button>
+              </div>
+            ))}
+          </div>
+        )}
+      </UseSignal>
     );
   }
 }
-

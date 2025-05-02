@@ -5,14 +5,13 @@ import { DeviceInfoTable } from './DeviceInfoTable';
 import { LegoBuildSpecific } from './LegoBuildSpecific';
 import { IThemeManager } from '@jupyterlab/apputils';
 
-
 export interface IMoveHubPanelProps {
   device: MoveHub;
 }
 
 export interface IMoveHubPanelWithThemeProps {
   device: MoveHub;
-  themeManager: IThemeManager
+  themeManager: IThemeManager;
 }
 
 export interface IHubControlProps {
@@ -20,14 +19,17 @@ export interface IHubControlProps {
 }
 
 export interface IBuildProps {
-  themeManager: IThemeManager
+  themeManager: IThemeManager;
 }
 
 export function MoveHubInfos(props: { device: MoveHub }) {
   return <DeviceInfoTable moveHub={props.device} />;
 }
 
-export function MoveHubPanel({ device, themeManager }: IMoveHubPanelWithThemeProps) {
+export function MoveHubPanel({
+  device,
+  themeManager
+}: IMoveHubPanelWithThemeProps) {
   return (
     <div>
       <LegoBuildSpecific device={device} themeManager={themeManager} />
@@ -38,15 +40,17 @@ export function MoveHubPanel({ device, themeManager }: IMoveHubPanelWithThemePro
 
 export class MoveHubPanelWidget extends ReactWidget {
   public device: MoveHub;
-  public themeManager: IThemeManager
+  public themeManager: IThemeManager;
 
   constructor(device: MoveHub, themeManager: IThemeManager) {
     super();
     this.device = device;
-    this.themeManager =  themeManager;
+    this.themeManager = themeManager;
   }
 
   render() {
-    return <MoveHubPanel device={this.device} themeManager={this.themeManager}/>;
+    return (
+      <MoveHubPanel device={this.device} themeManager={this.themeManager} />
+    );
   }
 }

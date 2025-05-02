@@ -5,7 +5,6 @@ const FrankieDarkSVGUrl = `data:image/svg+xml;base64,${btoa(FrankieDarkSVG)}`;
 import { IBuildProps } from './MoveHubPanel';
 import { UseSignal } from '@jupyterlab/apputils';
 
-
 export default function Frankie({ themeManager }: IBuildProps) {
   const theme = themeManager.theme;
   if (theme) {
@@ -14,14 +13,21 @@ export default function Frankie({ themeManager }: IBuildProps) {
     return (
       <UseSignal signal={themeManager.themeChanged}>
         {(): JSX.Element => (
-          <img src={currentSVGUrl} alt="Frankie build represented with LeoCAD" height="220px" />
+          <img
+            src={currentSVGUrl}
+            alt="Frankie build represented with LeoCAD"
+            height="220px"
+          />
         )}
       </UseSignal>
     );
-  }
-  else
+  } else {
     return (
-      <img src={FrankieLightSVGUrl} alt="Frankie build represented with LeoCAD" height="220px" />
-
+      <img
+        src={FrankieLightSVGUrl}
+        alt="Frankie build represented with LeoCAD"
+        height="220px"
+      />
     );
+  }
 }

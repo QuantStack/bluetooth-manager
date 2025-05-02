@@ -19,13 +19,6 @@
     "target": "ES2018",
     "strict": false
   },
-
   "include": ["src/**/*"],
-  "references": [
-    {
-      "@jupyterlab/bluetooth": ["./src/bluetooth"],
-      "@jupyterlab/bluetooth-extension": ["./src/bluetooth-extension"],
-      "movehub-extension": ["./src/movehub-extension"]
-    }
-  ]
+  "rootDirs": ["src", "ui-tests"]
 }

@@ -5,7 +5,6 @@ import { buildCompleteIdentifier } from '../bluetooth-extension';
 import { IDisposable } from '@lumino/disposable';
 import { Dialog, showDialog } from '@jupyterlab/apputils';
 
-
 /**
  * A class used to update the list of connected device and the related signals used to rerender the connected devices section.
  */
@@ -101,29 +100,24 @@ export class BluetoothManager implements IBluetoothManager {
     const isWebBluetoothSupported: boolean = navigator.bluetooth ? true : false;
     if (isWebBluetoothSupported === false) {
       showDialog({
-        title: ('Error'),
-        body: (
-          'Web Bluetooth is not supported on your browser. It works on Chrome and Edge (Firefox and Explorer are not supported). \n Please also check that the Web Bluetooth flag is properly set to enabled in the Chrome flags (chrome://flags/).'
-        ),
-        buttons: [
-          Dialog.okButton({ label: ('Close') })
-        ]
+        title: 'Error',
+        body: 'Web Bluetooth is not supported on your browser. It works on Chrome and Edge (Firefox and Explorer are not supported). \n Please also check that the Web Bluetooth flag is properly set to enabled in the Chrome flags (chrome://flags/).',
+        buttons: [Dialog.okButton({ label: 'Close' })]
       });
     }
-    return isWebBluetoothSupported
+    return isWebBluetoothSupported;
   }
 
   async requestDevice(
     registryItem: IDeviceRegistryItem
   ): Promise<BluetoothDevice | undefined> {
-    const isWebBluetoothSupported = await this.checkWebBluetoothSupport()
+    const isWebBluetoothSupported = await this.checkWebBluetoothSupport();
     if (isWebBluetoothSupported) {
       const native = await navigator.bluetooth.requestDevice(
         registryItem.options
       );
       return native;
-    }
-    else {
+    } else {
       return;
     }
   }
@@ -146,7 +140,7 @@ export namespace BluetoothManager {
     public connected: Signal<this, boolean>;
     public disconnected: Signal<this, boolean>;
     public isDisposed: boolean;
-    public contextCommands:Array<string>;
+    public contextCommands: Array<string>;
 
     constructor(native: BluetoothDevice) {
       this.connected = new Signal<this, boolean>(this);
@@ -154,7 +148,10 @@ export namespace BluetoothManager {
       this.isConnected = false;
       this.isDisposed = false;
       this.native = native;
-      this.contextCommands = ['bluetooth-manager:disconnect-device', 'bluetooth-manager:add-lego-movehub-control-panel']
+      this.contextCommands = [
+        'bluetooth-manager:disconnect-device',
+        'bluetooth-manager:add-lego-movehub-control-panel'
+      ];
     }
 
     async connectAndGetAllServices(): Promise<
@@ -164,40 +161,45 @@ export namespace BluetoothManager {
         this.isConnected = false;
         this.disconnected.emit(true);
       });
-      const server = this.native.gatt
+      const server = this.native.gatt;
       if (server) {
         const timeout = 5000;
         const connectWithTimeout = new Promise<void>((resolve, reject) => {
-        const timeoutId = setTimeout(() => {
-            reject(
-              new Error('Connection to GATT server timed out'));
+          const timeoutId = setTimeout(() => {
+            reject(new Error('Connection to GATT server timed out'));
             server.disconnect();
             this.dispose();
           }, timeout);
 
-          server.connect().then(async () => {
-            clearTimeout(timeoutId);
-            resolve();
-            this.isConnected = true;
-            this.connected.emit(true);
-          })
-            .catch((error) => {
+          server
+            .connect()
+            .then(async () => {
+              clearTimeout(timeoutId);
+              resolve();
+              this.isConnected = true;
+              this.connected.emit(true);
+            })
+            .catch(error => {
               server.disconnect();
               reject(error);
             });
         });
-        await connectWithTimeout
+        await connectWithTimeout;
         if (server.connected === true) {
           const services = await server.getPrimaryServices();
           if (!services || services.length === 0) {
-            throw new Error('Server exists but no service found on the device.');
-          } else { return services; }
+            throw new Error(
+              'Server exists but no service found on the device.'
+            );
+          } else {
+            return services;
+          }
+        } else {
+          throw new Error(
+            'There is no connection to server. No attempt to get a service.'
+          );
         }
-        else {
-          throw new Error('There is no connection to server. No attempt to get a service.')
-        }
-      }
-      else {
+      } else {
         throw new Error('Server is not defined.');
       }
     }
@@ -256,7 +258,7 @@ export namespace BluetoothManager {
       if (service) {
         return service.getCharacteristics();
       } else {
-        throw new Error('The requested service is not available.')
+        throw new Error('The requested service is not available.');
       }
     }
 
@@ -267,7 +269,6 @@ export namespace BluetoothManager {
       const service = await this.getService(serviceUUID);
       if (service) {
         return service.getCharacteristic(characteristicUUID);
-
       } else {
         throw new Error('The requested service is not available.');
       }

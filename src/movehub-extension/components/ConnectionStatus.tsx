@@ -11,7 +11,6 @@ import { BluetoothManager } from '../../bluetooth/BluetoothManager';
 export const connectMoveHub = 'bluetooth-manager:connect-movehub';
 export const disconnectMoveHub = 'bluetooth-manager:disconnect-movehub';
 
-
 export default function ConnectionStatus({ device }: IMoveHubPanelProps) {
   const [deviceState, setDeviceState] = useState<DeviceInfo>(defaultDeviceInfo);
 
@@ -47,19 +46,23 @@ export class ConnectionStatusWidget extends ReactWidget {
   public device: MoveHub;
   public menu: Menu;
 
-  constructor(device: MoveHub, bluetoothManager: BluetoothManager, commands: CommandRegistry) {
+  constructor(
+    device: MoveHub,
+    bluetoothManager: BluetoothManager,
+    commands: CommandRegistry
+  ) {
     super();
     this.device = device;
     const deviceID = this.device.native.id;
-    
+
     this.menu = new Menu({ commands: commands });
     this.menu.addItem({
       command: disconnectMoveHub,
-      args: {deviceID}
+      args: { deviceID }
     });
     this.menu.addItem({
       command: connectMoveHub,
-      args: {deviceID}
+      args: { deviceID }
     });
     this.menu.addClass('jp-connection-status-menu');
   }
