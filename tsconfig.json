@@ -19,7 +19,6 @@
     "target": "ES2018",
     "strict": false
   },
-
   "include": ["src/**/*"],
   "references": [
     {
