@@ -94,13 +94,17 @@ const BluetoothSidebarPlugin: JupyterFrontEndPlugin<void> = {
           ]
         }).then(async result => {
           if (result.button.accept) {
-            bluetoothManager.deviceTypeRegistry.itemsList.forEach(async item => {
-              if (item.deviceType === result.value) {
-                await bluetoothManager.connect(item);
-              } else {
-                console.warn('There is no corresponding item in the registry!');
+            bluetoothManager.deviceTypeRegistry.itemsList.forEach(
+              async item => {
+                if (item.deviceType === result.value) {
+                  await bluetoothManager.connect(item);
+                } else {
+                  console.warn(
+                    'There is no corresponding item in the registry!'
+                  );
+                }
               }
-            });
+            );
           }
         });
       }

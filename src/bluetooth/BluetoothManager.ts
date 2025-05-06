@@ -13,10 +13,6 @@ export class BluetoothManager implements IBluetoothManager {
     this.deviceListChanged = new Signal<this, Array<BluetoothManager.Device>>(
       this
     );
-    this.registeredByAPlugin = new Signal<
-      this,
-      BluetoothManager.DeviceTypeRegistry
-    >(this);
     this._deviceTypeRegistry = new BluetoothManager.DeviceTypeRegistry();
     this._deviceList = [];
     this._identifierRegistry = [];
@@ -191,32 +187,6 @@ export namespace BluetoothManager {
       }
     }
 
-    /*async connectAndGetAllServices(): Promise<
-      Array<BluetoothRemoteGATTService> | undefined
-    > {
-      this.native.addEventListener('gattserverdisconnected', event => {
-        this.isConnected = false;
-        this.disconnected.emit(true);
-      });
-      const server = this.native.gatt
-      if (server) {
-        server.connect();
-        if (server.connected === true) {
-          const services = await server.getPrimaryServices();
-          this.isConnected = true;
-          if (!services || services.length === 0) {
-            throw new Error('Server exists but no service found on the device.');
-          } else { return services; }
-        }
-        else {
-          throw new Error('There is no connection to server. No attempt to get a service.')
-        }
-      }
-      else {
-        throw new Error('Server is not defined.');
-      }
-    }*/
-
     async disconnect(): Promise<void> {
       if (this.native) {
         this.native.gatt?.disconnect();
@@ -272,9 +242,18 @@ export namespace BluetoothManager {
 
   export class DeviceTypeRegistry implements IDeviceTypeRegistry {
     private _deviceTypeRegistry: Array<IDeviceTypeRegistryItem>;
+    private _registeredByAPlugin: Signal<
+      this,
+      BluetoothManager.DeviceTypeRegistry
+    >;
+
     public registryItem: IDeviceTypeRegistryItem;
     constructor() {
       this._deviceTypeRegistry = [];
+      this._registeredByAPlugin = new Signal<
+        this,
+        BluetoothManager.DeviceTypeRegistry
+      >(this);
     }
 
     add(registryItem: IDeviceTypeRegistryItem) {
@@ -282,6 +261,12 @@ export namespace BluetoothManager {
     }
     get itemsList(): Array<IDeviceTypeRegistryItem> {
       return this._deviceTypeRegistry;
+    }
+    get registeredByAPlugin(): Signal<
+      this,
+      BluetoothManager.DeviceTypeRegistry
+    > {
+      return this._registeredByAPlugin;
     }
   }
 }
@@ -294,10 +279,6 @@ export interface IBluetoothManager {
   connect(registryItem: IDeviceTypeRegistryItem): any;
   disconnect(device: BluetoothManager.Device): void;
   deviceListChanged: Signal<BluetoothManager, Array<BluetoothManager.Device>>;
-  registeredByAPlugin: Signal<
-    BluetoothManager,
-    BluetoothManager.DeviceTypeRegistry
-  >;
   get deviceList(): Array<BluetoothManager.Device>;
   get deviceTypeRegistry(): BluetoothManager.DeviceTypeRegistry;
 }
@@ -313,6 +294,10 @@ export interface IDeviceTypeRegistryItem {
 export interface IDeviceTypeRegistry {
   add: (registryItem: IDeviceTypeRegistryItem) => void;
   get itemsList(): Array<IDeviceTypeRegistryItem>;
+  get registeredByAPlugin(): Signal<
+    IDeviceTypeRegistry,
+    BluetoothManager.DeviceTypeRegistry
+  >;
 }
 
 export const IBluetoothManager = new Token<IBluetoothManager>(

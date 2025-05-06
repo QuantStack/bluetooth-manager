@@ -57,7 +57,9 @@ const MoveHubRegisterPlugin: JupyterFrontEndPlugin<void> = {
   ): void => {
     console.log('JupyterLab move-hub-register plugin is activated!');
     bluetoothManager.deviceTypeRegistry.add(movehubRegistryItem);
-    bluetoothManager.registeredByAPlugin.emit(bluetoothManager.deviceTypeRegistry);
+    bluetoothManager.deviceTypeRegistry.registeredByAPlugin.emit(
+      bluetoothManager.deviceTypeRegistry
+    );
     console.warn(
       `New item from category ${movehubRegistryItem} is added to the registry.`
     );
