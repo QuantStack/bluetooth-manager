@@ -94,7 +94,7 @@ const BluetoothSidebarPlugin: JupyterFrontEndPlugin<void> = {
           ]
         }).then(async result => {
           if (result.button.accept) {
-            bluetoothManager.deviceTypeRegistry.itemsList.forEach(
+            bluetoothManager.deviceTypeRegistry.deviceTypes.forEach(
               async item => {
                 if (item.deviceType === result.value) {
                   await bluetoothManager.connect(item);
@@ -160,7 +160,7 @@ export class DropDownRegistry
     this._selectList = document.createElement('select');
     this.node.appendChild(this._selectList);
     this.registry = registry;
-    registry.itemsList.forEach(item => {
+    registry.deviceTypes.forEach(item => {
       const option = document.createElement('option');
       option.value = item.deviceType;
       option.text = item.deviceType;
