@@ -293,7 +293,7 @@ export interface IDeviceTypeRegistryItem {
 
 export interface IDeviceTypeRegistry {
   add: (registryItem: IDeviceTypeRegistryItem) => void;
-  get itemsList(): Array<IDeviceTypeRegistryItem>;
+  get deviceTypes(): IDeviceTypeRegistryItem[];
   get registeredByAPlugin(): Signal<
     IDeviceTypeRegistry,
     BluetoothManager.DeviceTypeRegistry
