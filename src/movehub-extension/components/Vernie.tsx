@@ -16,7 +16,7 @@ export default function Vernie({ themeManager }: IBuildProps) {
           <img
             src={currentSVGUrl}
             alt="Vernie build represented with LeoCAD"
-            height="300px"
+            height="280px"
           />
         )}
       </UseSignal>
@@ -26,7 +26,7 @@ export default function Vernie({ themeManager }: IBuildProps) {
       <img
         src={VernieLightSVGUrl}
         alt="Vernie build represented with LeoCAD"
-        height="300px"
+        height="280px"
       />
     );
   }

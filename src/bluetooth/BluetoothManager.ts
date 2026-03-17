@@ -6,7 +6,7 @@ import { IDisposable } from '@lumino/disposable';
 import { Dialog, showDialog } from '@jupyterlab/apputils';
 
 /**
- * A class used to update the list of connected device and the related signals used to rerender the connected devices section.
+ * A class used to update the list of connected devices and the related signals used to rerender the connected devices section.
  */
 export class BluetoothManager implements IBluetoothManager {
   constructor() {
