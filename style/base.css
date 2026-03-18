@@ -217,6 +217,11 @@
     grid-template-columns: repeat(2, 1fr);
     grid-template-rows: repeat(2, auto);
   }
+  .vernie-control-grid-item-right {
+    justify-content: center;
+    grid-column: 1 / -1; 
+  }
+
 }
 
 .manual-control-grid {
