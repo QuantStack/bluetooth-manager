@@ -4,103 +4,14 @@
 <svg
    version="1.1"
    id="svg1"
-   width="839.67401"
+   width="848"
    height="952.56006"
-   viewBox="0 0 839.67404 952.56007"
+   viewBox="0 0 848.00003 952.56007"
    xmlns:xlink="http://www.w3.org/1999/xlink"
    xmlns="http://www.w3.org/2000/svg"
    xmlns:svg="http://www.w3.org/2000/svg">
   <defs
      id="defs1">
-    <linearGradient
-       xlink:href="#linearGradient3241"
-       id="linearGradient3243"
-       x1="-113.7078"
-       y1="605.40808"
-       x2="239.34584"
-       y2="605.40808"
-       gradientUnits="userSpaceOnUse"
-       gradientTransform="matrix(1.2787013,0,0,0.88557009,465.75629,-327.38017)" />
-    <linearGradient
-       id="linearGradient3241">
-      <stop
-         style="stop-color:#000000;stop-opacity:1;"
-         offset="0"
-         id="stop3239" />
-    </linearGradient>
-    <marker
-       style="overflow:visible"
-       id="RoundedArrow"
-       refX="0"
-       refY="0"
-       orient="auto-start-reverse"
-       markerWidth="6.1347523"
-       markerHeight="5.9304948"
-       viewBox="0 0 6.1347524 5.9304951"
-       preserveAspectRatio="xMidYMid">
-      <path
-         transform="scale(0.7)"
-         d="m -0.21114562,-4.1055728 6.42229122,3.21114561 a 1,1 90 0 1 0,1.78885438 L -0.21114562,4.1055728 A 1.236068,1.236068 31.717474 0 1 -2,3 v -6 a 1.236068,1.236068 148.28253 0 1 1.78885438,-1.1055728 z"
-         style="fill:context-stroke;fill-rule:evenodd;stroke:none"
-         id="path1367" />
-    </marker>
-    <linearGradient
-       xlink:href="#linearGradient3241"
-       id="linearGradient3373"
-       gradientUnits="userSpaceOnUse"
-       x1="-113.7078"
-       y1="605.40808"
-       x2="239.34584"
-       y2="605.40808"
-       gradientTransform="matrix(0.76667416,0,0,1.0931915,410.1838,-277.22285)" />
-    <marker
-       style="overflow:visible"
-       id="RoundedArrow-4"
-       refX="0"
-       refY="0"
-       orient="auto-start-reverse"
-       markerWidth="6.1347523"
-       markerHeight="5.9304953"
-       viewBox="0 0 6.1347524 5.9304951"
-       preserveAspectRatio="xMidYMid">
-      <path
-         transform="scale(0.7)"
-         d="m -0.21114562,-4.1055728 6.42229122,3.21114561 a 1,1 90 0 1 0,1.78885438 L -0.21114562,4.1055728 A 1.236068,1.236068 31.717474 0 1 -2,3 v -6 a 1.236068,1.236068 148.28253 0 1 1.78885438,-1.1055728 z"
-         style="fill:context-stroke;fill-rule:evenodd;stroke:none"
-         id="path1367-5" />
-    </marker>
-    <marker
-       style="overflow:visible"
-       id="RoundedArrow-4-6"
-       refX="0"
-       refY="0"
-       orient="auto-start-reverse"
-       markerWidth="6.1347523"
-       markerHeight="5.9304953"
-       viewBox="0 0 6.1347524 5.9304951"
-       preserveAspectRatio="xMidYMid">
-      <path
-         transform="scale(0.7)"
-         d="m -0.21114562,-4.1055728 6.42229122,3.21114561 a 1,1 90 0 1 0,1.78885438 L -0.21114562,4.1055728 A 1.236068,1.236068 31.717474 0 1 -2,3 v -6 a 1.236068,1.236068 148.28253 0 1 1.78885438,-1.1055728 z"
-         style="fill:context-stroke;fill-rule:evenodd;stroke:none"
-         id="path1367-5-4" />
-    </marker>
-    <marker
-       style="overflow:visible"
-       id="RoundedArrow-4-2"
-       refX="0"
-       refY="0"
-       orient="auto-start-reverse"
-       markerWidth="6.1347523"
-       markerHeight="5.9304948"
-       viewBox="0 0 6.1347524 5.9304951"
-       preserveAspectRatio="xMidYMid">
-      <path
-         transform="scale(0.7)"
-         d="m -0.21114562,-4.1055728 6.42229122,3.21114561 a 1,1 90 0 1 0,1.78885438 L -0.21114562,4.1055728 A 1.236068,1.236068 31.717474 0 1 -2,3 v -6 a 1.236068,1.236068 148.28253 0 1 1.78885438,-1.1055728 z"
-         style="fill:context-stroke;fill-rule:evenodd;stroke:none"
-         id="path1367-5-7" />
-    </marker>
     <marker
        style="overflow:visible"
        id="RoundedArrow-4-2-3"
@@ -185,19 +96,20 @@
          y="437.66046"
          id="tspan11"
          style="font-size:37.3333px;fill:#ffffff">(port C)</tspan></text>
-    <text
-       xml:space="preserve"
-       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:37.3333px;font-family:System-ui;-inkscape-font-specification:'System-ui, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;fill:#ffffff;fill-opacity:0.870588;stroke:none;stroke-width:8;stroke-dasharray:none;stroke-opacity:1"
-       x="516.67651"
-       y="758.01709"
-       id="text12"><tspan
-         id="tspan12"
-         x="516.67651"
-         y="758.01709"
-         style="font-size:37.3333px;fill:#ffffff">Caterpillars wheels </tspan><tspan
-         x="516.67651"
-         y="798.01709"
-         id="tspan13"
-         style="font-size:37.3333px;fill:#ffffff">( port A and B)</tspan></text>
   </g>
+  <text
+     xml:space="preserve"
+     style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:37.3333px;font-family:System-ui;-inkscape-font-specification:System-ui;text-align:start;writing-mode:lr-tb;direction:ltr;text-anchor:start;fill:#ffffff"
+     x="539.47736"
+     y="775.58923"
+     id="text15"><tspan
+       id="tspan15"
+       x="539.47736"
+       y="775.58923">Caterpillars</tspan><tspan
+       x="539.47736"
+       y="822.25586"
+       id="tspan16">wheels</tspan><tspan
+       x="539.47736"
+       y="868.92249"
+       id="tspan17">(ports A and B)</tspan></text>
 </svg>
