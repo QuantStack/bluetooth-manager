@@ -41,7 +41,8 @@ export class BluetoothManager implements IBluetoothManager {
           return device;
         }
       }
-    } catch (error) {
+    }
+    catch (error) {
       console.error('Connection failed:', error);
       throw error;
     }
@@ -77,19 +78,19 @@ export class BluetoothManager implements IBluetoothManager {
     device.dispose();
   }
 
-  removeAllDevices(deviceList: Array<BluetoothManager.Device>) {
-    const devicesToRemove = [...deviceList];
+  removeAllDevices() {
+    const devicesToRemove = [...this._deviceList];
     for (const device of devicesToRemove) {
       this._removeDeviceFromList(device);
     }
-    this.deviceListChanged.emit(deviceList);
+    this.deviceListChanged.emit(this._deviceList);
   }
 
   async checkWebBluetoothSupport(): Promise<boolean> {
     if (!('bluetooth' in navigator)) {
       showDialog({
         title: 'Error',
-        body: 'Web Bluetooth is not supported in your browser. It works on Chrome and Edge. Make sure the Web Bluetooth flag is enabled in chrome://flags/.',
+        body: `Web Bluetooth is not supported in your browser. It works on Chrome and Edge. Make sure the Web Bluetooth flag is enabled in chrome://flags/.`,
         buttons: [Dialog.okButton({ label: 'Close' })]
       });
       return false;
@@ -193,6 +194,7 @@ export namespace BluetoothManager {
       if (this.native) {
         try {
           this.native.gatt?.disconnect();
+
         } catch (error) {
           console.error('Failed to disconnect:', error);
         }
@@ -274,7 +276,7 @@ export namespace BluetoothManager {
  * Interface for the bluetooth manager.
  */
 export interface IBluetoothManager {
-  removeAllDevices(deviceList: Array<BluetoothManager.Device>): void;
+  removeAllDevices(): void;
   connect(registryItem: IDeviceTypeRegistryItem): any;
   disconnect(device: BluetoothManager.Device): void;
   deviceListChanged: Signal<BluetoothManager, Array<BluetoothManager.Device>>;
