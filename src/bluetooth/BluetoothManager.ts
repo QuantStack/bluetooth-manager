@@ -43,6 +43,7 @@ export class BluetoothManager implements IBluetoothManager {
         });
         return device;
       }
+      return undefined;
     } catch (error) {
       console.error('Connection failed:', error);
       throw error;
