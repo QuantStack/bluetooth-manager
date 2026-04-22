@@ -90,7 +90,7 @@ export class BluetoothManager implements IBluetoothManager {
     if (!('bluetooth' in navigator)) {
       showDialog({
         title: 'Error',
-        body: `Web Bluetooth is not supported in your browser. It works on Chrome and Edge. Make sure the Web Bluetooth flag is enabled in chrome://flags/.`,
+        body: 'Web Bluetooth is not supported in your browser. It works on Chrome and Edge. Make sure the Web Bluetooth flag is enabled in chrome://flags/.',
         buttons: [Dialog.okButton({ label: 'Close' })]
       });
       return false;
