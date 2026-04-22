@@ -81,7 +81,12 @@ export class BluetoothManager implements IBluetoothManager {
 
   removeAllDevices(deviceList: Array<BluetoothManager.Device>) {
     for (const device of deviceList) {
-      this._removeDeviceFromList(device);
+      const index = this._deviceList.indexOf(device);
+      if (index > -1) {
+        this._deviceList.splice(index, 1);
+        this._identifierRegistry.splice(index, 1);
+        device.dispose();
+      }
     }
     this.deviceListChanged.emit(this._deviceList);
   }
