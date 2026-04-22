@@ -51,7 +51,6 @@ export class BluetoothManager implements IBluetoothManager {
 
   async disconnect(device: BluetoothManager.Device) {
     await device.disconnect();
-    device.dispose();
   }
 
   // Method to add a device to the list
@@ -151,6 +150,8 @@ export namespace BluetoothManager {
       this.native.addEventListener('gattserverdisconnected', event => {
         this.isConnected = false;
         this.disconnected.emit(true);
+        this.dispose();
+        this.isDisposed = true;
       });
       const server = this.native.gatt;
       if (server) {
