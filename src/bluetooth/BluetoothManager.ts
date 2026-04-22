@@ -83,7 +83,7 @@ export class BluetoothManager implements IBluetoothManager {
     for (const device of deviceList) {
       this._removeDeviceFromList(device);
     }
-    this.deviceListChanged.emit(deviceList);
+    this.deviceListChanged.emit(this._deviceList);
   }
 
   async checkWebBluetoothSupport(): Promise<boolean> {
