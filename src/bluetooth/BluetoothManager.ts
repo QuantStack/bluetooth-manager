@@ -83,7 +83,7 @@ export class BluetoothManager implements IBluetoothManager {
   }
 
   get identifierRegistry(): Array<string> {
-    return Array.from(this._identifierMap.keys()); 
+    return Array.from(this._identifierMap.keys());
   }
 
   removeAllDevices(deviceList: Array<BluetoothManager.Device>) {
@@ -122,7 +122,7 @@ export class BluetoothManager implements IBluetoothManager {
   private _deviceList: Array<BluetoothManager.Device>;
   public deviceListChanged: Signal<this, Array<BluetoothManager.Device>>;
   private _deviceTypeRegistry: BluetoothManager.DeviceTypeRegistry;
-  private _identifierMap: Map<string, BluetoothManager.Device>
+  private _identifierMap: Map<string, BluetoothManager.Device>;
 }
 
 export namespace BluetoothManager {
