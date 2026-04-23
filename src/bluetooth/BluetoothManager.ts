@@ -15,7 +15,7 @@ export class BluetoothManager implements IBluetoothManager {
     );
     this._deviceTypeRegistry = new BluetoothManager.DeviceTypeRegistry();
     this._deviceList = [];
-    this._identifierRegistry = [];
+    this._identifierMap = new Map();
   }
 
   get deviceList(): Array<BluetoothManager.Device> {
@@ -57,14 +57,14 @@ export class BluetoothManager implements IBluetoothManager {
   // Method to add a device to the list
   private _addDeviceToList(device: BluetoothManager.Device): void {
     const identifier = buildCompleteIdentifier(device.native);
-    if (this._identifierRegistry.includes(identifier) === false) {
+    if (this.identifierRegistry.includes(identifier) === false) {
       this._deviceList.push(device);
-      this._identifierRegistry.push(identifier);
+      this._identifierMap.set(identifier, device);
+      // Emit the signal when the list changes
+      this.deviceListChanged.emit(this._deviceList);
     } else {
       console.log('The device is already in the registry of identifiers');
     }
-    // Emit the signal when the list changes
-    this.deviceListChanged.emit(this._deviceList);
   }
 
   // Method to remove a device from the list
@@ -72,11 +72,18 @@ export class BluetoothManager implements IBluetoothManager {
     const index = this._deviceList.indexOf(device);
     if (index > -1) {
       this._deviceList.splice(index, 1);
-      this._identifierRegistry.splice(index, 1);
+      const identifier = buildCompleteIdentifier(device.native);
+      this._identifierMap.delete(identifier);
       // Emit the signal when the list changes
       this.deviceListChanged.emit(this._deviceList);
     }
-    device.dispose();
+    if (!device.isDisposed) {
+      device.dispose();
+    }
+  }
+
+  get identifierRegistry(): Array<string> {
+    return Array.from(this._identifierMap.keys()); 
   }
 
   removeAllDevices(deviceList: Array<BluetoothManager.Device>) {
@@ -84,7 +91,6 @@ export class BluetoothManager implements IBluetoothManager {
       const index = this._deviceList.indexOf(device);
       if (index > -1) {
         this._deviceList.splice(index, 1);
-        this._identifierRegistry.splice(index, 1);
         device.dispose();
       }
     }
@@ -106,21 +112,17 @@ export class BluetoothManager implements IBluetoothManager {
   async requestDevice(
     registryItem: IDeviceTypeRegistryItem
   ): Promise<BluetoothDevice | undefined> {
-    const isWebBluetoothSupported = await this.checkWebBluetoothSupport();
-    if (isWebBluetoothSupported) {
-      const native = await navigator.bluetooth.requestDevice(
-        registryItem.options
-      );
-      return native;
-    } else {
-      return;
+    const isSupported = await this.checkWebBluetoothSupport();
+    if (!isSupported) {
+      return undefined;
     }
+    return await navigator.bluetooth.requestDevice(registryItem.options);
   }
 
   private _deviceList: Array<BluetoothManager.Device>;
   public deviceListChanged: Signal<this, Array<BluetoothManager.Device>>;
   private _deviceTypeRegistry: BluetoothManager.DeviceTypeRegistry;
-  private _identifierRegistry: Array<string>;
+  private _identifierMap: Map<string, BluetoothManager.Device>
 }
 
 export namespace BluetoothManager {

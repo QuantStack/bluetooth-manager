@@ -174,7 +174,7 @@ export class MoveHubModel extends DOMWidgetModel {
       console.log('not connected yet');*/
     if (identifier === '') {
       this.movehub =
-        await MoveHubModel.bluetoothManager.connect(movehubRegistryItem);
+        await MoveHubModel.bluetoothManager.connect(movehubRegistryItem) as MoveHub;
     } else {
       const selectedDevice = MoveHubModel.bluetoothManager.deviceList.find(
         device => device.native.id === identifier
