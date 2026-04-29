@@ -5,7 +5,7 @@ import { buildCompleteIdentifier } from '../bluetooth-extension';
 import { Menu } from '@lumino/widgets';
 import { CommandRegistry } from '@lumino/commands';
 
-export const disconnectDevice = 'bluetooth-manager:disconnect-device';
+export const disconnect = 'bluetooth-manager:disconnect-device';
 
 export class BluetoothDeviceRunningItem
   implements IRunningSessions.IRunningItem
@@ -58,7 +58,7 @@ export class BluetoothDeviceRunningItem
   }
 
   shutdown() {
-    this.bluetoothManager.disconnectDevice(this._device);
+    this.bluetoothManager.disconnect(this._device);
   }
 
   private _device: BluetoothManager.Device;

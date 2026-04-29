@@ -16,7 +16,7 @@ import {
 export namespace CommandIDs {
   export const openDeviceRegistryDialog =
     'bluetooth-manager:open-dialog-for-devices-registry';
-  export const disconnectDevice = 'bluetooth-manager:disconnect-device';
+  export const disconnect = 'bluetooth-manager:disconnect-device';
 }
 
 export function buildCompleteIdentifier(native: BluetoothDevice): string {
@@ -67,13 +67,13 @@ const BluetoothSidebarPlugin: JupyterFrontEndPlugin<void> = {
     const openDeviceRegistryDialogLabel = trans.__('Add a Device');
     let runningItemsList: Array<IRunningSessions.IRunningItem>;
 
-    app.commands.addCommand(CommandIDs.disconnectDevice, {
+    app.commands.addCommand(CommandIDs.disconnect, {
       execute: args => {
         const selectedDevice = bluetoothManager.deviceList.find(
           device => device.native.id === (args.deviceID as string)
         );
         if (selectedDevice) {
-          bluetoothManager.disconnectDevice(selectedDevice);
+          bluetoothManager.disconnect(selectedDevice);
           return selectedDevice;
         } else {
           throw new Error('No device provided or device is invalid');
@@ -87,20 +87,24 @@ const BluetoothSidebarPlugin: JupyterFrontEndPlugin<void> = {
       execute: async () => {
         showDialog({
           title: 'Select device type',
-          body: new DropDownRegistry(bluetoothManager.registry),
+          body: new DropDownRegistry(bluetoothManager.deviceTypeRegistry),
           buttons: [
             Dialog.okButton({ label: 'Select' }),
             Dialog.cancelButton({ label: 'Cancel' })
           ]
         }).then(async result => {
           if (result.button.accept) {
-            bluetoothManager.registry.itemsList.forEach(async item => {
-              if (item.deviceType === result.value) {
-                await bluetoothManager.connectDevice(item);
-              } else {
-                console.warn('There is no corresponding item in the registry!');
+            bluetoothManager.deviceTypeRegistry.deviceTypes.forEach(
+              async item => {
+                if (item.deviceType === result.value) {
+                  await bluetoothManager.connect(item);
+                } else {
+                  console.warn(
+                    'There is no corresponding item in the registry!'
+                  );
+                }
               }
-            });
+            );
           }
         });
       }
@@ -151,12 +155,12 @@ export class DropDownRegistry
   extends Widget
   implements Dialog.IBodyWidget<string>
 {
-  constructor(registry: BluetoothManager.DeviceRegistry) {
+  constructor(registry: BluetoothManager.DeviceTypeRegistry) {
     super();
     this._selectList = document.createElement('select');
     this.node.appendChild(this._selectList);
     this.registry = registry;
-    registry.itemsList.forEach(item => {
+    registry.deviceTypes.forEach(item => {
       const option = document.createElement('option');
       option.value = item.deviceType;
       option.text = item.deviceType;
@@ -169,7 +173,7 @@ export class DropDownRegistry
   }
 
   private _selectList: HTMLSelectElement;
-  public registry: BluetoothManager.DeviceRegistry;
+  public registry: BluetoothManager.DeviceTypeRegistry;
 }
 
 const BluetoothExtensionPlugins: JupyterFrontEndPlugin<any>[] = [

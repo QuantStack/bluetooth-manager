@@ -13,11 +13,7 @@ export class BluetoothManager implements IBluetoothManager {
     this.deviceListChanged = new Signal<this, Array<BluetoothManager.Device>>(
       this
     );
-    this.registeredByAPlugin = new Signal<
-      this,
-      BluetoothManager.DeviceRegistry
-    >(this);
-    this._registry = new BluetoothManager.DeviceRegistry();
+    this._deviceTypeRegistry = new BluetoothManager.DeviceTypeRegistry();
     this._deviceList = [];
     this._identifierRegistry = [];
   }
@@ -26,54 +22,50 @@ export class BluetoothManager implements IBluetoothManager {
     return this._deviceList;
   }
 
-  get registry(): BluetoothManager.DeviceRegistry {
-    return this._registry;
+  get deviceTypeRegistry(): BluetoothManager.DeviceTypeRegistry {
+    return this._deviceTypeRegistry;
   }
 
-  get identifierRegistry(): Array<string> {
-    return this._identifierRegistry;
-  }
-
-  async connectDevice(
-    registryItem: IDeviceRegistryItem
+  async connect(
+    registryItem: IDeviceTypeRegistryItem
   ): Promise<BluetoothManager.Device | undefined> {
     const native = await this.requestDevice(registryItem);
     if (native) {
       const device = await registryItem.factory(native);
       if (device && device.isConnected) {
-        this.addDeviceToList(device);
+        this._addDeviceToList(device);
         device.disconnected.connect(async () => {
-          this.removeDeviceFromList(device);
+          this._removeDeviceFromList(device);
         });
         return device;
       }
     }
   }
 
-  async disconnectDevice(device: BluetoothManager.Device) {
+  async disconnect(device: BluetoothManager.Device) {
     await device.disconnect();
     device.dispose();
   }
 
   // Method to add a device to the list
-  addDeviceToList(device: BluetoothManager.Device): void {
+  private _addDeviceToList(device: BluetoothManager.Device): void {
     const identifier = buildCompleteIdentifier(device.native);
-    if (this.identifierRegistry.includes(identifier) === false) {
+    if (this._identifierRegistry.includes(identifier) === false) {
       this._deviceList.push(device);
-      this.identifierRegistry.push(identifier);
+      this._identifierRegistry.push(identifier);
     } else {
-      console.warn('The device is already in the identifierRegistry');
+      console.warn('The device is already in the registry of identifiers');
     }
     // Emit the signal when the list changes
     this.deviceListChanged.emit(this._deviceList);
   }
 
   // Method to remove a device from the list
-  removeDeviceFromList(device: BluetoothManager.Device): void {
+  private _removeDeviceFromList(device: BluetoothManager.Device): void {
     const index = this._deviceList.indexOf(device);
     if (index > -1) {
       this._deviceList.splice(index, 1);
-      this.identifierRegistry.splice(index, 1);
+      this._identifierRegistry.splice(index, 1);
       // Emit the signal when the list changes
       this.deviceListChanged.emit(this._deviceList);
     }
@@ -82,18 +74,9 @@ export class BluetoothManager implements IBluetoothManager {
 
   removeAllDevices() {
     this._deviceList.forEach((device, index) => {
-      this.removeDeviceFromList(device);
+      this._removeDeviceFromList(device);
       this.deviceListChanged.emit(this._deviceList);
     });
-  }
-
-  register(registryItem: IDeviceRegistryItem) {
-    this._registry.add(registryItem);
-    this.registeredByAPlugin.emit(this._registry);
-    console.warn(
-      `New item from category ${registryItem.deviceType} is added to the registry.`
-    );
-    return this._registry;
   }
 
   async checkWebBluetoothSupport(): Promise<boolean> {
@@ -109,7 +92,7 @@ export class BluetoothManager implements IBluetoothManager {
   }
 
   async requestDevice(
-    registryItem: IDeviceRegistryItem
+    registryItem: IDeviceTypeRegistryItem
   ): Promise<BluetoothDevice | undefined> {
     const isWebBluetoothSupported = await this.checkWebBluetoothSupport();
     if (isWebBluetoothSupported) {
@@ -124,11 +107,7 @@ export class BluetoothManager implements IBluetoothManager {
 
   private _deviceList: Array<BluetoothManager.Device>;
   public deviceListChanged: Signal<this, Array<BluetoothManager.Device>>;
-  public registeredByAPlugin: Signal<
-    BluetoothManager,
-    BluetoothManager.DeviceRegistry
-  >;
-  private _registry: BluetoothManager.DeviceRegistry;
+  private _deviceTypeRegistry: BluetoothManager.DeviceTypeRegistry;
   private _identifierRegistry: Array<string>;
 }
 
@@ -204,32 +183,6 @@ export namespace BluetoothManager {
       }
     }
 
-    /*async connectAndGetAllServices(): Promise<
-      Array<BluetoothRemoteGATTService> | undefined
-    > {
-      this.native.addEventListener('gattserverdisconnected', event => {
-        this.isConnected = false;
-        this.disconnected.emit(true);
-      });
-      const server = this.native.gatt
-      if (server) {
-        server.connect();
-        if (server.connected === true) {
-          const services = await server.getPrimaryServices();
-          this.isConnected = true;
-          if (!services || services.length === 0) {
-            throw new Error('Server exists but no service found on the device.');
-          } else { return services; }
-        }
-        else {
-          throw new Error('There is no connection to server. No attempt to get a service.')
-        }
-      }
-      else {
-        throw new Error('Server is not defined.');
-      }
-    }*/
-
     async disconnect(): Promise<void> {
       if (this.native) {
         this.native.gatt?.disconnect();
@@ -283,19 +236,27 @@ export namespace BluetoothManager {
     }
   }
 
-  export class DeviceRegistry implements IDeviceRegistry {
-    private _registry: Array<IDeviceRegistryItem>;
-    public registryItem: IDeviceRegistryItem;
+  export class DeviceTypeRegistry implements IDeviceTypeRegistry {
     constructor() {
-      this._registry = [];
+      this._deviceTypes = [];
+      this._added = new Signal<this, IDeviceTypeRegistryItem>(this);
     }
 
-    add(registryItem: IDeviceRegistryItem) {
-      this._registry.push(registryItem);
+    add(registryItem: IDeviceTypeRegistryItem) {
+      this._deviceTypes.push(registryItem);
+      this._added.emit(registryItem);
     }
-    get itemsList(): Array<IDeviceRegistryItem> {
-      return this._registry;
+
+    get deviceTypes(): IDeviceTypeRegistryItem[] {
+      return this._deviceTypes;
     }
+
+    get added(): Signal<this, IDeviceTypeRegistryItem> {
+      return this._added;
+    }
+
+    private _deviceTypes: Array<IDeviceTypeRegistryItem>;
+    private _added: Signal<this, IDeviceTypeRegistryItem>;
   }
 }
 
@@ -303,23 +264,15 @@ export namespace BluetoothManager {
  * Interface for the bluetooth manager.
  */
 export interface IBluetoothManager {
-  addDeviceToList(Device: BluetoothManager.Device): void;
-  removeDeviceFromList(Device: BluetoothManager.Device): void;
   removeAllDevices(Devices: Array<BluetoothManager.Device>): void;
-  register(registryItem: IDeviceRegistryItem): BluetoothManager.DeviceRegistry;
-  connectDevice(registryItem: IDeviceRegistryItem): any;
-  disconnectDevice(device: BluetoothManager.Device): void;
+  connect(registryItem: IDeviceTypeRegistryItem): any;
+  disconnect(device: BluetoothManager.Device): void;
   deviceListChanged: Signal<BluetoothManager, Array<BluetoothManager.Device>>;
-  registeredByAPlugin: Signal<
-    BluetoothManager,
-    BluetoothManager.DeviceRegistry
-  >;
   get deviceList(): Array<BluetoothManager.Device>;
-  get registry(): BluetoothManager.DeviceRegistry;
-  get identifierRegistry(): Array<string>;
+  get deviceTypeRegistry(): BluetoothManager.DeviceTypeRegistry;
 }
 
-export interface IDeviceRegistryItem {
+export interface IDeviceTypeRegistryItem {
   deviceType: string;
   factory: (
     native: BluetoothDevice
@@ -327,9 +280,9 @@ export interface IDeviceRegistryItem {
   options: IDeviceOptions;
 }
 
-export interface IDeviceRegistry {
-  add: (registryItem: IDeviceRegistryItem) => void;
-  get itemsList(): Array<IDeviceRegistryItem>;
+export interface IDeviceTypeRegistry {
+  add: (registryItem: IDeviceTypeRegistryItem) => void;
+  get deviceTypes(): IDeviceTypeRegistryItem[];
 }
 
 export const IBluetoothManager = new Token<IBluetoothManager>(

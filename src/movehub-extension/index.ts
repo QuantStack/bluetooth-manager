@@ -6,7 +6,7 @@ import { ITranslator } from '@jupyterlab/translation';
 import { IThemeManager, MainAreaWidget } from '@jupyterlab/apputils';
 import { Toolbar } from '@jupyterlab/ui-components';
 import {
-  IDeviceRegistryItem,
+  IDeviceTypeRegistryItem,
   IBluetoothManager,
   BluetoothManager
 } from '../bluetooth/BluetoothManager';
@@ -27,7 +27,7 @@ export const connectMoveHub = 'bluetooth-manager:connect-movehub';
 export const disconnectMoveHub = 'bluetooth-manager:disconnect-movehub';
 export const moveHubServiceUUID = '00001623-1212-efde-1623-785feabcd123';
 export const moveHubCharacteristicUUID = '00001624-1212-efde-1623-785feabcd123';
-export const movehubRegistryItem: IDeviceRegistryItem = {
+export const movehubRegistryItem: IDeviceTypeRegistryItem = {
   deviceType: 'LEGO® Move Hub',
   options: {
     acceptAllDevices: false,
@@ -56,7 +56,14 @@ const MoveHubRegisterPlugin: JupyterFrontEndPlugin<void> = {
     bluetoothManager: BluetoothManager
   ): void => {
     console.log('JupyterLab move-hub-register plugin is activated!');
-    bluetoothManager.register(movehubRegistryItem);
+    bluetoothManager.deviceTypeRegistry.added.connect(
+      async (sender, movehubRegistryItem) => {
+        console.warn(
+          `New item from category ${movehubRegistryItem.deviceType} is added to the deviceType registry.`
+        );
+      }
+    );
+    bluetoothManager.deviceTypeRegistry.add(movehubRegistryItem);
   }
 };
 
@@ -125,7 +132,7 @@ const LEGOMoveHubControlPanelPlugin: JupyterFrontEndPlugin<void> = {
           device => device.native.id === (args.deviceID as string)
         );
         if (selectedDevice && selectedDevice instanceof MoveHub) {
-          bluetoothManager.disconnectDevice(selectedDevice);
+          bluetoothManager.disconnect(selectedDevice);
           return selectedDevice;
         } else {
           throw new Error('No device provided or device is invalid');
@@ -151,7 +158,7 @@ const LEGOMoveHubControlPanelPlugin: JupyterFrontEndPlugin<void> = {
 
     app.commands.addCommand(connectMoveHub, {
       execute: args => {
-        const newDevice = bluetoothManager.connectDevice(movehubRegistryItem);
+        const newDevice = bluetoothManager.connect(movehubRegistryItem);
         return newDevice;
       },
       caption: 'Connect MoveHub',
