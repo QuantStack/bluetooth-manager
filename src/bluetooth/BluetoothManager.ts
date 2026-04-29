@@ -15,7 +15,7 @@ export class BluetoothManager implements IBluetoothManager {
     );
     this._deviceTypeRegistry = new BluetoothManager.DeviceTypeRegistry();
     this._deviceList = [];
-    this._identifierRegistry = [];
+    this._identifierMap = new Map();
   }
 
   get deviceList(): Array<BluetoothManager.Device> {
@@ -29,35 +29,42 @@ export class BluetoothManager implements IBluetoothManager {
   async connect(
     registryItem: IDeviceTypeRegistryItem
   ): Promise<BluetoothManager.Device | undefined> {
-    const native = await this.requestDevice(registryItem);
-    if (native) {
+    try {
+      const native = await this.requestDevice(registryItem);
+      if (!native) {
+        console.warn('No device selected');
+        return undefined;
+      }
       const device = await registryItem.factory(native);
       if (device && device.isConnected) {
         this._addDeviceToList(device);
-        device.disconnected.connect(async () => {
+        device.disconnected.connect(() => {
           this._removeDeviceFromList(device);
         });
         return device;
       }
+      return undefined;
+    } catch (error) {
+      console.error('Connection failed:', error);
+      throw error;
     }
   }
 
   async disconnect(device: BluetoothManager.Device) {
     await device.disconnect();
-    device.dispose();
   }
 
   // Method to add a device to the list
   private _addDeviceToList(device: BluetoothManager.Device): void {
     const identifier = buildCompleteIdentifier(device.native);
-    if (this._identifierRegistry.includes(identifier) === false) {
+    if (this.identifierRegistry.includes(identifier) === false) {
       this._deviceList.push(device);
-      this._identifierRegistry.push(identifier);
+      this._identifierMap.set(identifier, device);
+      // Emit the signal when the list changes
+      this.deviceListChanged.emit(this._deviceList);
     } else {
-      console.warn('The device is already in the registry of identifiers');
+      console.log('The device is already in the registry of identifiers');
     }
-    // Emit the signal when the list changes
-    this.deviceListChanged.emit(this._deviceList);
   }
 
   // Method to remove a device from the list
@@ -65,50 +72,57 @@ export class BluetoothManager implements IBluetoothManager {
     const index = this._deviceList.indexOf(device);
     if (index > -1) {
       this._deviceList.splice(index, 1);
-      this._identifierRegistry.splice(index, 1);
+      const identifier = buildCompleteIdentifier(device.native);
+      this._identifierMap.delete(identifier);
       // Emit the signal when the list changes
       this.deviceListChanged.emit(this._deviceList);
     }
-    device.dispose();
+    if (!device.isDisposed) {
+      device.dispose();
+    }
   }
 
-  removeAllDevices() {
-    this._deviceList.forEach((device, index) => {
-      this._removeDeviceFromList(device);
-      this.deviceListChanged.emit(this._deviceList);
-    });
+  get identifierRegistry(): Array<string> {
+    return Array.from(this._identifierMap.keys());
+  }
+
+  removeAllDevices(deviceList: Array<BluetoothManager.Device>) {
+    for (const device of deviceList) {
+      const index = this._deviceList.indexOf(device);
+      if (index > -1) {
+        this._deviceList.splice(index, 1);
+        device.dispose();
+      }
+    }
+    this.deviceListChanged.emit(this._deviceList);
   }
 
   async checkWebBluetoothSupport(): Promise<boolean> {
-    const isWebBluetoothSupported: boolean = navigator.bluetooth ? true : false;
-    if (isWebBluetoothSupported === false) {
+    if (!('bluetooth' in navigator)) {
       showDialog({
         title: 'Error',
-        body: 'Web Bluetooth is not supported on your browser. It works on Chrome and Edge (Firefox and Explorer are not supported). \n Please also check that the Web Bluetooth flag is properly set to enabled in the Chrome flags (chrome://flags/).',
+        body: 'Web Bluetooth is not supported in your browser. It works on Chrome and Edge. Make sure the Web Bluetooth flag is enabled in chrome://flags/.',
         buttons: [Dialog.okButton({ label: 'Close' })]
       });
+      return false;
     }
-    return isWebBluetoothSupported;
+    return true;
   }
 
   async requestDevice(
     registryItem: IDeviceTypeRegistryItem
   ): Promise<BluetoothDevice | undefined> {
-    const isWebBluetoothSupported = await this.checkWebBluetoothSupport();
-    if (isWebBluetoothSupported) {
-      const native = await navigator.bluetooth.requestDevice(
-        registryItem.options
-      );
-      return native;
-    } else {
-      return;
+    const isSupported = await this.checkWebBluetoothSupport();
+    if (!isSupported) {
+      return undefined;
     }
+    return await navigator.bluetooth.requestDevice(registryItem.options);
   }
 
   private _deviceList: Array<BluetoothManager.Device>;
   public deviceListChanged: Signal<this, Array<BluetoothManager.Device>>;
   private _deviceTypeRegistry: BluetoothManager.DeviceTypeRegistry;
-  private _identifierRegistry: Array<string>;
+  private _identifierMap: Map<string, BluetoothManager.Device>;
 }
 
 export namespace BluetoothManager {
@@ -139,6 +153,8 @@ export namespace BluetoothManager {
       this.native.addEventListener('gattserverdisconnected', event => {
         this.isConnected = false;
         this.disconnected.emit(true);
+        this.dispose();
+        this.isDisposed = true;
       });
       const server = this.native.gatt;
       if (server) {
@@ -184,8 +200,14 @@ export namespace BluetoothManager {
     }
 
     async disconnect(): Promise<void> {
-      if (this.native) {
-        this.native.gatt?.disconnect();
+      if (this.native?.gatt) {
+        try {
+          if (this.native.gatt.connected) {
+            this.native.gatt.disconnect();
+          }
+        } catch (error) {
+          console.error('Failed to disconnect:', error);
+        }
         this.isConnected = false;
       }
     }
@@ -264,8 +286,10 @@ export namespace BluetoothManager {
  * Interface for the bluetooth manager.
  */
 export interface IBluetoothManager {
-  removeAllDevices(Devices: Array<BluetoothManager.Device>): void;
-  connect(registryItem: IDeviceTypeRegistryItem): any;
+  removeAllDevices(deviceList: Array<BluetoothManager.Device>): void;
+  connect(
+    registryItem: IDeviceTypeRegistryItem
+  ): Promise<BluetoothManager.Device | undefined>;
   disconnect(device: BluetoothManager.Device): void;
   deviceListChanged: Signal<BluetoothManager, Array<BluetoothManager.Device>>;
   get deviceList(): Array<BluetoothManager.Device>;
