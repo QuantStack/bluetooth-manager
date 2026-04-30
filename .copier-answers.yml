@@ -6,10 +6,10 @@ author_name: Florence Haudin
 has_binder: false
 has_settings: true
 kind: frontend
-labextension_name: bluetooth-manager
+labextension_name: jupyter-bluetooth-manager
 project_short_description: A JupyterLab extension to manage to connect to devices
     with web bluetooth.
-python_name: bluetooth_manager
+python_name: jupyter-bluetooth-manager
 repository: https://github.com/QuantStack/bluetooth-manager
 test: true
 

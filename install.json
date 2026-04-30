@@ -1,5 +1,5 @@
 {
   "packageManager": "python",
-  "packageName": "bluetooth_manager",
-  "uninstallInstructions": "Use your Python package manager (pip, conda, etc.) to uninstall the package bluetooth_manager"
+  "packageName": "jupyter-bluetooth-manager",
+  "uninstallInstructions": "Use your Python package manager (pip, conda, etc.) to uninstall the package jupyter-bluetooth-manager"
 }
