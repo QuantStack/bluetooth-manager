@@ -37,8 +37,8 @@ artifacts = ["jupyter_bluetooth_manager/labextension"]
 exclude = [".github"]
 
 [tool.hatch.build.targets.wheel.shared-data]
-"jupyter_bluetooth_manager/labextension" = "share/jupyter/labextensions/bluetooth-manager"
-"install.json" = "share/jupyter/labextensions/bluetooth-manager/install.json"
+"jupyter_bluetooth_manager/labextension" = "share/jupyter/labextensions/jupyter-bluetooth-manager"
+"install.json" = "share/jupyter/labextensions/jupyter-bluetooth-manager/install.json"
 
 [tool.hatch.build.hooks.version]
 path = "jupyter_bluetooth_manager/_version.py"
