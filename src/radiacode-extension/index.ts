@@ -9,9 +9,11 @@ import {
   BluetoothManager
 } from '../bluetooth/BluetoothManager';
 import { RadiacodeDetector } from './detector';
-export const radiacodeServiceUUID = 'e63215e5-7003-49d8-96b0-b024798fb901'
-export const radiacodeReadCharacteristicUUID = 'e63215e6-7003-49d8-96b0-b024798fb901';
-export const radiacodeWriteCharacteristicUUID = 'e63215e6-7003-49d8-96b0-b024798fb901';
+export const radiacodeServiceUUID = 'e63215e5-7003-49d8-96b0-b024798fb901';
+export const radiacodeNotifyCharacteristicUUID =
+  'e63215e7-7003-49d8-96b0-b024798fb901';
+export const radiacodeWriteCharacteristicUUID =
+  'e63215e6-7003-49d8-96b0-b024798fb901';
 export const radiacodeRegistryItem: IDeviceTypeRegistryItem = {
   deviceType: 'Radiacode® 110',
   options: {
@@ -21,13 +23,15 @@ export const radiacodeRegistryItem: IDeviceTypeRegistryItem = {
   },
   factory: async (native: BluetoothDevice) => {
     const device = new RadiacodeDetector(native);
+    await device.initDevice();
     return device;
   }
 };
 
 const RadiacodeDetectorRegisterPlugin: JupyterFrontEndPlugin<void> = {
   id: 'bluetooth-manager:radiacode-detector-register-plugin',
-  description: 'Registers the radiacode detector device and provides a factory.',
+  description:
+    'Registers the radiacode detector device and provides a factory.',
   requires: [IBluetoothManager],
   autoStart: true,
   activate: (
@@ -46,8 +50,7 @@ const RadiacodeDetectorRegisterPlugin: JupyterFrontEndPlugin<void> = {
   }
 };
 
-
 const RadiacodeDetectorExtensionPlugins: JupyterFrontEndPlugin<any>[] = [
-  RadiacodeDetectorRegisterPlugin,
+  RadiacodeDetectorRegisterPlugin
 ];
 export default RadiacodeDetectorExtensionPlugins;
