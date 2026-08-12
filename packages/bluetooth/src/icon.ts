@@ -1,6 +1,6 @@
 import { LabIcon } from '@jupyterlab/ui-components';
-import bluetoothConnectSvgstr from '../style/icons/bluetoothConnect.svg';
-import bluetoothDisconnectSvgstr from '../style/icons/bluetoothDisconnect.svg';
+import bluetoothConnectSvgstr from '@bluetooth-manager/bluetooth/style/icons/bluetoothConnect.svg';
+import bluetoothDisconnectSvgstr from '@bluetooth-manager/bluetooth/style/icons/bluetoothDisconnect.svg';
 
 
 export const BluetoothConnectIcon = new LabIcon({
