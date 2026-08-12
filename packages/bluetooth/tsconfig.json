@@ -19,6 +19,6 @@
     "target": "ES2018",
     "strict": false
   },
-  "include": ["packages/bluetooth/src/**/*", "packages/bluetooth-extension/src/**/*"],
+  "include": ["src/**/*"],
   "rootDirs": ["src", "ui-tests"]
 }
