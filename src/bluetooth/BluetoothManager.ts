@@ -128,8 +128,7 @@ export namespace BluetoothManager {
       this.isDisposed = false;
       this.native = native;
       this.contextCommands = [
-        'bluetooth-manager:disconnect-device',
-        'bluetooth-manager:add-lego-movehub-control-panel'
+        'bluetooth-manager:disconnect-device'
       ];
     }
 
