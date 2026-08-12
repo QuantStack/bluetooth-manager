@@ -1,7 +1,7 @@
 import { IRunningSessions } from '@jupyterlab/running';
 import { BluetoothConnectIcon } from './icon';
 import { BluetoothManager } from './BluetoothManager';
-import { buildCompleteIdentifier } from '../bluetooth-extension';
+import { buildCompleteIdentifier } from './BluetoothManager';
 import { Menu } from '@lumino/widgets';
 import { CommandRegistry } from '@lumino/commands';
 

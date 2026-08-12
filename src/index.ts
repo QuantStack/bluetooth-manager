@@ -1,3 +1,3 @@
 import BluetoothExtensionPlugins from './bluetooth-extension';
 
-export default BluetoothExtensionPlugins
+export default BluetoothExtensionPlugins;

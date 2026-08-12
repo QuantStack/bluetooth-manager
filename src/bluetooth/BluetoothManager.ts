@@ -1,9 +1,13 @@
 import { Signal } from '@lumino/signaling';
 import { Token } from '@lumino/coreutils';
 import { IDeviceOptions } from './DeviceOptions';
-import { buildCompleteIdentifier } from '../bluetooth-extension';
 import { IDisposable } from '@lumino/disposable';
 import { Dialog, showDialog } from '@jupyterlab/apputils';
+
+export function buildCompleteIdentifier(native: BluetoothDevice): string {
+  const identifier = native.name?.replace(/\s+/g, '-') + '-' + native.id;
+  return identifier;
+}
 
 /**
  * A class used to update the list of connected devices and the related signals used to rerender the connected devices section.
@@ -127,9 +131,7 @@ export namespace BluetoothManager {
       this.isConnected = false;
       this.isDisposed = false;
       this.native = native;
-      this.contextCommands = [
-        'bluetooth-manager:disconnect-device'
-      ];
+      this.contextCommands = ['bluetooth-manager:disconnect-device'];
     }
 
     async connectAndGetAllServices(): Promise<

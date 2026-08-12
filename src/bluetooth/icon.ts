@@ -11,4 +11,3 @@ export const BluetoothDisconnectIcon = new LabIcon({
   name: '@jupyterlab/bluetooh-manager:bluetooth-disconnect',
   svgstr: bluetoothDisconnectSvgstr
 });
-
