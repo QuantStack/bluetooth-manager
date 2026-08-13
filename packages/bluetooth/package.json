@@ -1,5 +1,5 @@
 {
-    "name": "@bluetooth-manager/bluetooth",
+    "name": "@jupyter-bluetooth-manager/bluetooth",
     "version": "0.1.0",
     "description": "A JupyterLab extension to manage to connect to devices with web bluetooth.",
     "keywords": [

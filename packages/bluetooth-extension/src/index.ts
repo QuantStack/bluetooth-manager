@@ -6,7 +6,7 @@ import { ITranslator } from '@jupyterlab/translation';
 import { IRunningSessions, IRunningSessionManagers } from '@jupyterlab/running';
 import { addIcon, CommandToolbarButton } from '@jupyterlab/ui-components';
 import { Dialog, showDialog } from '@jupyterlab/apputils';
-import { BluetoothDeviceRunningItem, BluetoothManager, DropDownRegistry, IBluetoothManager } from '@bluetooth-manager/bluetooth';
+import { BluetoothDeviceRunningItem, BluetoothManager, DropDownRegistry, IBluetoothManager } from '@jupyter-bluetooth-manager/bluetooth';
 
 export namespace CommandIDs {
   export const openDeviceRegistryDialog =
