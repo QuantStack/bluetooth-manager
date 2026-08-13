@@ -3,9 +3,13 @@
   "compilerOptions": {
     "outDir": "lib",
     "rootDir": "src",
-    "skipLibCheck": true
+    "skipLibCheck": true,
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
+    "moduleResolution": "node"
   },
   "include": [
-    "src/**/*"
+    "src/**/*",
+    "src/**/*.d.ts"
   ]
 }

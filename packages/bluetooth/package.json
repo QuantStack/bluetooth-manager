@@ -30,22 +30,18 @@
         "url": "https://github.com/QuantStack/bluetooth-manager.git"
     },
     "scripts": {
-        "build": "jlpm build:lib && jlpm build:labextension:dev",
-        "build:prod": "jlpm clean && jlpm build:lib:prod && jlpm build:labextension",
-        "build:labextension": "jupyter labextension build .",
-        "build:labextension:dev": "jupyter labextension build --development True .",
+        "build": "jlpm build:lib",
+        "build:prod": "jlpm clean && jlpm build:lib:prod",
         "build:lib": "tsc --sourceMap",
         "build:lib:prod": "tsc",
         "clean": "jlpm clean:lib",
         "clean:lib": "rimraf lib tsconfig.tsbuildinfo",
         "clean:lintcache": "rimraf .eslintcache .stylelintcache",
-        "clean:labextension": "rimraf jupyter_bluetooth_manager/labextension jupyter_bluetooth_manager/_version.py",
-        "clean:all": "jlpm clean:lib && jlpm clean:labextension && jlpm clean:lintcache",
+        "clean:all": "jlpm clean:lib && jlpm clean:lintcache",
         "install:extension": "jlpm build",
         "test": "jest --coverage",
-        "watch": "run-p watch:src watch:labextension",
-        "watch:src": "tsc -w --sourceMap",
-        "watch:labextension": "jupyter labextension watch ."
+        "watch": "run-p watch:src",
+        "watch:src": "tsc -w --sourceMap"
     },
     "dependencies": {
         "@emotion/react": "^11.9.0",
@@ -99,11 +95,6 @@
     "styleModule": "style/index.js",
     "publishConfig": {
         "access": "public"
-    },
-    "jupyterlab": {
-        "extension": true,
-        "outputDir": "jupyter_bluetooth_manager/labextension",
-        "schemaDir": "schema"
     },
     "eslintIgnore": [
         "node_modules",

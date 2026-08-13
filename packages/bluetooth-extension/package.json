@@ -101,7 +101,7 @@
     },
     "jupyterlab": {
         "extension": true,
-        "outputDir": "jupyter_bluetooth_manager/labextension",
+        "outputDir": "../../jupyter_bluetooth_manager/labextension",
         "schemaDir": "schema"
     },
     "eslintIgnore": [
