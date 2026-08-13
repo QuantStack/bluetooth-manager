@@ -6,12 +6,7 @@ import { ITranslator } from '@jupyterlab/translation';
 import { IRunningSessions, IRunningSessionManagers } from '@jupyterlab/running';
 import { addIcon, CommandToolbarButton } from '@jupyterlab/ui-components';
 import { Dialog, showDialog } from '@jupyterlab/apputils';
-import { BluetoothDeviceRunningItem } from '@bluetooth-manager/bluetooth/src/BluetoothDeviceRunningItem';
-import {
-  IBluetoothManager,
-  BluetoothManager
-} from '@bluetooth-manager/bluetooth/src/BluetoothManager';
-import { DropDownRegistry } from '@bluetooth-manager/bluetooth/src/DropDownRegistry';
+import { BluetoothDeviceRunningItem, BluetoothManager, DropDownRegistry, IBluetoothManager } from '@bluetooth-manager/bluetooth';
 
 export namespace CommandIDs {
   export const openDeviceRegistryDialog =
