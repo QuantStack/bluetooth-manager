@@ -49,7 +49,6 @@
         "test": "jest --coverage"
     },
     "devDependencies": {
-        "@types/node": "20",
         "lerna": "^10.0.0"
     }
 }
