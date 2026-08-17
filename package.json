@@ -43,8 +43,7 @@
         "lint": "jlpm prettier && jlpm eslint && jlpm stylelint",
         "lint:check": "jlpm prettier:check && jlpm eslint:check",
         "start": "jupyter lab",
-        "test": "jest --coverage --passWithNoTests",
-        "test:ui": "jlpm playwright test"
+        "test": "jest --coverage --passWithNoTests"
     },
     "dependencies": {
         "@types/jest": "^29.2.0",
