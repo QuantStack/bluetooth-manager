@@ -45,7 +45,9 @@
         "stylelint:check": "stylelint \"packages/**/*.css\" --cache",
         "lint": "jlpm prettier && jlpm eslint && jlpm stylelint",
         "lint:check": "jlpm prettier:check && jlpm eslint:check && jlpm stylelint:check",
-        "test": "jest --coverage"
+        "start": "jupyter lab",
+        "test": "jest --coverage --passWithNoTests",
+        "test:ui": "jlpm playwright test"
     },
     "dependencies": {
         "@types/jest": "^29.2.0",
@@ -54,6 +56,7 @@
         "eslint": "^10.8.1",
         "eslint-config-prettier": "^8.8.0",
         "eslint-plugin-prettier": "^5.0.0",
+        "playwright": "^1.62.1",
         "prettier": "^3.9.6",
         "style-loader": "^3.3.1",
         "stylelint": "^15.10.1",
