@@ -16,7 +16,6 @@
         "name": "Florence Haudin",
         "email": "haudin.florence@gmail.com"
     },
-    "type": "module",
     "files": [
         "lib/**/*.{d.ts,eot,gif,html,jpg,js,js.map,json,png,svg,woff2,ttf}",
         "style/**/*.{js,eot,gif,html,jpg,json,png,svg,woff2,ttf}",
