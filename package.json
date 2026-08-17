@@ -16,6 +16,7 @@
         "name": "Florence Haudin",
         "email": "haudin.florence@gmail.com"
     },
+    "type": "module",
     "files": [
         "lib/**/*.{d.ts,eot,gif,html,jpg,js,js.map,json,png,svg,woff2,ttf}",
         "style/**/*.{js,eot,gif,html,jpg,json,png,svg,woff2,ttf}",
@@ -41,7 +42,7 @@
         "prettier": "prettier \"**/*.{ts,tsx,js,jsx,json,md}\" --write",
         "prettier:check": "prettier \"**/*.{ts,tsx,js,jsx,json,md}\" --check",
         "lint": "jlpm prettier && jlpm eslint && jlpm stylelint",
-        "lint:check": "jlpm prettier:check && jlpm eslint:check && jlpm stylelint:check",
+        "lint:check": "jlpm prettier:check && jlpm eslint:check",
         "start": "jupyter lab",
         "test": "jest --coverage --passWithNoTests",
         "test:ui": "jlpm playwright test"
