@@ -18,13 +18,11 @@
     },
     "files": [
         "lib/**/*.{d.ts,eot,gif,html,jpg,js,js.map,json,png,svg,woff2,ttf}",
-        "style/**/*.{css,js,eot,gif,html,jpg,json,png,svg,woff2,ttf}",
         "src/**/*.{ts,tsx}",
         "schema/*.json"
     ],
     "main": "lib/index.js",
     "types": "lib/index.d.ts",
-    "style": "style/index.css",
     "repository": {
         "type": "git",
         "url": "https://github.com/QuantStack/bluetooth-manager.git"
@@ -69,7 +67,6 @@
         "@types/web-bluetooth": "^0.0.7",
         "@typescript-eslint/eslint-plugin": "^6.1.0",
         "@typescript-eslint/parser": "^6.1.0",
-        "css-loader": "^6.7.1",
         "eslint": "^8.36.0",
         "eslint-config-prettier": "^8.8.0",
         "eslint-plugin-prettier": "^5.0.0",
@@ -91,11 +88,6 @@
         "webpack": "^5.109.2",
         "yjs": "^13.5.0"
     },
-    "sideEffects": [
-        "style/*.css",
-        "style/index.js"
-    ],
-    "styleModule": "style/index.js",
     "publishConfig": {
         "access": "public"
     },

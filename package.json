@@ -18,13 +18,12 @@
     },
     "files": [
         "lib/**/*.{d.ts,eot,gif,html,jpg,js,js.map,json,png,svg,woff2,ttf}",
-        "style/**/*.{css,js,eot,gif,html,jpg,json,png,svg,woff2,ttf}",
+        "style/**/*.{js,eot,gif,html,jpg,json,png,svg,woff2,ttf}",
         "src/**/*.{ts,tsx}",
         "schema/*.json"
     ],
     "main": "lib/index.js",
     "types": "lib/index.d.ts",
-    "style": "style/index.css",
     "repository": {
         "type": "git",
         "url": "https://github.com/QuantStack/bluetooth-manager.git"
@@ -39,10 +38,8 @@
         "clean": "lerna run clean",
         "eslint": "eslint . --cache --fix",
         "eslint:check": "eslint . --cache",
-        "prettier": "prettier \"**/*.{ts,tsx,js,jsx,css,json,md}\" --write",
-        "prettier:check": "prettier \"**/*.{ts,tsx,js,jsx,css,json,md}\" --check",
-        "stylelint": "stylelint \"packages/**/*.css\" --cache --fix",
-        "stylelint:check": "stylelint \"packages/**/*.css\" --cache",
+        "prettier": "prettier \"**/*.{ts,tsx,js,jsx,json,md}\" --write",
+        "prettier:check": "prettier \"**/*.{ts,tsx,js,jsx,json,md}\" --check",
         "lint": "jlpm prettier && jlpm eslint && jlpm stylelint",
         "lint:check": "jlpm prettier:check && jlpm eslint:check && jlpm stylelint:check",
         "start": "jupyter lab",
@@ -62,7 +59,6 @@
         "stylelint": "^15.10.1",
         "stylelint-config-recommended": "^13.0.0",
         "stylelint-config-standard": "^34.0.0",
-        "stylelint-csstree-validator": "^3.0.0",
         "stylelint-prettier": "^4.0.0",
         "typescript-eslint": "^8.67.0"
     },
@@ -154,11 +150,7 @@
             "stylelint-config-standard",
             "stylelint-prettier/recommended"
         ],
-        "plugins": [
-            "stylelint-csstree-validator"
-        ],
         "rules": {
-            "csstree/validator": true,
             "property-no-vendor-prefix": null,
             "selector-class-pattern": "^([a-z][A-z\\d]*)(-[A-z\\d]+)*$",
             "selector-no-vendor-prefix": null,
