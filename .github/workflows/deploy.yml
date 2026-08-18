@@ -28,11 +28,6 @@ jobs:
           # install a dev version of the bluetooth-manager extension
           python -m pip install .
 
-      - name: Upload artifact
-        uses: actions/upload-pages-artifact@v3
-        with:
-          path: ./dist
-
   deploy:
     needs: build
     if: github.ref == 'refs/heads/main'
