@@ -30,12 +30,16 @@
     },
     "private": true,
     "workspaces": [
-        "packages/*"
+        "packages/bluetooth",
+        "packages/bluetooth-extension"
     ],
     "scripts": {
         "build": "lerna run build",
         "build:prod": "lerna run build:prod",
         "clean": "lerna run clean",
+        "clean:bluetooth": "jlpm --cwd packages/bluetooth clean",
+        "clean:bluetooth-extension": "jlpm --cwd packages/bluetooth-extension clean",
+        "clean:all": "jlpm clean:bluetooth && jlpm clean:bluetooth-extension",
         "eslint": "eslint . --cache --fix",
         "eslint:check": "eslint . --cache",
         "prettier": "prettier \"**/*.{ts,tsx,js,jsx,json,md}\" --write",
