@@ -44,8 +44,7 @@
         "prettier:check": "prettier \"**/*.{ts,tsx,js,jsx,json,md}\" --check",
         "lint": "jlpm prettier && jlpm eslint && jlpm stylelint",
         "lint:check": "jlpm prettier:check && jlpm eslint:check",
-        "start": "jupyter lab",
-        "test": "jest --coverage --passWithNoTests"
+        "start": "jupyter lab"
     },
     "devDependencies": {
         "@eslint/js": "^8.57.1",
