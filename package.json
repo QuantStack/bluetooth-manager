@@ -37,7 +37,7 @@
         "build": "lerna run build",
         "build:prod": "lerna run build:prod",
         "clean": "lerna run clean",
-        "clean:all": "lerna clean:all",
+        "clean:all": "lerna run clean:all",
         "eslint": "eslint . --cache --fix",
         "eslint:check": "eslint . --cache",
         "prettier": "prettier \"**/*.{ts,tsx,js,jsx,json,md}\" --write",
