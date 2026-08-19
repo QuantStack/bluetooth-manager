@@ -18,8 +18,7 @@
     },
     "files": [
         "lib/**/*.{d.ts,eot,gif,html,jpg,js,js.map,json,png,svg,woff2,ttf}",
-        "src/**/*.{ts,tsx}",
-        "schema/*.json"
+        "src/**/*.{ts,tsx}"
     ],
     "main": "lib/index.js",
     "types": "lib/index.d.ts",
@@ -46,7 +45,7 @@
     },
     "dependencies": {
         "@jupyter-bluetooth-manager/bluetooth": "^0.1.0",
-        "@jupyterlab/application": ">=4.5.10 <5.0.0",
+        "@jupyterlab/application": "^4.5.10",
         "@jupyterlab/builder": "^4.5.10"
     },
     "devDependencies": {
@@ -61,7 +60,6 @@
     },
     "jupyterlab": {
         "extension": true,
-        "outputDir": "../../jupyter_bluetooth_manager/labextension",
-        "schemaDir": "schema"
+        "outputDir": "../../jupyter_bluetooth_manager/labextension"
     }
 }
