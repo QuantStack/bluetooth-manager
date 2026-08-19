@@ -42,8 +42,8 @@
         "watch:src": "tsc -w --sourceMap"
     },
     "devDependencies": {
-        "@jupyterlab/running": "^4.3.1",
-        "@jupyterlab/ui-components": "^4.3.1",
+        "@jupyterlab/running": ">=4.5.10 <5.0.0",
+        "@jupyterlab/ui-components": ">=4.5.10 <5.0.0",
         "@types/web-bluetooth": "^0.0.7",
         "rimraf": "^5.0.1",
         "typescript": "~5.9.3",

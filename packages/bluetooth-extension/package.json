@@ -46,8 +46,8 @@
     },
     "dependencies": {
         "@jupyter-bluetooth-manager/bluetooth": "^0.1.0",
-        "@jupyterlab/application": "^4.3.1",
-        "@jupyterlab/builder": "^4.3.1"
+        "@jupyterlab/application": ">=4.5.10 <5.0.0",
+        "@jupyterlab/builder": "^4.5.10"
     },
     "devDependencies": {
         "@types/web-bluetooth": "^0.0.7",
