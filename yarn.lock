@@ -577,7 +577,7 @@ __metadata:
   resolution: "@jupyter-bluetooth-manager/bluetooth-extension@workspace:packages/bluetooth-extension"
   dependencies:
     "@jupyter-bluetooth-manager/bluetooth": ^0.1.0
-    "@jupyterlab/application": ">=4.5.10 <5.0.0"
+    "@jupyterlab/application": ^4.5.10
     "@jupyterlab/builder": ^4.5.10
     "@types/web-bluetooth": ^0.0.7
     rimraf: ^5.0.1
@@ -613,8 +613,8 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@jupyter-bluetooth-manager/bluetooth@workspace:packages/bluetooth"
   dependencies:
-    "@jupyterlab/running": ">=4.5.10 <5.0.0"
-    "@jupyterlab/ui-components": ">=4.5.10 <5.0.0"
+    "@jupyterlab/running": ^4.5.10
+    "@jupyterlab/ui-components": ^4.5.10
     "@types/web-bluetooth": ^0.0.7
     rimraf: ^5.0.1
     typescript: ~5.9.3
@@ -659,7 +659,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@jupyterlab/application@npm:>=4.5.10 <5.0.0":
+"@jupyterlab/application@npm:^4.5.10":
   version: 4.6.3
   resolution: "@jupyterlab/application@npm:4.6.3"
   dependencies:
@@ -874,7 +874,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@jupyterlab/running@npm:>=4.5.10 <5.0.0":
+"@jupyterlab/running@npm:^4.5.10":
   version: 4.6.3
   resolution: "@jupyterlab/running@npm:4.6.3"
   dependencies:
@@ -974,7 +974,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@jupyterlab/ui-components@npm:>=4.5.10 <5.0.0, @jupyterlab/ui-components@npm:^4.6.3":
+"@jupyterlab/ui-components@npm:^4.5.10, @jupyterlab/ui-components@npm:^4.6.3":
   version: 4.6.3
   resolution: "@jupyterlab/ui-components@npm:4.6.3"
   dependencies:
