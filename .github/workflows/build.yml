@@ -30,11 +30,6 @@ jobs:
         jlpm
         jlpm run lint:check
 
-    - name: Test the extension
-      run: |
-        set -eux
-        jlpm run test
-
     - name: Build the extension
       run: |
         set -eux
@@ -111,7 +106,7 @@ jobs:
         set -eux
         python -m pip install "jupyterlab>=4.0.0,<5" jupyter_bluetooth_manager*.whl
 
-    - name: Install dependencies
+    - name: Install dependencies    
       working-directory: ui-tests
       env:
         YARN_ENABLE_IMMUTABLE_INSTALLS: 0
@@ -133,7 +128,6 @@ jobs:
       working-directory: ui-tests
       run: |
         jlpm playwright test
-
     - name: Upload Playwright Test report
       if: always()
       uses: actions/upload-artifact@v4

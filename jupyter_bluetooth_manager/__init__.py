@@ -1,5 +1,3 @@
-from .movehub import MoveHubWidget,  LedColor,Port, Sensor
-
 try:
     from ._version import __version__
 except ImportError:
@@ -14,5 +12,5 @@ except ImportError:
 def _jupyter_labextension_paths():
     return [{
         "src": "labextension",
-        "dest": "jupyter-bluetooth-manager"
+        "dest": "@jupyter-bluetooth-manager/bluetooth-extension"
     }]
