@@ -576,7 +576,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@jupyter-bluetooth-manager/bluetooth-extension@workspace:packages/bluetooth-extension"
   dependencies:
-    "@jupyter-bluetooth-manager/bluetooth": ^0.1.0
+    "@jupyter-bluetooth-manager/bluetooth": ^0.2.0
     "@jupyterlab/application": ^4.5.10
     "@jupyterlab/builder": ^4.5.10
     "@types/web-bluetooth": ^0.0.7
@@ -609,7 +609,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@jupyter-bluetooth-manager/bluetooth@^0.1.0, @jupyter-bluetooth-manager/bluetooth@workspace:packages/bluetooth":
+"@jupyter-bluetooth-manager/bluetooth@^0.2.0, @jupyter-bluetooth-manager/bluetooth@workspace:packages/bluetooth":
   version: 0.0.0-use.local
   resolution: "@jupyter-bluetooth-manager/bluetooth@workspace:packages/bluetooth"
   dependencies:
